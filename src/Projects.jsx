@@ -117,9 +117,8 @@ const Projects = () => {
     <>
       <div className="flex flex-col items-center justify-center pt-20">
         {/* TITLE */}
-        <h1 className="h1 flex justify-center mb-10">
-          <FaCertificate className="inline-block me-5" />
-          Projects
+        <h1 className="h1 flex items-end mb-10">
+          <FaCertificate className="inline-block me-5" /> Projects
         </h1>
 
         {/* SUBTITLE */}

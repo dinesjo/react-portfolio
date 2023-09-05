@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaHandshake } from "react-icons/fa";
 
-function App() {
+export default function App() {
   return (
     <>
       {/* Using tailwind CSS, write a simple portfolio website */}
@@ -31,5 +31,3 @@ function App() {
     </>
   );
 }
-
-export default App;
