@@ -21,3 +21,27 @@
 .link {
   @apply text-blue-500 hover:text-blue-700 underline;
 }
+
+.h1 {
+  @apply text-4xl xs:text-6xl font-semibold text-center;
+}
+
+.h2 {
+  @apply text-3xl xs:text-5xl font-semibold text-center;
+}
+
+.h3 {
+  @apply text-2xl xs:text-4xl font-semibold text-center;
+}
+
+.h4 {
+  @apply text-xl xs:text-3xl font-semibold text-center;
+}
+
+.h5 {
+  @apply text-lg xs:text-2xl font-semibold text-center;
+}
+
+.h6 {
+  @apply text-base xs:text-xl font-semibold text-center;
+}

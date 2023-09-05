@@ -117,22 +117,22 @@ const Projects = () => {
     <>
       <div className="flex flex-col items-center justify-center pt-20">
         {/* TITLE */}
-        <h1 className="text-6xl font-semibold flex justify-center mb-10">
+        <h1 className="h1 flex justify-center mb-10">
           <FaCertificate className="inline-block me-5" />
           Projects
         </h1>
 
         {/* SUBTITLE */}
-        <h4 className="text-2xl mb-10 w-3/4 text-center">
+        <h3 className="h3 mb-10 w-3/4">
           Here are some of the projects I have worked on, and which{" "}
           <span className="text-lg text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full">
             technologies
           </span>{" "}
           were used.
-        </h4>
+        </h3>
 
         {/* Grid of cards, each one having an image, header and description */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 w-2/3 mb-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 w-11/12 xs:w-2/3 mb-5">
           <ProjectCard
             title="3D drone relief software"
             imgsrc="src\assets\drone-software.png"

@@ -14,8 +14,8 @@ const Contact = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-6xl font-semibold mb-3 flex justify-center"><FaEnvelope className="inline-block me-5" />Contact</h1>
-        <h2 className="text-2xl mb-3">Get in touch by sending me an email:</h2>
+        <h1 className="h1 mb-3 flex justify-center"><FaEnvelope className="inline-block me-5" />Contact</h1>
+        <h4 className="h4 mb-3">Get in touch by sending me an email:</h4>
         <div className="flex items-center mb-3">
           <button
           onClick={handleCopy}
