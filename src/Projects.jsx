@@ -76,37 +76,40 @@ const ProjectCard = ({
         </div>
 
         {/* TITLE */}
-        <h1 className="text-xl font-semibold mb-2">
+        <h5 className="text-xl font-semibold mb-2">
           {icon}
           {title}
-        </h1>
+        </h5>
 
         {/* DESCRIPTION */}
         <p className="text-gray-600 dark:text-gray-400 mb-3">{children}</p>
 
-        {/* LINK */}
-        {href && (
-          <a
-            href={href}
-            target="_blank"
-            className="rounded-lg text-neutral-50 bg-indigo-500 hover:bg-indigo-600 px-3 py-1 mt-3 inline-block transition-all"
-          >
-            <FaLink className="inline-block me-2" />
-            {hrefText}
-          </a>
-        )}
-
-        {/* GITHUB LINK */}
-        {githubhref && (
-          <a
-            href={githubhref}
-            target="_blank"
-            title="View on GitHub"
-            className="px-3 py-1 float-right mb-4"
-          >
-            <FaGithub className="inline-block text-4xl hover:text-gray-400 transition-all" />
-          </a>
-        )}
+        {/* LINKS */}
+        <div className="flex flex-col gap-3 sm:items-center sm:flex-row sm:gap-0">
+          {/* DYNAMIC LINK */}
+          {href && (
+            <a
+              href={href}
+              target="_blank"
+              className="mx-auto px-3 py-2 rounded-lg text-neutral-50 bg-indigo-500 hover:bg-indigo-600 inline-block transition-all"
+            >
+              <FaLink className="inline-block me-2" />
+              {hrefText}
+            </a>
+          )}
+          {/* GITHUB LINK */}
+          {githubhref && (
+            <a
+              href={githubhref}
+              target="_blank"
+              title="View on GitHub"
+              className="mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 bg-orange-500 hover:bg-orange-600 transition-all"
+            >
+              <FaGithub className="inline-block text-4xl" />{" "}
+              {githubhref.split("/").pop()}
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

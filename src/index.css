@@ -27,21 +27,21 @@
 }
 
 .h2 {
-  @apply text-3xl xs:text-5xl font-semibold text-center;
+  @apply text-3xl xs:text-4xl font-semibold text-center;
 }
 
 .h3 {
-  @apply text-2xl xs:text-4xl text-center;
+  @apply text-2xl xs:text-3xl text-center;
 }
 
 .h4 {
-  @apply text-xl xs:text-3xl text-center;
+  @apply text-xl xs:text-2xl text-center;
 }
 
 .h5 {
-  @apply text-lg xs:text-2xl text-center;
+  @apply text-lg xs:text-xl text-center;
 }
 
 .h6 {
-  @apply text-base xs:text-xl text-center;
+  @apply text-base xs:text-lg text-center;
 }
