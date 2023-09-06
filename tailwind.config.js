@@ -37,6 +37,8 @@ export default {
     "bg-purple-700",
     "bg-amber-700",
     "bg-fuchsia-700",
+    "bg-yellow-700",
+    "bg-sky-700",
   ],
 }
 

@@ -1,13 +1,21 @@
 import {
+  FaBootstrap,
   FaCertificate,
   FaChess,
   FaChessBoard,
+  FaCode,
+  FaCss3Alt,
   FaGithub,
+  FaHtml5,
+  FaJsSquare,
   FaLink,
   FaMapPin,
   FaMusic,
+  FaPython,
+  FaReact,
   FaRoad,
   FaServer,
+  FaTwitter,
   FaUnity,
 } from "react-icons/fa";
 
@@ -26,21 +34,44 @@ const ProjectCard = ({
     wxwidgets: "lime",
     "c#": "green",
     javascript: "indigo",
-    kql: "red",
-    "asp.net": "orange",
+    kql: "sky",
+    "asp.net": "purple",
     html: "blue",
     css: "pink",
     react: "cyan",
     "tailwind css": "emerald",
     bootstrap: "purple",
-    python: "amber",
-    "twitter api": "fuchsia",
+    python: "cyan",
+    "twitter api": "blue",
     unity: "lime",
+  };
+
+  const iconMap = {
+    javascript: <FaJsSquare className="inline-block me-2" />,
+    html: <FaHtml5 className="inline-block me-2" />,
+    css: <FaCss3Alt className="inline-block me-2" />,
+    react: <FaReact className="inline-block me-2" />,
+    bootstrap: <FaBootstrap className="inline-block me-2" />,
+    python: <FaPython className="inline-block me-2" />,
+    "twitter api": <FaTwitter className="inline-block me-2" />,
+    unity: <FaUnity className="inline-block me-2" />,
+    "tailwind css": (
+      <img src="src\assets\tailwind.png" className="inline-block me-2 w-3" />
+    ),
+    "c++": <img src="src\assets\c++.png" className="inline-block me-2 w-5" />,
+    "c#": <img src="src\assets\csharp.png" className="inline-block me-2 w-5" />,
+    wxwidgets: (
+      <img src="src\assets\wxwidgets.png" className="inline-block me-2 w-5" />
+    ),
+    kql: <img src="src\assets\kql.png" className="inline-block me-2 w-5" />,
+    "asp.net": (
+      <img src="src\assets\aspnet.png" className="inline-block me-2 w-5" />
+    ),
   };
 
   return (
     <div
-      className="bg-slate-700 rounded-lg shadow-md overflow-hidden"
+      className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent hover:outline-indigo-500"
       onMouseOver={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
       }}
@@ -68,8 +99,9 @@ const ProjectCard = ({
               key={tag}
               className={`text-sm text-gray-200 bg-${
                 colorMap[tag.toLowerCase()]
-              }-700 bg-opacity-60 px-2 py-1 rounded-full whitespace-nowrap`}
+              }-700 bg-opacity-60 px-2 py-1 rounded-full whitespace-nowrap items-center flex font-semibold`}
             >
+              {iconMap[tag.toLowerCase()]}
               {tag}
             </span>
           ))}
@@ -85,7 +117,7 @@ const ProjectCard = ({
         <p className="text-gray-600 dark:text-gray-400 mb-3">{children}</p>
 
         {/* LINKS */}
-        <div className="flex flex-col gap-3 sm:items-center sm:flex-row sm:gap-0">
+        <div className="flex flex-col gap-3 sm:items-center sm:flex-row">
           {/* DYNAMIC LINK */}
           {href && (
             <a
@@ -103,7 +135,7 @@ const ProjectCard = ({
               href={githubhref}
               target="_blank"
               title="View on GitHub"
-              className="mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 bg-orange-500 hover:bg-orange-600 transition-all"
+              className="truncate underline lg:no-underline mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 hover:bg-gray-600 transition-all"
             >
               <FaGithub className="inline-block text-4xl" />{" "}
               {githubhref.split("/").pop()}
@@ -127,14 +159,15 @@ const Projects = () => {
         {/* SUBTITLE */}
         <h3 className="h3 mb-10 w-3/4">
           Here are some of the projects I have worked on, and which{" "}
-          <span className="text-lg text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full">
+          <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full items-center inline-flex">
+            <FaCode className="inline-block me-2" />
             technologies
           </span>{" "}
           were used.
         </h3>
 
         {/* Grid of cards, each one having an image, header and description */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 w-11/12 xs:w-2/3 mb-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-1/2 mb-5 items-start">
           <ProjectCard
             title="3D drone relief software"
             imgsrc="src\assets\drone-software.png"
@@ -214,7 +247,7 @@ const Projects = () => {
             title="Chess Reporter"
             imgsrc="src\assets\chess-reporter.png"
             href="https://twitter.com/ChessReporter/"
-            hrefText="View on X (Formerly Twitter)"
+            hrefText="View on X (Twitter)"
             githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
             tags={["Python", "Twitter API"]}
             icon={<FaChess className="inline-block me-2 text-amber-700" />}
