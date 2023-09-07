@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaCopy, FaEnvelope } from "react-icons/fa";
+import { TabTitle } from "./utils/GeneralFunctions";
 
 const Contact = () => {
   const email = "dinesjo@kth.se";
@@ -10,6 +11,8 @@ const Contact = () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  
+  TabTitle("Contact");
 
   return (
     <>

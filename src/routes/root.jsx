@@ -13,7 +13,7 @@ import {
 const SideBar = () => {
   return (
     <div className="fixed top-0 left-0 w-screen shadow flex justify-center gap-5 bg-neutral-800 z-50">
-      <SideBarItem name="App" icon={<FaHome />} to="/" />
+      <SideBarItem name="Home" icon={<FaHome />} to="/" />
       <SideBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
       <SideBarItem name="Contact" icon={<FaEnvelope />} to="/contact" />
     </div>

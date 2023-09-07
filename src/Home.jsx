@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaHandshake } from "react-icons/fa";
+import { TabTitle } from "./utils/GeneralFunctions";
 
-export default function App() {
+export default function Home() {
+  TabTitle("Home");
+
   return (
     <>
       {/* Using tailwind CSS, write a simple portfolio website */}

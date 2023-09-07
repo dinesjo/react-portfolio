@@ -29,6 +29,7 @@ import pathvisImg from "./assets/path-vis.png";
 import droneImg from "./assets/drone-software.png";
 import thisImg from "./assets/this.png";
 import logportalImg from "./assets/log-portal.png";
+import { TabTitle } from "./utils/GeneralFunctions";
 
 const ProjectCard = ({
   children,
@@ -82,7 +83,7 @@ const ProjectCard = ({
 
   return (
     <div
-      className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent hover:outline-indigo-500"
+      className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
       onMouseOver={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
       }}
@@ -159,6 +160,8 @@ const ProjectCard = ({
 };
 
 const Projects = () => {
+  TabTitle("Projects");
+
   return (
     <>
       <div className="flex flex-col items-center justify-center pt-20">
