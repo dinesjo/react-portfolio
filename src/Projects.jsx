@@ -2,7 +2,6 @@ import {
   FaBootstrap,
   FaCertificate,
   FaChess,
-  FaChessBoard,
   FaCode,
   FaCss3Alt,
   FaGithub,
@@ -18,6 +17,11 @@ import {
   FaTwitter,
   FaUnity,
 } from "react-icons/fa";
+import cppImg from "./assets/c++.png";
+import csharpImg from "./assets/csharp.png";
+import wxwidgetsImg from "./assets/wxwidgets.png";
+import kqlImg from "./assets/kql.png";
+import aspnetImg from "./assets/aspnet.png";
 
 const ProjectCard = ({
   children,
@@ -58,14 +62,14 @@ const ProjectCard = ({
     "tailwind css": (
       <img src="src\assets\tailwind.png" className="inline-block me-2 w-3" />
     ),
-    "c++": <img src="src\assets\c++.png" className="inline-block me-2 w-5" />,
-    "c#": <img src="src\assets\csharp.png" className="inline-block me-2 w-5" />,
+    "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
+    "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
     wxwidgets: (
-      <img src="src\assets\wxwidgets.png" className="inline-block me-2 w-5" />
+      <img src={wxwidgetsImg} className="inline-block me-2 w-5" />
     ),
-    kql: <img src="src\assets\kql.png" className="inline-block me-2 w-5" />,
+    kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
     "asp.net": (
-      <img src="src\assets\aspnet.png" className="inline-block me-2 w-5" />
+      <img src={aspnetImg} className="inline-block me-2 w-5" />
     ),
   };
 
