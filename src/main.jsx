@@ -8,27 +8,30 @@ import Contact from "./Contact.jsx";
 import Projects from "./Projects";
 import ErrorPage from "./routes/error-page";
 
-const router = createBrowserRouter([
-  {
-    path: "",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "",
-        element: <App />,
-      },
-      {
-        path: "/contact",
-        element: <Contact />,
-      },
-      {
-        path: "/projects",
-        element: <Projects />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "",
+      element: <Root />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: "",
+          element: <App />,
+        },
+        {
+          path: "/contact",
+          element: <Contact />,
+        },
+        {
+          path: "/projects",
+          element: <Projects />,
+        },
+      ],
+    },
+  ],
+  { basename: import.meta.env.DEV ? "/" : "/react-portfolio/" }
+);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
