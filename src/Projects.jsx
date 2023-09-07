@@ -22,6 +22,12 @@ import csharpImg from "./assets/csharp.png";
 import wxwidgetsImg from "./assets/wxwidgets.png";
 import kqlImg from "./assets/kql.png";
 import aspnetImg from "./assets/aspnet.png";
+import chessreporterImg from "./assets/chess-reporter.png";
+import noteheroImg from "./assets/note-hero.png";
+import pathvisImg from "./assets/path-vis.png";
+import droneImg from "./assets/drone-software.png";
+import thisImg from "./assets/this.png";
+import logportalImg from "./assets/log-portal.png";
 
 const ProjectCard = ({
   children,
@@ -174,7 +180,7 @@ const Projects = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-1/2 mb-5 items-start">
           <ProjectCard
             title="3D drone relief software"
-            imgsrc="src\assets\drone-software.png"
+            imgsrc={droneImg}
             href="https://i-conicvision.com/2022/12/15/kth-selected-proposal-from-i-conic-again/"
             hrefText="Read I-CONIC blog"
             githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
@@ -197,7 +203,7 @@ const Projects = () => {
           </ProjectCard>
           <ProjectCard
             title="Log Portal"
-            imgsrc="src\assets\log-portal.png"
+            imgsrc={logportalImg}
             tags={[
               "C#",
               "KQL",
@@ -224,7 +230,7 @@ const Projects = () => {
           </ProjectCard>
           <ProjectCard
             title="Pathfinging Visualization"
-            imgsrc="src\assets\path-vis.png"
+            imgsrc={pathvisImg}
             href="https://linusdinesjo.github.io/pathfinding-vis/"
             hrefText="Try Yourself"
             githubhref={"https://github.com/linusdinesjo/pathfinding-vis"}
@@ -249,7 +255,7 @@ const Projects = () => {
           </ProjectCard>
           <ProjectCard
             title="Chess Reporter"
-            imgsrc="src\assets\chess-reporter.png"
+            imgsrc={chessreporterImg}
             href="https://twitter.com/ChessReporter/"
             hrefText="View on X (Twitter)"
             githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
@@ -269,7 +275,7 @@ const Projects = () => {
           </ProjectCard>
           <ProjectCard
             title="Note Hero"
-            imgsrc="src\assets\note-hero.png"
+            imgsrc={noteheroImg}
             tags={["Unity", "C#"]}
             icon={<FaMusic className="inline-block me-2 text-purple-500" />}
           >
