@@ -20,6 +20,7 @@ import {
 import cppImg from "./assets/c++.png";
 import csharpImg from "./assets/csharp.png";
 import wxwidgetsImg from "./assets/wxwidgets.png";
+import tailwindImg from "./assets/tailwind.png";
 import kqlImg from "./assets/kql.png";
 import aspnetImg from "./assets/aspnet.png";
 import chessreporterImg from "./assets/chess-reporter.png";
@@ -66,7 +67,7 @@ const ProjectCard = ({
     "twitter api": <FaTwitter className="inline-block me-2" />,
     unity: <FaUnity className="inline-block me-2" />,
     "tailwind css": (
-      <img src="src\assets\tailwind.png" className="inline-block me-2 w-3" />
+      <img src={tailwindImg} className="inline-block me-2 w-3" />
     ),
     "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
     "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
@@ -244,7 +245,7 @@ const Projects = () => {
           </ProjectCard>
           <ProjectCard
             title="This Website"
-            imgsrc="src\assets\this.png"
+            imgsrc={thisImg}
             githubhref="https://github.com/linusdinesjo/react-portfolio"
             tags={["React", "Tailwind CSS", "JavaScript", "HTML", "CSS"]}
             icon={<FaMapPin className="inline-block text-red-500 me-2" />}
