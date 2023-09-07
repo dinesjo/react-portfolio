@@ -96,10 +96,10 @@ const ProjectCard = ({
         src={imgsrc}
         alt={title}
         className={`w-full h-32 sm:h-48 object-cover transition-all duration-300 overflow-hidden ${
-          href && "cursor-pointer"
+          href && "xs:cursor-pointer"
         }`}
         onClick={() => {
-          if (href) window.open(href, "_blank");
+          if (href && window.innerWidth > 768) window.open(href, "_blank"); // FIXME: hack to prevent mobile
         }}
       />
 
