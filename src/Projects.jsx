@@ -1,5 +1,8 @@
 import {
   FaBootstrap,
+  FaCalendarCheck,
+  FaCalendarDay,
+  FaCalendarWeek,
   FaCertificate,
   FaChess,
   FaCode,
@@ -26,6 +29,7 @@ import aspnetImg from "./assets/aspnet.png";
 import chessreporterImg from "./assets/chess-reporter.png";
 import noteheroImg from "./assets/note-hero.png";
 import pathvisImg from "./assets/path-vis.png";
+import pathvisReactImg from "./assets/path-vis-react.png";
 import droneImg from "./assets/drone-software.png";
 import thisImg from "./assets/this.png";
 import logportalImg from "./assets/log-portal.png";
@@ -40,6 +44,7 @@ const ProjectCard = ({
   tags,
   icon,
   githubhref,
+  date,
 }) => {
   const colorMap = {
     "c++": "teal",
@@ -56,6 +61,7 @@ const ProjectCard = ({
     python: "cyan",
     "twitter api": "blue",
     unity: "lime",
+    "joy ui": "blue",
   };
 
   const iconMap = {
@@ -67,18 +73,12 @@ const ProjectCard = ({
     python: <FaPython className="inline-block me-2" />,
     "twitter api": <FaTwitter className="inline-block me-2" />,
     unity: <FaUnity className="inline-block me-2" />,
-    "tailwind css": (
-      <img src={tailwindImg} className="inline-block me-2 w-3" />
-    ),
+    "tailwind css": <img src={tailwindImg} className="inline-block me-2 w-3" />,
     "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
     "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
-    wxwidgets: (
-      <img src={wxwidgetsImg} className="inline-block me-2 w-5" />
-    ),
+    wxwidgets: <img src={wxwidgetsImg} className="inline-block me-2 w-5" />,
     kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
-    "asp.net": (
-      <img src={aspnetImg} className="inline-block me-2 w-5" />
-    ),
+    "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
   };
 
   return (
@@ -154,6 +154,13 @@ const ProjectCard = ({
             </a>
           )}
         </div>
+        {/* FOOTER with date */}
+        {date && (
+          <div className="text-gray-400 text-sm font-semibold mt-1 flex">
+            <FaCalendarDay className="inline-block me-2 text-lg" />
+            {date}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -171,7 +178,7 @@ const Projects = () => {
         </h1>
 
         {/* SUBTITLE */}
-        <h3 className="h3 mb-10 w-3/4">
+        <h3 className="h4 mb-10 w-3/4">
           Here are some of the projects I have worked on, and which{" "}
           <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full items-center inline-flex">
             <FaCode className="inline-block me-2" />
@@ -190,6 +197,7 @@ const Projects = () => {
             githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
             tags={["C++", "wxWidgets"]}
             icon={<FaUnity className="inline-block me-2 text-lime-600" />}
+            date={"January-June 2023"}
           >
             In a collaborative effort with seven other KTH students, we
             developed a user-friendly interface for an existing 3D drone
@@ -201,9 +209,12 @@ const Projects = () => {
             >
               I-CONIC
             </a>
-            . The software is used to plan and execute drone missions for
-            disaster relief operations, and their software is part of a larger
-            United Nations-funded project.
+            . The software is used to{" "}
+            <b>
+              plan and execute drone missions for disaster relief operations
+            </b>
+            , and their software is part of a larger United Nations-funded
+            project.
           </ProjectCard>
           <ProjectCard
             title="Log Portal"
@@ -218,6 +229,7 @@ const Projects = () => {
               "CSS",
             ]}
             icon={<FaServer className="inline-block me-2 text-emerald-500" />}
+            date={"June-August 2023"}
           >
             I provided{" "}
             <a
@@ -235,11 +247,12 @@ const Projects = () => {
           <ProjectCard
             title="Pathfinging Visualization"
             imgsrc={pathvisImg}
-            href="https://linusdinesjo.github.io/pathfinding-vis/"
+            href="https://dinesjo.github.io/pathfinding-vis/"
             hrefText="Try Yourself"
-            githubhref={"https://github.com/linusdinesjo/pathfinding-vis"}
+            githubhref={"https://github.com/dinesjo/pathfinding-vis"}
             tags={["JavaScript", "HTML", "CSS"]}
             icon={<FaRoad className="inline-block me-2 text-blue-500" />}
+            date={"November 2020 - Mars 2021"}
           >
             Upper secondary school graduate project (Gymnasie&shy;arbete) where
             I developed a pathfinding visualization website. The project aimed
@@ -247,11 +260,26 @@ const Projects = () => {
             characteristics in a visual form.
           </ProjectCard>
           <ProjectCard
+            title="Pathfinging Visualization (React)"
+            imgsrc={pathvisReactImg}
+            githubhref={"https://github.com/dinesjo/joy-ui-site"}
+            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+            icon={<FaReact className="inline-block me-2 text-sky-400" />}
+            date={"September 2023 - Present"}
+          >
+            <b>New and improved version</b> of the pathfinding visualization
+            website. This time using React and a new React-UI framework: Joy UI.
+            The website is still{" "}
+            <b className="text-amber-400">in development</b>, but you can check
+            out the source code on GitHub in the meantime.
+          </ProjectCard>
+          <ProjectCard
             title="This Website"
             imgsrc={thisImg}
-            githubhref="https://github.com/linusdinesjo/react-portfolio"
+            githubhref="https://github.com/dinesjo/react-portfolio"
             tags={["React", "Tailwind CSS", "JavaScript", "HTML", "CSS"]}
             icon={<FaMapPin className="inline-block text-red-500 me-2" />}
+            date={"September 2023 - Present"}
           >
             This portfolio website is my first project using React and Tailwind
             CSS. I wanted to learn these technologies and decided to make a
@@ -265,6 +293,7 @@ const Projects = () => {
             githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
             tags={["Python", "Twitter API"]}
             icon={<FaChess className="inline-block me-2 text-amber-700" />}
+            date={"May 2022"}
           >
             A Twitter bot that posts Python-generated GIFs of high-profile chess
             games. The project was part of the course{" "}
@@ -282,6 +311,7 @@ const Projects = () => {
             imgsrc={noteheroImg}
             tags={["Unity", "C#"]}
             icon={<FaMusic className="inline-block me-2 text-purple-500" />}
+            date={"January-June 2022"}
           >
             A rhythm game inspired by Guitar Hero. After interviewing music
             teachers I, along with other students, developed a game to help
