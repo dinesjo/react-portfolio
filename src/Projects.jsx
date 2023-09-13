@@ -1,5 +1,6 @@
 import {
   FaBootstrap,
+  FaCalendarAlt,
   FaCalendarCheck,
   FaCalendarDay,
   FaCalendarWeek,
@@ -29,6 +30,7 @@ import aspnetImg from "./assets/aspnet.png";
 import chessreporterImg from "./assets/chess-reporter.png";
 import noteheroImg from "./assets/note-hero.png";
 import pathvisImg from "./assets/path-vis.png";
+import deadlineTracker from "./assets/deadline-tracker.png";
 import pathvisReactImg from "./assets/path-vis-react.png";
 import droneImg from "./assets/drone-software.png";
 import thisImg from "./assets/this.png";
@@ -188,7 +190,7 @@ const Projects = () => {
         </h3>
 
         {/* Grid of cards, each one having an image, header and description */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-1/2 mb-5 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
           <ProjectCard
             title="3D drone relief software"
             imgsrc={droneImg}
@@ -260,7 +262,24 @@ const Projects = () => {
             characteristics in a visual form.
           </ProjectCard>
           <ProjectCard
-            title="Pathfinging Visualization (React)"
+            title="Deadline Tracker"
+            imgsrc={deadlineTracker}
+            githubhref={"https://github.com/dinesjo/deadline-tracker"}
+            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+            icon={
+              <FaCalendarAlt className="inline-block me-2 text-yellow-500" />
+            }
+            date={"September 2023 - Present"}
+          >
+            Personal project where I developed a website to track deadlines in
+            my courses at KTH. The website is still{" "}
+            <b className="text-amber-400">in development</b>, but you can check
+            out the source code on GitHub in the meantime. <i>In the future</i>{" "}
+            I plan to integrate the website with <b>Google API</b> for Drive and
+            Calendar connectivity.
+          </ProjectCard>
+          <ProjectCard
+            title="(React) Pathfinging Visualization"
             imgsrc={pathvisReactImg}
             githubhref={"https://github.com/dinesjo/joy-ui-site"}
             tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
