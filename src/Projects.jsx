@@ -35,6 +35,7 @@ import pathvisReactImg from "./assets/path-vis-react.png";
 import droneImg from "./assets/drone-software.png";
 import thisImg from "./assets/this.png";
 import logportalImg from "./assets/log-portal.png";
+import mui from "./assets/mui.png";
 import { TabTitle } from "./utils/GeneralFunctions";
 
 const ProjectCard = ({
@@ -81,6 +82,7 @@ const ProjectCard = ({
     wxwidgets: <img src={wxwidgetsImg} className="inline-block me-2 w-5" />,
     kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
     "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
+    "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
   };
 
   return (
@@ -192,6 +194,23 @@ const Projects = () => {
         {/* Grid of cards, each one having an image, header and description */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
           <ProjectCard
+            title="Deadline Tracker"
+            imgsrc={deadlineTracker}
+            githubhref={"https://github.com/dinesjo/deadline-tracker"}
+            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+            icon={
+              <FaCalendarAlt className="inline-block me-2 text-yellow-500" />
+            }
+            date={"September 2023 - Present"}
+          >
+            Personal project where I developed a website to track deadlines in
+            my courses at KTH. The website is still{" "}
+            <b className="text-amber-400">in development</b>, but you can check
+            out the source code on GitHub in the meantime. <i>In the future</i>{" "}
+            I plan to integrate the website with <b>Google API</b> for Drive and
+            Calendar connectivity.
+          </ProjectCard>
+          <ProjectCard
             title="3D drone relief software"
             imgsrc={droneImg}
             href="https://i-conicvision.com/2022/12/15/kth-selected-proposal-from-i-conic-again/"
@@ -260,23 +279,6 @@ const Projects = () => {
             I developed a pathfinding visualization website. The project aimed
             to study the most popular pathfinding algorithms and show their
             characteristics in a visual form.
-          </ProjectCard>
-          <ProjectCard
-            title="Deadline Tracker"
-            imgsrc={deadlineTracker}
-            githubhref={"https://github.com/dinesjo/deadline-tracker"}
-            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
-            icon={
-              <FaCalendarAlt className="inline-block me-2 text-yellow-500" />
-            }
-            date={"September 2023 - Present"}
-          >
-            Personal project where I developed a website to track deadlines in
-            my courses at KTH. The website is still{" "}
-            <b className="text-amber-400">in development</b>, but you can check
-            out the source code on GitHub in the meantime. <i>In the future</i>{" "}
-            I plan to integrate the website with <b>Google API</b> for Drive and
-            Calendar connectivity.
           </ProjectCard>
           <ProjectCard
             title="(React) Pathfinging Visualization"
