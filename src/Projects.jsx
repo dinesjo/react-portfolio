@@ -196,6 +196,8 @@ const Projects = () => {
           <ProjectCard
             title="Deadline Tracker"
             imgsrc={deadlineTracker}
+            href={"https://dinesjo.github.io/deadline-tracker/"}
+            hrefText={"Try Yourself"}
             githubhref={"https://github.com/dinesjo/deadline-tracker"}
             tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
             icon={
@@ -278,7 +280,9 @@ const Projects = () => {
             Upper secondary school graduate project (Gymnasie&shy;arbete) where
             I developed a pathfinding visualization website. The project aimed
             to study the most popular pathfinding algorithms and show their
-            characteristics in a visual form.
+            characteristics in a visual form. Please keep in mind that the{" "}
+            <b>website lacks mobile support</b>, and is meant to be used with a
+            keyboard and mouse.
           </ProjectCard>
           <ProjectCard
             title="(React) Pathfinging Visualization"

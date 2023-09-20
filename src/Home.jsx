@@ -11,7 +11,7 @@ export default function Home() {
       {/* Using tailwind CSS, write a simple portfolio website */}
       <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="h1 mb-3">
-          Hello <FaHandshake className="inline-block animate-bounce" />, I'm{" "}
+          Hello <FaHandshake className="inline-block animate-bounce" />, my name is{" "}
           <span className="text-indigo-600 font-bold">Linus</span>
         </h1>
         <h4 className="h4">
