@@ -11,9 +11,7 @@ export default function ErrorPage() {
         <FaExclamationCircle className="inline-block me-2" /> Oops!
       </h1>
       <h3 className="h3 mb-3">Sorry, an unexpected error has occurred.</h3>
-      <p>
-        Error: {error.statusText || error.message}
-      </p>
+      <p>Error: {error.statusText || error.message}</p>
     </div>
   );
 }

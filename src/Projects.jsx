@@ -1,9 +1,7 @@
 import {
   FaBootstrap,
   FaCalendarAlt,
-  FaCalendarCheck,
   FaCalendarDay,
-  FaCalendarWeek,
   FaCertificate,
   FaChess,
   FaCode,
@@ -139,6 +137,7 @@ const ProjectCard = ({
             <a
               href={href}
               target="_blank"
+              rel="noreferrer"
               className="mx-auto px-3 py-2 rounded-lg text-neutral-50 bg-indigo-500 hover:bg-indigo-600 inline-block transition-all"
             >
               <FaLink className="inline-block me-2" />
@@ -150,6 +149,7 @@ const ProjectCard = ({
             <a
               href={githubhref}
               target="_blank"
+              rel="noreferrer"
               title="View on GitHub"
               className="truncate underline lg:no-underline mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 hover:bg-gray-600 transition-all"
             >
@@ -206,11 +206,10 @@ const Projects = () => {
             date={"September 2023 - Present"}
           >
             Personal project where I developed a website to track deadlines in
-            my courses at KTH. The website is still{" "}
-            <b className="text-amber-400">in development</b>, but you can check
-            out the source code on GitHub in the meantime. <i>In the future</i>{" "}
-            I plan to integrate the website with <b>Google API</b> for Drive and
-            Calendar connectivity.
+            my courses at KTH. The website (also available as PWA) is still{" "}
+            <b className="text-amber-400">being development</b>.{" "}
+            <i>In the future</i> I plan to integrate the website with{" "}
+            <b>Google API</b> for Drive and Calendar connectivity.
           </ProjectCard>
           <ProjectCard
             title="3D drone relief software"
@@ -228,6 +227,7 @@ const Projects = () => {
             <a
               href="https://i-conicvision.com/"
               target="_blank"
+              rel="noreferrer"
               className="text-blue-400 hover:text-blue-500 hover:underline"
             >
               I-CONIC
@@ -258,6 +258,7 @@ const Projects = () => {
             <a
               href="https://www.bravida.se/en/"
               target="_blank"
+              rel="noreferrer"
               className="text-emerald-500 hover:text-emerald-600 hover:underline"
             >
               Bravida
@@ -325,6 +326,7 @@ const Projects = () => {
             <a
               href="https://www.kth.se/student/kurser/kurs/DD1349?periods=6&startterm=20221&l=en"
               target="_blank"
+              rel="noreferrer"
               className="link"
             >
               DD1349
@@ -340,12 +342,13 @@ const Projects = () => {
           >
             A rhythm game inspired by Guitar Hero. After interviewing music
             teachers I, along with other students, developed a game to help
-            gamify music theory. The game used a mobile device's microphone to
-            detect a players real-life instrument. The project was part of the
-            course{" "}
+            gamify music theory. The game used a mobile device&apos;s microphone
+            to detect a players real-life instrument. The project was part of
+            the course{" "}
             <a
               href="https://www.kth.se/student/kurser/kurs/DH1620?periods=6&startterm=20221&l=en"
               target="_blank"
+              rel="noreferrer"
               className="link"
             >
               DH1620

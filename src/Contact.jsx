@@ -11,7 +11,7 @@ const Contact = () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-  
+
   TabTitle("Contact");
 
   return (
