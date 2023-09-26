@@ -205,9 +205,9 @@ const Projects = () => {
             }
             date={"September 2023 - Present"}
           >
-            Personal project where I developed a website to track deadlines in
+            A personal project where I developed a website to track deadlines in
             my courses at KTH. The website (also available as PWA) is still{" "}
-            <b className="text-amber-400">being development</b>.{" "}
+            <b className="text-amber-400">being developed</b>.{" "}
             <i>In the future</i> I plan to integrate the website with{" "}
             <b>Google API</b> for Drive and Calendar connectivity.
           </ProjectCard>
