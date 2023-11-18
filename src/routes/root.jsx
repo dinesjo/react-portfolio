@@ -36,7 +36,7 @@ const Footer = () => {
   return (
     <div className="flex justify-center gap-10 mt-auto py-5 text-gray-300 bg-neutral-800">
       <a
-        href="https://github.com/linusdinesjo"
+        href="https://github.com/dinesjo"
         target="_blank"
         rel="noopener noreferrer"
         title="View my GitHub"
@@ -47,7 +47,7 @@ const Footer = () => {
         <FaEnvelope className="text-4xl hover:text-gray-400 transition-all" />
       </a>
       <a
-        href="http://linkedin.com/in/linus-dinesjö-6b1b3b1b0"
+        href="https://www.linkedin.com/in/dinesjo/"
         target="_blank"
         rel="noopener noreferrer"
         title="Open my LinkedIn"
