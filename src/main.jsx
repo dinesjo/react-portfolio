@@ -7,6 +7,7 @@ import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
 import Projects from "./Projects";
 import ErrorPage from "./routes/error-page";
+import Courses from "./Courses.jsx";
 
 const router = createBrowserRouter(
   [
@@ -26,6 +27,10 @@ const router = createBrowserRouter(
         {
           path: "/projects",
           element: <Projects />,
+        },
+        {
+          path: "/courses",
+          element: <Courses />,
         },
       ],
     },

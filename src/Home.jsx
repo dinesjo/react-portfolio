@@ -20,7 +20,7 @@ export default function Home() {
           </Link>
           .
           <br />
-          If you want to get in touch, check out the{" "}
+          If you want to get in touch, please check out the{" "}
           <Link className="link" to="/contact">
             contact
           </Link>{" "}

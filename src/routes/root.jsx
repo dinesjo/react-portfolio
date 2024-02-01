@@ -5,13 +5,15 @@ import {
   FaCertificate,
   FaGithub,
   FaLinkedin,
+  FaBook,
 } from "react-icons/fa";
 
 const SideBar = () => {
   return (
-    <div className="fixed top-0 left-0 w-screen shadow flex justify-center gap-5 bg-neutral-800 z-50">
+    <div className="fixed top-0 left-0 w-screen shadow flex justify-center gap-4 bg-neutral-800 z-50">
       <SideBarItem name="Home" icon={<FaHome />} to="/" />
       <SideBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
+      <SideBarItem name="Courses" icon={<FaBook />} to="/courses" />
       <SideBarItem name="Contact" icon={<FaEnvelope />} to="/contact" />
     </div>
   );
@@ -22,7 +24,7 @@ const SideBarItem = ({ name, icon, to }) => {
   return (
     <Link
       to={to}
-      className={`flex items-center p-2 text-lg font-semibold rounded-md transition-all ${
+      className={`flex items-center py-2 text-lg font-semibold rounded-md transition-all ${
         current ? "text-indigo-500" : "text-zinc-300 hover:text-indigo-500"
       }`}
     >
