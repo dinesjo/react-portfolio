@@ -10,8 +10,8 @@ export default function Home() {
       <div className="flex flex-col justify-center h-screen pt-28">
         <div className="flex justify-center relative mb-3">
           <img
-            src="/public/portrait.png"
-            alt=""
+            src="portrait.png"
+            alt="Portrait"
             className="w-60 xs:w-72 rounded-full mx-auto absolute bottom-0 -z-50"
           />
           <h1
@@ -25,8 +25,12 @@ export default function Home() {
           </h1>
         </div>
         <h4 className="h4">
-          <b className="text-indigo-500">Welcome!</b> Please check out some of
-          my{" "}
+          <b className="text-indigo-500">Welcome!</b> I&apos;m a 3rd year
+          student at <b>KTH</b> Stockholm, persuing a{" "}
+          <b>master&apos;s degree in Computer Science</b>.
+        </h4>
+        <h5 className="h5 mt-5 text-gray-400">
+          Please check out some of my{" "}
           <Link className="link" to="/projects">
             projects
           </Link>
@@ -39,10 +43,6 @@ export default function Home() {
             contact
           </Link>{" "}
           page.
-        </h4>
-        <h5 className="h5 mt-5 text-gray-400">
-          I&apos;m a <em>third year</em> student at <b>KTH</b> Stockholm.
-          Persuing a <b>master&apos;s degree in Computer Science</b>.
         </h5>
       </div>
     </>
