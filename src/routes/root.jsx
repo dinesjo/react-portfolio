@@ -10,7 +10,7 @@ import {
 
 const NavBar = () => {
   return (
-    <div className="fixed w-full flex flex-wrap justify-center gap-2 bg-neutral-800">
+    <div className="fixed w-full flex flex-wrap justify-center gap-2 bg-neutral-800 shadow z-50">
       <NavBarItem name="Home" icon={<FaHome />} to="/" />
       <NavBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
       <NavBarItem name="Courses" icon={<FaBook />} to="/courses" />
