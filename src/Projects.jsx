@@ -174,190 +174,181 @@ const Projects = () => {
   TabTitle("Projects");
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center pt-20">
-        {/* TITLE */}
-        <h1 className="h1 flex items-end mb-10">
-          <FaCertificate className="inline-block me-5" /> Projects
-        </h1>
+    <div className="flex flex-col items-center justify-center pt-28">
+      {/* TITLE */}
+      <h1 className="h1 flex items-end mb-10">
+        <FaCertificate className="inline-block me-5" /> Projects
+      </h1>
 
-        {/* SUBTITLE */}
-        <h3 className="h4 mb-10 w-3/4">
-          Here are some of the projects I have worked on, and which{" "}
-          <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full items-center inline-flex">
-            <FaCode className="inline-block me-2" />
-            technologies
-          </span>{" "}
-          were used.
-        </h3>
+      {/* SUBTITLE */}
+      <h3 className="h4 mb-10 w-3/4">
+        Here are some of the projects I have worked on, and which{" "}
+        <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-1 rounded-full items-center inline-flex">
+          <FaCode className="inline-block me-2" />
+          technologies
+        </span>{" "}
+        were used.
+      </h3>
 
-        {/* Grid of cards, each one having an image, header and description */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
-          <ProjectCard
-            title="Deadline Tracker"
-            imgsrc={deadlineTracker}
-            href={"https://dinesjo.github.io/deadline-tracker/"}
-            hrefText={"Try Yourself"}
-            githubhref={"https://github.com/dinesjo/deadline-tracker"}
-            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
-            icon={
-              <FaCalendarAlt className="inline-block me-2 text-yellow-500" />
-            }
-            date={"September 2023 - Present"}
+      {/* Grid of cards, each one having an image, header and description */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
+        <ProjectCard
+          title="Deadline Tracker"
+          imgsrc={deadlineTracker}
+          href={"https://dinesjo.github.io/deadline-tracker/"}
+          hrefText={"Try Yourself"}
+          githubhref={"https://github.com/dinesjo/deadline-tracker"}
+          tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+          icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
+          date={"September 2023 - Present"}
+        >
+          A personal project where I developed a website to track deadlines in
+          my courses at KTH. The website (also available as PWA) is still{" "}
+          <b className="text-amber-400">being developed</b>.{" "}
+          <i>In the future</i> I plan to integrate the website with{" "}
+          <b>Google API</b> for Drive and Calendar connectivity.
+        </ProjectCard>
+        <ProjectCard
+          title="3D drone relief software"
+          imgsrc={droneImg}
+          href="https://i-conicvision.com/2022/12/15/kth-selected-proposal-from-i-conic-again/"
+          hrefText="Read I-CONIC blog"
+          githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
+          tags={["C++", "wxWidgets"]}
+          icon={<FaUnity className="inline-block me-2 text-lime-600" />}
+          date={"January-June 2023"}
+        >
+          In a collaborative effort with seven other KTH students, we developed
+          a user-friendly interface for an existing 3D drone software for{" "}
+          <a
+            href="https://i-conicvision.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-400 hover:text-blue-500 hover:underline"
           >
-            A personal project where I developed a website to track deadlines in
-            my courses at KTH. The website (also available as PWA) is still{" "}
-            <b className="text-amber-400">being developed</b>.{" "}
-            <i>In the future</i> I plan to integrate the website with{" "}
-            <b>Google API</b> for Drive and Calendar connectivity.
-          </ProjectCard>
-          <ProjectCard
-            title="3D drone relief software"
-            imgsrc={droneImg}
-            href="https://i-conicvision.com/2022/12/15/kth-selected-proposal-from-i-conic-again/"
-            hrefText="Read I-CONIC blog"
-            githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
-            tags={["C++", "wxWidgets"]}
-            icon={<FaUnity className="inline-block me-2 text-lime-600" />}
-            date={"January-June 2023"}
+            I-CONIC
+          </a>
+          . The software is used to{" "}
+          <b>plan and execute drone missions for disaster relief operations</b>,
+          and their software is part of a larger United Nations-funded project.
+        </ProjectCard>
+        <ProjectCard
+          title="Log Portal"
+          imgsrc={logportalImg}
+          tags={[
+            "C#",
+            "KQL",
+            "ASP.NET",
+            "JavaScript",
+            "Bootstrap",
+            "HTML",
+            "CSS",
+          ]}
+          icon={<FaServer className="inline-block me-2 text-emerald-500" />}
+          date={"June-August 2023"}
+        >
+          I provided{" "}
+          <a
+            href="https://www.bravida.se/en/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-emerald-500 hover:text-emerald-600 hover:underline"
           >
-            In a collaborative effort with seven other KTH students, we
-            developed a user-friendly interface for an existing 3D drone
-            software for{" "}
-            <a
-              href="https://i-conicvision.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="text-blue-400 hover:text-blue-500 hover:underline"
-            >
-              I-CONIC
-            </a>
-            . The software is used to{" "}
-            <b>
-              plan and execute drone missions for disaster relief operations
-            </b>
-            , and their software is part of a larger United Nations-funded
-            project.
-          </ProjectCard>
-          <ProjectCard
-            title="Log Portal"
-            imgsrc={logportalImg}
-            tags={[
-              "C#",
-              "KQL",
-              "ASP.NET",
-              "JavaScript",
-              "Bootstrap",
-              "HTML",
-              "CSS",
-            ]}
-            icon={<FaServer className="inline-block me-2 text-emerald-500" />}
-            date={"June-August 2023"}
+            Bravida
+          </a>{" "}
+          a solution for viewing their Azure Logic App logs. On top of this I
+          provided an API solution to remotely toggle automations, offloading
+          their developers from scheduling maintence. The product is also
+          intended for the support team to keep track of orders.
+        </ProjectCard>
+        <ProjectCard
+          title="Pathfinging Visualization"
+          imgsrc={pathvisImg}
+          href="https://dinesjo.github.io/pathfinding-vis/"
+          hrefText="Try Yourself"
+          githubhref={"https://github.com/dinesjo/pathfinding-vis"}
+          tags={["JavaScript", "HTML", "CSS"]}
+          icon={<FaRoad className="inline-block me-2 text-blue-500" />}
+          date={"November 2020 - Mars 2021"}
+        >
+          Upper secondary school graduate project (Gymnasie&shy;arbete) where I
+          developed a pathfinding visualization website. The project aimed to
+          study the most popular pathfinding algorithms and show their
+          characteristics in a visual form. Please keep in mind that the{" "}
+          <b>website lacks mobile support</b>, and is meant to be used with a
+          keyboard and mouse.
+        </ProjectCard>
+        <ProjectCard
+          title="(React) Pathfinging Visualization"
+          imgsrc={pathvisReactImg}
+          githubhref={"https://github.com/dinesjo/joy-ui-site"}
+          tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+          icon={<FaReact className="inline-block me-2 text-sky-400" />}
+          date={"September 2023 - Present"}
+        >
+          <b>New and improved version</b> of the pathfinding visualization
+          website. This time using React and a new React-UI framework: Joy UI.
+          The website is still <b className="text-amber-400">in development</b>,
+          but you can check out the source code on GitHub in the meantime.
+        </ProjectCard>
+        <ProjectCard
+          title="This Website"
+          imgsrc={thisImg}
+          githubhref="https://github.com/dinesjo/react-portfolio"
+          tags={["React", "Tailwind CSS", "JavaScript", "HTML", "CSS"]}
+          icon={<FaMapPin className="inline-block text-red-500 me-2" />}
+          date={"September 2023 - Present"}
+        >
+          This portfolio website is my first project using React and Tailwind
+          CSS. I wanted to learn these technologies and decided to make a
+          portfolio website to showcase my projects.
+        </ProjectCard>
+        <ProjectCard
+          title="Chess Reporter"
+          imgsrc={chessreporterImg}
+          href="https://twitter.com/ChessReporter/"
+          hrefText="View on X (Twitter)"
+          githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
+          tags={["Python", "Twitter API"]}
+          icon={<FaChess className="inline-block me-2 text-amber-700" />}
+          date={"May 2022"}
+        >
+          A Twitter bot that posts Python-generated GIFs of high-profile chess
+          games. The project was part of the course{" "}
+          <a
+            href="https://www.kth.se/student/kurser/kurs/DD1349?periods=6&startterm=20221&l=en"
+            target="_blank"
+            rel="noreferrer"
+            className="link"
           >
-            I provided{" "}
-            <a
-              href="https://www.bravida.se/en/"
-              target="_blank"
-              rel="noreferrer"
-              className="text-emerald-500 hover:text-emerald-600 hover:underline"
-            >
-              Bravida
-            </a>{" "}
-            a solution for viewing their Azure Logic App logs. On top of this I
-            provided an API solution to remotely toggle automations, offloading
-            their developers from scheduling maintence. The product is also
-            intended for the support team to keep track of orders.
-          </ProjectCard>
-          <ProjectCard
-            title="Pathfinging Visualization"
-            imgsrc={pathvisImg}
-            href="https://dinesjo.github.io/pathfinding-vis/"
-            hrefText="Try Yourself"
-            githubhref={"https://github.com/dinesjo/pathfinding-vis"}
-            tags={["JavaScript", "HTML", "CSS"]}
-            icon={<FaRoad className="inline-block me-2 text-blue-500" />}
-            date={"November 2020 - Mars 2021"}
+            DD1349
+          </a>
+          .
+        </ProjectCard>
+        <ProjectCard
+          title="Note Hero"
+          imgsrc={noteheroImg}
+          tags={["Unity", "C#"]}
+          icon={<FaMusic className="inline-block me-2 text-purple-500" />}
+          date={"January-June 2022"}
+        >
+          A rhythm game inspired by Guitar Hero. After interviewing music
+          teachers I, along with other students, developed a game to help gamify
+          music theory. The game used a mobile device&apos;s microphone to
+          detect a players real-life instrument. The project was part of the
+          course{" "}
+          <a
+            href="https://www.kth.se/student/kurser/kurs/DH1620?periods=6&startterm=20221&l=en"
+            target="_blank"
+            rel="noreferrer"
+            className="link"
           >
-            Upper secondary school graduate project (Gymnasie&shy;arbete) where
-            I developed a pathfinding visualization website. The project aimed
-            to study the most popular pathfinding algorithms and show their
-            characteristics in a visual form. Please keep in mind that the{" "}
-            <b>website lacks mobile support</b>, and is meant to be used with a
-            keyboard and mouse.
-          </ProjectCard>
-          <ProjectCard
-            title="(React) Pathfinging Visualization"
-            imgsrc={pathvisReactImg}
-            githubhref={"https://github.com/dinesjo/joy-ui-site"}
-            tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
-            icon={<FaReact className="inline-block me-2 text-sky-400" />}
-            date={"September 2023 - Present"}
-          >
-            <b>New and improved version</b> of the pathfinding visualization
-            website. This time using React and a new React-UI framework: Joy UI.
-            The website is still{" "}
-            <b className="text-amber-400">in development</b>, but you can check
-            out the source code on GitHub in the meantime.
-          </ProjectCard>
-          <ProjectCard
-            title="This Website"
-            imgsrc={thisImg}
-            githubhref="https://github.com/dinesjo/react-portfolio"
-            tags={["React", "Tailwind CSS", "JavaScript", "HTML", "CSS"]}
-            icon={<FaMapPin className="inline-block text-red-500 me-2" />}
-            date={"September 2023 - Present"}
-          >
-            This portfolio website is my first project using React and Tailwind
-            CSS. I wanted to learn these technologies and decided to make a
-            portfolio website to showcase my projects.
-          </ProjectCard>
-          <ProjectCard
-            title="Chess Reporter"
-            imgsrc={chessreporterImg}
-            href="https://twitter.com/ChessReporter/"
-            hrefText="View on X (Twitter)"
-            githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
-            tags={["Python", "Twitter API"]}
-            icon={<FaChess className="inline-block me-2 text-amber-700" />}
-            date={"May 2022"}
-          >
-            A Twitter bot that posts Python-generated GIFs of high-profile chess
-            games. The project was part of the course{" "}
-            <a
-              href="https://www.kth.se/student/kurser/kurs/DD1349?periods=6&startterm=20221&l=en"
-              target="_blank"
-              rel="noreferrer"
-              className="link"
-            >
-              DD1349
-            </a>
-            .
-          </ProjectCard>
-          <ProjectCard
-            title="Note Hero"
-            imgsrc={noteheroImg}
-            tags={["Unity", "C#"]}
-            icon={<FaMusic className="inline-block me-2 text-purple-500" />}
-            date={"January-June 2022"}
-          >
-            A rhythm game inspired by Guitar Hero. After interviewing music
-            teachers I, along with other students, developed a game to help
-            gamify music theory. The game used a mobile device&apos;s microphone
-            to detect a players real-life instrument. The project was part of
-            the course{" "}
-            <a
-              href="https://www.kth.se/student/kurser/kurs/DH1620?periods=6&startterm=20221&l=en"
-              target="_blank"
-              rel="noreferrer"
-              className="link"
-            >
-              DH1620
-            </a>
-            .
-          </ProjectCard>
-        </div>
+            DH1620
+          </a>
+          .
+        </ProjectCard>
       </div>
-    </>
+    </div>
   );
 };
 

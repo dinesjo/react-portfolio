@@ -8,23 +8,23 @@ import {
   FaBook,
 } from "react-icons/fa";
 
-const SideBar = () => {
+const NavBar = () => {
   return (
-    <div className="fixed top-0 left-0 w-screen shadow flex justify-center gap-4 bg-neutral-800 z-50">
-      <SideBarItem name="Home" icon={<FaHome />} to="/" />
-      <SideBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
-      <SideBarItem name="Courses" icon={<FaBook />} to="/courses" />
-      <SideBarItem name="Contact" icon={<FaEnvelope />} to="/contact" />
+    <div className="fixed w-full flex flex-wrap justify-center gap-2 bg-neutral-800">
+      <NavBarItem name="Home" icon={<FaHome />} to="/" />
+      <NavBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
+      <NavBarItem name="Courses" icon={<FaBook />} to="/courses" />
+      <NavBarItem name="Contact" icon={<FaEnvelope />} to="/contact" />
     </div>
   );
 };
 
-const SideBarItem = ({ name, icon, to }) => {
+const NavBarItem = ({ name, icon, to }) => {
   let current = useLocation().pathname === to;
   return (
     <Link
       to={to}
-      className={`flex items-center py-2 text-lg font-semibold rounded-md transition-all ${
+      className={`flex items-center p-2 text-lg font-semibold rounded-md transition-all ${
         current ? "text-indigo-500" : "text-zinc-300 hover:text-indigo-500"
       }`}
     >
@@ -63,8 +63,10 @@ const Footer = () => {
 export default function Root() {
   return (
     <div className="flex flex-col h-screen">
-      <SideBar />
-      <Outlet />
+      <NavBar />
+      <div className="w-11/12 mx-auto">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );

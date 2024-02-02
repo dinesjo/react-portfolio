@@ -102,7 +102,7 @@ export default function Courses() {
   const sortedCourses = courses.sort((a, b) => a.code.localeCompare(b.code));
 
   return (
-    <div className="flex flex-col items-center justify-center w-11/12 mx-auto my-20">
+    <div className="flex flex-col items-center justify-center w-11/12 mx-auto pt-28">
       <h1 className="h1 flex items-end mb-3">
         <FaBook className="inline-block me-5" /> Courses
       </h1>
