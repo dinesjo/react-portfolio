@@ -6,12 +6,14 @@ import {
   FaChess,
   FaCode,
   FaCss3Alt,
+  FaExclamationTriangle,
   FaGithub,
   FaHtml5,
   FaJsSquare,
   FaLink,
   FaMapPin,
   FaMusic,
+  FaPencilRuler,
   FaPython,
   FaReact,
   FaRoad,
@@ -35,6 +37,7 @@ import thisImg from "./assets/this.png";
 import logportalImg from "./assets/log-portal.png";
 import mui from "./assets/mui.png";
 import { TabTitle } from "./utils/GeneralFunctions";
+import Alert from "./utils/Alert";
 
 const ProjectCard = ({
   children,
@@ -128,7 +131,7 @@ const ProjectCard = ({
         </h5>
 
         {/* DESCRIPTION */}
-        <p className="text-gray-600 dark:text-gray-400 mb-3">{children}</p>
+        <p className="text-gray-400 mb-3">{children}</p>
 
         {/* LINKS */}
         <div className="flex flex-col gap-3 sm:items-center sm:flex-row">
@@ -202,11 +205,14 @@ const Projects = () => {
           icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
           date={"September 2023 - Present"}
         >
-          A personal project where I developed a website to track deadlines in
-          my courses at KTH. The website (also available as PWA) is still{" "}
-          <b className="text-amber-400">being developed</b>.{" "}
-          <i>In the future</i> I plan to integrate the website with{" "}
-          <b>Google API</b> for Drive and Calendar connectivity.
+          A personal project where I developed a website to track deadlines for
+          my courses at KTH.{" "}
+          <Alert type="info">
+            <FaPencilRuler className="inline-block text-blue-400 me-2" />
+            The website (also available as PWA) is still <b>being developed</b>.
+            In the future I plan to integrate the website with <b>Google API</b>{" "}
+            for Drive and Calendar syncing.
+          </Alert>
         </ProjectCard>
         <ProjectCard
           title="3D drone relief software"
@@ -258,7 +264,7 @@ const Projects = () => {
           </a>{" "}
           a solution for viewing their Azure Logic App logs. On top of this I
           provided an API solution to remotely toggle automations, offloading
-          their developers from scheduling maintence. The product is also
+          their developers from scheduling maintence manually. The solution also
           intended for the support team to keep track of orders.
         </ProjectCard>
         <ProjectCard
@@ -271,12 +277,16 @@ const Projects = () => {
           icon={<FaRoad className="inline-block me-2 text-blue-500" />}
           date={"November 2020 - Mars 2021"}
         >
-          Upper secondary school graduate project (Gymnasie&shy;arbete) where I
-          developed a pathfinding visualization website. The project aimed to
-          study the most popular pathfinding algorithms and show their
-          characteristics in a visual form. Please keep in mind that the{" "}
-          <b>website lacks mobile support</b>, and is meant to be used with a
-          keyboard and mouse.
+          Upper secondary school graduate project (<em>gymnasie&shy;arbete</em>)
+          where I visualized pathfinding algorithms in a website. The project
+          aimed to study the most popular pathfinding algorithms and show their
+          characteristics in a visual form.
+          <br />
+          <Alert type="warning">
+            <FaExclamationTriangle className="inline-block text-amber-400 me-2" />{" "}
+            Please keep in mind that the <b>website lacks mobile support</b>,
+            and is meant to be used with a keyboard and mouse.
+          </Alert>
         </ProjectCard>
         <ProjectCard
           title="(React) Pathfinging Visualization"
@@ -288,8 +298,11 @@ const Projects = () => {
         >
           <b>New and improved version</b> of the pathfinding visualization
           website. This time using React and a new React-UI framework: Joy UI.
-          The website is still <b className="text-amber-400">in development</b>,
-          but you can check out the source code on GitHub in the meantime.
+          <Alert type="info">
+            <FaPencilRuler className="inline-block text-blue-400 me-2" /> The
+            website is still <b>in development</b>, but you can check out the
+            source code on GitHub in the meantime.
+          </Alert>
         </ProjectCard>
         <ProjectCard
           title="This Website"
