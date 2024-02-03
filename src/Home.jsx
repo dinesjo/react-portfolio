@@ -6,8 +6,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Using tailwind CSS, write a simple portfolio website */}
-      <div className="flex flex-col justify-center h-screen pt-28">
+      <div className="flex flex-col justify-center pt-56 md:w-1/2">
         <div className="flex justify-center relative mb-3">
           <img
             src="portrait.png"

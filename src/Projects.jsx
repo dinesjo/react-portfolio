@@ -177,7 +177,7 @@ const Projects = () => {
   TabTitle("Projects");
 
   return (
-    <div className="flex flex-col items-center justify-center pt-28">
+    <div className="flex flex-col items-center justify-center">
       {/* TITLE */}
       <h1 className="h1 flex items-end mb-10">
         <FaCertificate className="inline-block me-5" /> Projects

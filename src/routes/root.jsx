@@ -64,7 +64,7 @@ export default function Root() {
   return (
     <div className="flex flex-col h-screen">
       <NavBar />
-      <div className="w-11/12 mx-auto">
+      <div className="w-11/12 mx-auto flex flex-col items-center justify-center pt-28">
         <Outlet />
       </div>
       <Footer />
