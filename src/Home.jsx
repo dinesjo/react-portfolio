@@ -13,20 +13,16 @@ export default function Home() {
             alt="Portrait"
             className="w-60 xs:w-72 rounded-full mx-auto absolute bottom-0 -z-50"
           />
-          <h1
-            className="h1 text-indigo-500 font-serif underline underline-offset-4"
-            style={{
-              // text shadow
-              textShadow: "2px 2px 4px #000000",
-            }}
-          >
+          <h1 className="h1 text-indigo-500 font-poppins" style={{ textShadow: "2px 2px 4px #000000" }}>
             Linus Dinesjö
           </h1>
         </div>
         <h4 className="h4">
-          <b className="text-indigo-500">Welcome!</b> I&apos;m a 3rd year
-          student at <b>KTH</b> Stockholm, persuing a{" "}
-          <b>master&apos;s degree in Computer Science</b>.
+          <b className="text-indigo-500">Welcome!</b> I&apos;m a 3rd year student at{" "}
+          <span className="text-indigo-500">
+            <b>KTH</b> Stockholm
+          </span>
+          , persuing a <b>master&apos;s degree in Computer Science</b>.
         </h4>
         <h5 className="h5 mt-5 text-gray-400">
           Please check out some of my{" "}
