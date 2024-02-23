@@ -68,11 +68,13 @@ export default function Courses() {
       code: "DD1388",
       name: "Program System Construction Using C++",
       year: 3,
+      optional: true,
     },
     {
       code: "DH2642",
       name: "Interaction Programming and the Dynamic Web",
       year: 3,
+      optional: true,
     },
   ];
 
@@ -107,7 +109,7 @@ export default function Courses() {
         <FaBook className="inline-block me-5" /> Courses
       </h1>
       <h4 className="h4">Here are most of the courses I have taken at KTH.</h4>
-      <h5 className="h5 italic mt-1 text-gray-400">As of 2024-02-01</h5>
+      <h5 className="h5 italic mt-1 text-gray-400">As of February 2024</h5>
 
       <div>
         {/* Loop year 1-3 */}
@@ -130,12 +132,10 @@ export default function Courses() {
                   return course.year === year;
                 })
                 .map((course) => (
-                  <li
-                    key={course.code}
-                    style={{ paddingLeft: "4rem", textIndent: "-4rem" }}
-                  >
-                    <samp className={`${course.color}`}>{course.code}</samp>{" "}
+                  <li key={course.code} style={{ paddingLeft: "4rem", textIndent: "-4rem" }}>
+                    <samp className={`${course.color}`}>{course.code}</samp>
                     <span className="ml-2">{course.name}</span>
+                    <span className="text-gray-400 italic text-sm ml-2">{course.optional && "(optional course)"}</span>
                   </li>
                 ))}
             </ul>
