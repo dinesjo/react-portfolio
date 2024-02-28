@@ -133,9 +133,8 @@ export default function Courses() {
                 })
                 .map((course) => (
                   <li key={course.code} style={{ paddingLeft: "4rem", textIndent: "-4rem" }}>
-                    <samp className={`${course.color}`}>{course.code}</samp>
-                    <span className="ml-2">{course.name}</span>
-                    <span className="text-gray-400 italic text-sm ml-2">{course.optional && "(optional course)"}</span>
+                    <samp className={`${course.color}`}>{course.code}</samp> <span className="ml-1">{course.name}</span>
+                    <span className="text-gray-400 italic text-sm ml-1">{course.optional && " (optional course)"}</span>
                   </li>
                 ))}
             </ul>
