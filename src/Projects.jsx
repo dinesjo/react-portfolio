@@ -6,6 +6,7 @@ import {
   FaChess,
   FaCode,
   FaCss3Alt,
+  FaDumbbell,
   FaExclamationTriangle,
   FaGithub,
   FaHtml5,
@@ -33,23 +34,16 @@ import pathvisImg from "./assets/path-vis.png";
 import deadlineTracker from "./assets/deadline-tracker.png";
 import pathvisReactImg from "./assets/path-vis-react.png";
 import droneImg from "./assets/drone-software.png";
+import fittrackrImg from "./assets/fittrackr.png";
+import firebaseImg from "./assets/firebase.png";
+import typescriptImg from "./assets/typescript.png";
+import mui from "./assets/mui.png";
 import thisImg from "./assets/this.png";
 import logportalImg from "./assets/log-portal.png";
-import mui from "./assets/mui.png";
 import { TabTitle } from "./utils/GeneralFunctions";
 import Alert from "./utils/Alert";
 
-const ProjectCard = ({
-  children,
-  title,
-  imgsrc,
-  hrefText,
-  href,
-  tags,
-  icon,
-  githubhref,
-  date,
-}) => {
+const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, githubhref, date }) => {
   const colorMap = {
     "c++": "teal",
     wxwidgets: "lime",
@@ -66,6 +60,9 @@ const ProjectCard = ({
     "twitter api": "blue",
     unity: "lime",
     "joy ui": "blue",
+    "material-ui": "blue",
+    firebase: "yellow",
+    typescript: "sky",
   };
 
   const iconMap = {
@@ -84,6 +81,9 @@ const ProjectCard = ({
     kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
     "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
     "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
+    "material-ui": <img src={mui} className="inline-block me-2 w-5" />,
+    firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
+    typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
   };
 
   return (
@@ -156,8 +156,7 @@ const ProjectCard = ({
               title="View on GitHub"
               className="truncate underline lg:no-underline mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 hover:bg-gray-600 transition-all"
             >
-              <FaGithub className="inline-block text-4xl" />{" "}
-              {githubhref.split("/").pop()}
+              <FaGithub className="inline-block text-4xl" /> {githubhref.split("/").pop()}
             </a>
           )}
         </div>
@@ -205,14 +204,24 @@ const Projects = () => {
           icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
           date={"September 2023 - Present"}
         >
-          A personal project where I developed a website to track deadlines for
-          my courses at KTH.{" "}
+          A personal project where I developed a website to track deadlines for my courses at KTH.{" "}
           <Alert type="info">
             <FaPencilRuler className="inline-block text-blue-400 me-2" />
-            The website (also available as PWA) is still <b>being developed</b>.
-            In the future I plan to integrate the website with <b>Google API</b>{" "}
-            for Drive and Calendar syncing.
+            The website (also available as PWA) is still <b>being developed</b>. In the future I plan to integrate the
+            website with <b>Google API</b> for Drive and Calendar syncing.
           </Alert>
+        </ProjectCard>
+        <ProjectCard
+          title="FitTrackr"
+          imgsrc={fittrackrImg}
+          githubhref={"https://github.com/DH2642-project/FitTrackr"}
+          tags={["React", "Firebase", "Material-UI", "TypeScript", "HTML", "CSS"]}
+          icon={<FaDumbbell className="inline-block me-2 text-amber-600" />}
+          date={"March 2024 - Present"}
+        >
+          A KTH course project with three other students where we develop a fitness tracking application using modern
+          web devlopment principles. The user should be able to track their workouts and progress over time, as well as
+          meals.
         </ProjectCard>
         <ProjectCard
           title="3D drone relief software"
@@ -224,8 +233,8 @@ const Projects = () => {
           icon={<FaUnity className="inline-block me-2 text-lime-600" />}
           date={"January-June 2023"}
         >
-          In a collaborative effort with seven other KTH students, we developed
-          a user-friendly interface for an existing 3D drone software for{" "}
+          In a collaborative effort with seven other KTH students, we developed a user-friendly interface for an
+          existing 3D drone software for{" "}
           <a
             href="https://i-conicvision.com/"
             target="_blank"
@@ -234,22 +243,13 @@ const Projects = () => {
           >
             I-CONIC
           </a>
-          . The software is used to{" "}
-          <b>plan and execute drone missions for disaster relief operations</b>,
-          and their software is part of a larger United Nations-funded project.
+          . The software is used to <b>plan and execute drone missions for disaster relief operations</b>, and their
+          software is part of a larger United Nations-funded project.
         </ProjectCard>
         <ProjectCard
           title="Log Portal"
           imgsrc={logportalImg}
-          tags={[
-            "C#",
-            "KQL",
-            "ASP.NET",
-            "JavaScript",
-            "Bootstrap",
-            "HTML",
-            "CSS",
-          ]}
+          tags={["C#", "KQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
           icon={<FaServer className="inline-block me-2 text-emerald-500" />}
           date={"June-August 2023"}
         >
@@ -262,10 +262,9 @@ const Projects = () => {
           >
             Bravida
           </a>{" "}
-          a solution for viewing their Azure Logic App logs. On top of this I
-          provided an API solution to remotely toggle automations, offloading
-          their developers from scheduling maintence manually. The solution also
-          intended for the support team to keep track of orders.
+          a solution for viewing their Azure Logic App logs. On top of this I provided an API solution to remotely
+          toggle automations, offloading their developers from scheduling maintence manually. The solution also intended
+          for the support team to keep track of orders.
         </ProjectCard>
         <ProjectCard
           title="Pathfinging Visualization"
@@ -277,15 +276,13 @@ const Projects = () => {
           icon={<FaRoad className="inline-block me-2 text-blue-500" />}
           date={"November 2020 - Mars 2021"}
         >
-          Upper secondary school graduate project (<em>gymnasie&shy;arbete</em>)
-          where I visualized pathfinding algorithms in a website. The project
-          aimed to study the most popular pathfinding algorithms and show their
+          Upper secondary school graduate project (<em>gymnasie&shy;arbete</em>) where I visualized pathfinding
+          algorithms in a website. The project aimed to study the most popular pathfinding algorithms and show their
           characteristics in a visual form.
           <br />
           <Alert type="warning">
-            <FaExclamationTriangle className="inline-block text-amber-400 me-2" />{" "}
-            Please keep in mind that the <b>website lacks mobile support</b>,
-            and is meant to be used with a keyboard and mouse.
+            <FaExclamationTriangle className="inline-block text-amber-400 me-2" /> Please keep in mind that the{" "}
+            <b>website lacks mobile support</b>, and is meant to be used with a keyboard and mouse.
           </Alert>
         </ProjectCard>
         <ProjectCard
@@ -296,12 +293,11 @@ const Projects = () => {
           icon={<FaReact className="inline-block me-2 text-sky-400" />}
           date={"September 2023 - Present"}
         >
-          <b>New and improved version</b> of the pathfinding visualization
-          website. This time using React and a new React-UI framework: Joy UI.
+          <b>New and improved version</b> of the pathfinding visualization website. This time using React and a new
+          React-UI framework: Joy UI.
           <Alert type="info">
-            <FaPencilRuler className="inline-block text-blue-400 me-2" /> The
-            website is still <b>in development</b>, but you can check out the
-            source code on GitHub in the meantime.
+            <FaPencilRuler className="inline-block text-blue-400 me-2" /> The website is still <b>in development</b>,
+            but you can check out the source code on GitHub in the meantime.
           </Alert>
         </ProjectCard>
         <ProjectCard
@@ -312,9 +308,8 @@ const Projects = () => {
           icon={<FaMapPin className="inline-block text-red-500 me-2" />}
           date={"September 2023 - Present"}
         >
-          This portfolio website is my first project using React and Tailwind
-          CSS. I wanted to learn these technologies and decided to make a
-          portfolio website to showcase my projects.
+          This portfolio website is my first project using React and Tailwind CSS. I wanted to learn these technologies
+          and decided to make a portfolio website to showcase my projects.
         </ProjectCard>
         <ProjectCard
           title="Chess Reporter"
@@ -326,8 +321,7 @@ const Projects = () => {
           icon={<FaChess className="inline-block me-2 text-amber-700" />}
           date={"May 2022"}
         >
-          A Twitter bot that posts Python-generated GIFs of high-profile chess
-          games. The project was part of the course{" "}
+          A Twitter bot that posts Python-generated GIFs of high-profile chess games. The project was part of the course{" "}
           <a
             href="https://www.kth.se/student/kurser/kurs/DD1349?periods=6&startterm=20221&l=en"
             target="_blank"
@@ -345,11 +339,9 @@ const Projects = () => {
           icon={<FaMusic className="inline-block me-2 text-purple-500" />}
           date={"January-June 2022"}
         >
-          A rhythm game inspired by Guitar Hero. After interviewing music
-          teachers I, along with other students, developed a game to help gamify
-          music theory. The game used a mobile device&apos;s microphone to
-          detect a players real-life instrument. The project was part of the
-          course{" "}
+          A rhythm game inspired by Guitar Hero. After interviewing music teachers I, along with other students,
+          developed a game to help gamify music theory. The game used a mobile device&apos;s microphone to detect a
+          players real-life instrument. The project was part of the course{" "}
           <a
             href="https://www.kth.se/student/kurser/kurs/DH1620?periods=6&startterm=20221&l=en"
             target="_blank"
