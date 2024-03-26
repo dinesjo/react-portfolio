@@ -215,6 +215,8 @@ const Projects = () => {
           title="FitTrackr"
           imgsrc={fittrackrImg}
           githubhref={"https://github.com/DH2642-project/FitTrackr"}
+          href={"https://dh2642-project-7eb8e.web.app/"}
+          hrefText={"Try Yourself"}
           tags={["React", "Firebase", "Material-UI", "TypeScript", "HTML", "CSS"]}
           icon={<FaDumbbell className="inline-block me-2 text-amber-600" />}
           date={"March 2024 - Present"}
