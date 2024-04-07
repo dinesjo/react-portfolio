@@ -16,9 +16,5 @@ export default function Alert(props) {
     default:
       borderClassName = "border-l-amber-400";
   }
-  return (
-    <div className={`${borderClassName} border-l-4 my-2 pl-4`}>
-      {props.children}
-    </div>
-  );
+  return <div className={`${borderClassName} border-l-4 my-2 pl-4`}>{props.children}</div>;
 }

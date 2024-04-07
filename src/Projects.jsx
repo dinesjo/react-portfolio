@@ -19,6 +19,7 @@ import {
   FaReact,
   FaRoad,
   FaServer,
+  FaTree,
   FaTwitter,
   FaUnity,
 } from "react-icons/fa";
@@ -32,6 +33,7 @@ import chessreporterImg from "./assets/chess-reporter.png";
 import noteheroImg from "./assets/note-hero.png";
 import pathvisImg from "./assets/path-vis.png";
 import deadlineTracker from "./assets/deadline-tracker.png";
+import habitGrower from "./assets/habit-grower.png";
 import pathvisReactImg from "./assets/path-vis-react.png";
 import droneImg from "./assets/drone-software.png";
 import fittrackrImg from "./assets/fittrackr.png";
@@ -60,7 +62,7 @@ const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, gith
     "twitter api": "blue",
     unity: "lime",
     "joy ui": "blue",
-    "material-ui": "blue",
+    "material ui": "blue",
     firebase: "yellow",
     typescript: "sky",
   };
@@ -81,7 +83,7 @@ const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, gith
     kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
     "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
     "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
-    "material-ui": <img src={mui} className="inline-block me-2 w-5" />,
+    "material ui": <img src={mui} className="inline-block me-2 w-5" />,
     firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
     typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
   };
@@ -125,7 +127,7 @@ const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, gith
         </div>
 
         {/* TITLE */}
-        <h5 className="text-xl font-semibold mb-2">
+        <h5 className="text-xl font-semibold mb-2 flex items-center">
           {icon}
           {title}
         </h5>
@@ -189,7 +191,7 @@ const Projects = () => {
           <FaCode className="inline-block me-2" />
           technologies
         </span>{" "}
-        were used.
+        were involved.
       </h3>
 
       {/* Grid of cards, each one having an image, header and description */}
@@ -202,14 +204,36 @@ const Projects = () => {
           githubhref={"https://github.com/dinesjo/deadline-tracker"}
           tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
           icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
-          date={"September 2023 - Present"}
+          date={"September 2023 - October 2023"}
         >
           A personal project where I developed a website to track deadlines for my courses at KTH.{" "}
           <Alert type="info">
             <FaPencilRuler className="inline-block text-blue-400 me-2" />
-            The website (also available as PWA) is still <b>being developed</b>. In the future I plan to integrate the
-            website with <b>Google API</b> for Drive and Calendar syncing.
+            The website is still <b>being developed</b>. In the future I plan to integrate the website with{" "}
+            <b>Google API</b> for Drive and Calendar syncing.
           </Alert>
+        </ProjectCard>
+        <ProjectCard
+          title={
+            <div className="flex gap-2">
+              HabitGrower{" "}
+              <span
+                className={`text-sm text-black bg-lime-400 px-2 py-1 rounded-full whitespace-nowrap items-center flex font-semibold`}
+              >
+                New
+              </span>
+            </div>
+          }
+          imgsrc={habitGrower}
+          href={"https://habitgrower.web.app/"}
+          hrefText={"Try Yourself"}
+          githubhref={"https://github.com/dinesjo/habitgrower"}
+          tags={["React", "Material UI", "Firebase", "TypeScript"]}
+          icon={<FaTree className="inline-block me-2 text-lime-400" />}
+          date={"April 2024 - Present"}
+        >
+          A personal life-organizer website used to growing new or existing habits. Uses firebase for authentication and
+          storage.
         </ProjectCard>
         <ProjectCard
           title="FitTrackr"
@@ -217,7 +241,7 @@ const Projects = () => {
           githubhref={"https://github.com/DH2642-project/FitTrackr"}
           href={"https://dh2642-project-7eb8e.web.app/"}
           hrefText={"Try Yourself"}
-          tags={["React", "Firebase", "Material-UI", "TypeScript", "HTML", "CSS"]}
+          tags={["React", "Firebase", "Material UI", "TypeScript", "HTML", "CSS"]}
           icon={<FaDumbbell className="inline-block me-2 text-amber-600" />}
           date={"March 2024 - Present"}
         >
@@ -293,7 +317,7 @@ const Projects = () => {
           githubhref={"https://github.com/dinesjo/joy-ui-site"}
           tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
           icon={<FaReact className="inline-block me-2 text-sky-400" />}
-          date={"September 2023 - Present"}
+          date={"September 2023"}
         >
           <b>New and improved version</b> of the pathfinding visualization website. This time using React and a new
           React-UI framework: Joy UI.
