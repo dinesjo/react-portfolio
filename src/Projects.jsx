@@ -14,7 +14,6 @@ import {
   FaLink,
   FaMapPin,
   FaMusic,
-  FaPencilRuler,
   FaPython,
   FaReact,
   FaRoad,
@@ -222,7 +221,7 @@ export default function Projects() {
           imgsrc={habitGrower}
           href={"https://habitgrower.web.app/"}
           hrefText={"Try Yourself"}
-          githubhref={"https://github.com/dinesjo/habitgrower"}
+          githubhref={"https://github.com/dinesjo/HabitGrower"}
           tags={["React", "Material UI", "Firebase", "TypeScript"]}
           icon={<FaTree className="inline-block me-2 text-lime-400" />}
           date={"April 2024 - Present"}
@@ -307,21 +306,6 @@ export default function Projects() {
           </Alert>
         </ProjectCard>
         <ProjectCard
-          title="(React) Pathfinging Visualization"
-          imgsrc={pathvisReactImg}
-          githubhref={"https://github.com/dinesjo/joy-ui-site"}
-          tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
-          icon={<FaReact className="inline-block me-2 text-sky-400" />}
-          date={"September 2023"}
-        >
-          <b>New and improved version</b> of the pathfinding visualization website. This time using React and a new
-          React-UI framework: Joy UI.
-          <Alert type="info">
-            <FaPencilRuler className="inline-block text-blue-400 me-2" /> The website is still <b>in development</b>,
-            but you can check out the source code on GitHub in the meantime.
-          </Alert>
-        </ProjectCard>
-        <ProjectCard
           title="This Website"
           imgsrc={thisImg}
           githubhref="https://github.com/dinesjo/react-portfolio"
@@ -372,6 +356,21 @@ export default function Projects() {
             DH1620
           </a>
           .
+        </ProjectCard>
+        <ProjectCard
+          title="(React) Pathfinging Visualization"
+          imgsrc={pathvisReactImg}
+          githubhref={"https://github.com/dinesjo/joy-ui-site"}
+          tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
+          icon={<FaReact className="inline-block me-2 text-sky-400" />}
+          date={"September 2023"}
+        >
+          <b>New and improved version</b> of the pathfinding visualization website. This time using React and a new
+          React-UI framework: Joy UI.
+          <Alert type="warning">
+            <FaExclamationTriangle className="inline-block text-amber-400 me-2" /> This project is unfinished and will
+            probably be abandoned.
+          </Alert>
         </ProjectCard>
       </div>
     </div>
