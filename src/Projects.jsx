@@ -252,7 +252,7 @@ export default function Projects() {
           githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
           tags={["C++", "wxWidgets"]}
           icon={<FaUnity className="inline-block me-2 text-lime-600" />}
-          date={"January-June 2023"}
+          date={"January - June 2023"}
         >
           In a collaborative effort with seven other KTH students, we developed a user-friendly interface for an
           existing 3D drone software for{" "}
@@ -272,7 +272,7 @@ export default function Projects() {
           imgsrc={logportalImg}
           tags={["C#", "KQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
           icon={<FaServer className="inline-block me-2 text-emerald-500" />}
-          date={"June-August 2023"}
+          date={"June - August 2023"}
         >
           I provided{" "}
           <a
@@ -358,7 +358,7 @@ export default function Projects() {
           imgsrc={noteheroImg}
           tags={["Unity", "C#"]}
           icon={<FaMusic className="inline-block me-2 text-purple-500" />}
-          date={"January-June 2022"}
+          date={"January - June 2022"}
         >
           A rhythm game inspired by Guitar Hero. After interviewing music teachers I, along with other students,
           developed a game to help gamify music theory. The game used a mobile device&apos;s microphone to detect a
