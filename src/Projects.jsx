@@ -45,49 +45,49 @@ import logportalImg from "./assets/log-portal.png";
 import { TabTitle } from "./utils/GeneralFunctions";
 import Alert from "./utils/Alert";
 
-const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, githubhref, date }) => {
-  const colorMap = {
-    "c++": "teal",
-    wxwidgets: "lime",
-    "c#": "green",
-    javascript: "indigo",
-    kql: "sky",
-    "asp.net": "purple",
-    html: "blue",
-    css: "pink",
-    react: "cyan",
-    "tailwind css": "emerald",
-    bootstrap: "purple",
-    python: "cyan",
-    "twitter api": "blue",
-    unity: "lime",
-    "joy ui": "blue",
-    "material ui": "blue",
-    firebase: "yellow",
-    typescript: "sky",
-  };
+const colorMap = {
+  "c++": "teal",
+  wxwidgets: "lime",
+  "c#": "green",
+  javascript: "indigo",
+  kql: "sky",
+  "asp.net": "purple",
+  html: "blue",
+  css: "pink",
+  react: "cyan",
+  "tailwind css": "emerald",
+  bootstrap: "purple",
+  python: "cyan",
+  "twitter api": "blue",
+  unity: "lime",
+  "joy ui": "blue",
+  "material ui": "blue",
+  firebase: "yellow",
+  typescript: "sky",
+};
 
-  const iconMap = {
-    javascript: <FaJsSquare className="inline-block me-2" />,
-    html: <FaHtml5 className="inline-block me-2" />,
-    css: <FaCss3Alt className="inline-block me-2" />,
-    react: <FaReact className="inline-block me-2" />,
-    bootstrap: <FaBootstrap className="inline-block me-2" />,
-    python: <FaPython className="inline-block me-2" />,
-    "twitter api": <FaTwitter className="inline-block me-2" />,
-    unity: <FaUnity className="inline-block me-2" />,
-    "tailwind css": <img src={tailwindImg} className="inline-block me-2 w-3" />,
-    "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
-    "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
-    wxwidgets: <img src={wxwidgetsImg} className="inline-block me-2 w-5" />,
-    kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
-    "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
-    "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
-    "material ui": <img src={mui} className="inline-block me-2 w-5" />,
-    firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
-    typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
-  };
+const iconMap = {
+  javascript: <FaJsSquare className="inline-block me-2" />,
+  html: <FaHtml5 className="inline-block me-2" />,
+  css: <FaCss3Alt className="inline-block me-2" />,
+  react: <FaReact className="inline-block me-2" />,
+  bootstrap: <FaBootstrap className="inline-block me-2" />,
+  python: <FaPython className="inline-block me-2" />,
+  "twitter api": <FaTwitter className="inline-block me-2" />,
+  unity: <FaUnity className="inline-block me-2" />,
+  "tailwind css": <img src={tailwindImg} className="inline-block me-2 w-3" />,
+  "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
+  "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
+  wxwidgets: <img src={wxwidgetsImg} className="inline-block me-2 w-5" />,
+  kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
+  "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
+  "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
+  "material ui": <img src={mui} className="inline-block me-2 w-5" />,
+  firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
+  typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
+};
 
+function ProjectCard({ children, title, imgsrc, hrefText, href, tags, icon, githubhref, date }) {
   return (
     <div
       className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
@@ -172,9 +172,9 @@ const ProjectCard = ({ children, title, imgsrc, hrefText, href, tags, icon, gith
       </div>
     </div>
   );
-};
+}
 
-const Projects = () => {
+export default function Projects() {
   TabTitle("Projects");
 
   return (
@@ -206,12 +206,7 @@ const Projects = () => {
           icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
           date={"September 2023 - October 2023"}
         >
-          A personal project where I developed a website to track deadlines for my courses at KTH.{" "}
-          <Alert type="info">
-            <FaPencilRuler className="inline-block text-blue-400 me-2" />
-            The website is still <b>being developed</b>. In the future I plan to integrate the website with{" "}
-            <b>Google API</b> for Drive and Calendar syncing.
-          </Alert>
+          A personal project where I developed a website to track deadlines for my courses at KTH.
         </ProjectCard>
         <ProjectCard
           title={
@@ -233,7 +228,7 @@ const Projects = () => {
           date={"April 2024 - Present"}
         >
           A personal life-organizer website used to growing new or existing habits. Uses firebase for authentication and
-          storage.
+          storage. It is developed <b>mobile-first</b>, and is available as a PWA to be downloaded to your device.
         </ProjectCard>
         <ProjectCard
           title="FitTrackr"
@@ -381,6 +376,4 @@ const Projects = () => {
       </div>
     </div>
   );
-};
-
-export default Projects;
+}
