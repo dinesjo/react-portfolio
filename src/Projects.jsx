@@ -26,7 +26,7 @@ import cppImg from "./assets/c++.png";
 import csharpImg from "./assets/csharp.png";
 import wxwidgetsImg from "./assets/wxwidgets.png";
 import tailwindImg from "./assets/tailwind.png";
-import kqlImg from "./assets/kql.png";
+import sqlImg from "./assets/sql.png";
 import aspnetImg from "./assets/aspnet.png";
 import chessreporterImg from "./assets/chess-reporter.png";
 import noteheroImg from "./assets/note-hero.png";
@@ -49,7 +49,7 @@ const colorMap = {
   wxwidgets: "lime",
   "c#": "green",
   javascript: "indigo",
-  kql: "sky",
+  sql: "sky",
   "asp.net": "purple",
   html: "blue",
   css: "pink",
@@ -78,7 +78,7 @@ const iconMap = {
   "c++": <img src={cppImg} className="inline-block me-2 w-5" />,
   "c#": <img src={csharpImg} className="inline-block me-2 w-5" />,
   wxwidgets: <img src={wxwidgetsImg} className="inline-block me-2 w-5" />,
-  kql: <img src={kqlImg} className="inline-block me-2 w-5" />,
+  sql: <img src={sqlImg} className="inline-block me-2 w-5" />,
   "asp.net": <img src={aspnetImg} className="inline-block me-2 w-5" />,
   "joy ui": <img src={mui} className="inline-block me-2 w-5" />,
   "material ui": <img src={mui} className="inline-block me-2 w-5" />,
@@ -105,7 +105,7 @@ function ProjectCard({ children, title, imgsrc, hrefText, href, tags, icon, gith
           href && "xs:cursor-pointer"
         }`}
         onClick={() => {
-          if (href && window.innerWidth > 768) window.open(href, "_blank"); // FIXME: hack to prevent mobile
+          if (href && window.innerWidth > 768) window.open(href, "_blank"); // hack to prevent mobile click
         }}
       />
 
@@ -267,11 +267,11 @@ export default function Projects() {
           software is part of a larger United Nations-funded project.
         </ProjectCard>
         <ProjectCard
-          title="Log Portal"
+          title="LogPortal"
           imgsrc={logportalImg}
-          tags={["C#", "KQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
+          tags={["C#", "SQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
           icon={<FaServer className="inline-block me-2 text-emerald-500" />}
-          date={"June - August 2023"}
+          date={"June 2023 - August 2024"}
         >
           I provided{" "}
           <a
@@ -282,9 +282,19 @@ export default function Projects() {
           >
             Bravida
           </a>{" "}
-          a solution for viewing their Azure Logic App logs. On top of this I provided an API solution to remotely
-          toggle automations, offloading their developers from scheduling maintence manually. The solution also intended
-          for the support team to keep track of orders.
+          a robust, secure web appplication with 3 uses:
+          <ul className="list-disc list-inside">
+            <li>
+              <strong>Viewing Azure logs</strong>, previously hidden behind inaccessible KQL queries.
+            </li>
+            <li>
+              <strong>Remotely toggling automations</strong>, offloading developers from performing maintenance manually
+              on each app.
+            </li>
+            <li>
+              Help support team <strong>track orders</strong>.
+            </li>
+          </ul>
         </ProjectCard>
         <ProjectCard
           title="Pathfinging Visualization"
