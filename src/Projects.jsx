@@ -12,6 +12,7 @@ import {
   FaHtml5,
   FaJsSquare,
   FaLink,
+  FaLock,
   FaMapPin,
   FaMusic,
   FaPython,
@@ -40,7 +41,7 @@ import firebaseImg from "./assets/firebase.png";
 import typescriptImg from "./assets/typescript.png";
 import mui from "./assets/mui.png";
 import thisImg from "./assets/this.png";
-import logportalImg from "./assets/log-portal.png";
+import logportalImg from "./assets/logportal.jpg";
 import { TabTitle } from "./utils/GeneralFunctions";
 import Alert from "./utils/Alert";
 
@@ -86,7 +87,7 @@ const iconMap = {
   typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
 };
 
-function ProjectCard({ children, title, imgsrc, hrefText, href, tags, icon, githubhref, date }) {
+function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
   return (
     <div
       className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
@@ -99,9 +100,9 @@ function ProjectCard({ children, title, imgsrc, hrefText, href, tags, icon, gith
     >
       {/* IMAGE */}
       <img
-        src={imgsrc}
+        src={imgsrcs}
         alt={title}
-        className={`w-full h-32 sm:h-48 object-cover transition-all duration-300 overflow-hidden ${
+        className={`w-full h-40 sm:h-60 object-cover transition-all duration-300 overflow-hidden ${
           href && "xs:cursor-pointer"
         }`}
         onClick={() => {
@@ -197,7 +198,7 @@ export default function Projects() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
         <ProjectCard
           title="Deadline Tracker"
-          imgsrc={deadlineTracker}
+          imgsrcs={deadlineTracker}
           href={"https://dinesjo.github.io/deadline-tracker/"}
           hrefText={"Try Yourself"}
           githubhref={"https://github.com/dinesjo/deadline-tracker"}
@@ -218,7 +219,7 @@ export default function Projects() {
               </span>
             </div>
           }
-          imgsrc={habitGrower}
+          imgsrcs={habitGrower}
           href={"https://habitgrower.web.app/"}
           hrefText={"Try Yourself"}
           githubhref={"https://github.com/dinesjo/HabitGrower"}
@@ -231,7 +232,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="FitTrackr"
-          imgsrc={fittrackrImg}
+          imgsrcs={fittrackrImg}
           githubhref={"https://github.com/DH2642-project/FitTrackr"}
           href={"https://dh2642-project-7eb8e.web.app/"}
           hrefText={"Try Yourself"}
@@ -245,7 +246,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="3D drone relief software"
-          imgsrc={droneImg}
+          imgsrcs={droneImg}
           href="https://i-conicvision.com/2022/12/15/kth-selected-proposal-from-i-conic-again/"
           hrefText="Read I-CONIC blog"
           githubhref={"https://github.com/I-CONIC-Vision-AB/iconic-measure"}
@@ -268,7 +269,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="LogPortal"
-          imgsrc={logportalImg}
+          imgsrcs={logportalImg}
           tags={["C#", "SQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
           icon={<FaServer className="inline-block me-2 text-emerald-500" />}
           date={"June 2023 - August 2024"}
@@ -295,10 +296,14 @@ export default function Projects() {
               Help support team <strong>track orders</strong>.
             </li>
           </ul>
+          <Alert type="info">
+            <FaLock className="inline-block text-blue-400 me-2" />
+            Unfortunately, the application cannot be viewed publicly.
+          </Alert>
         </ProjectCard>
         <ProjectCard
           title="Pathfinging Visualization"
-          imgsrc={pathvisImg}
+          imgsrcs={pathvisImg}
           href="https://dinesjo.github.io/pathfinding-vis/"
           hrefText="Try Yourself"
           githubhref={"https://github.com/dinesjo/pathfinding-vis"}
@@ -317,7 +322,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="This Website"
-          imgsrc={thisImg}
+          imgsrcs={thisImg}
           githubhref="https://github.com/dinesjo/react-portfolio"
           tags={["React", "Tailwind CSS", "JavaScript", "HTML", "CSS"]}
           icon={<FaMapPin className="inline-block text-red-500 me-2" />}
@@ -328,7 +333,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="Chess Reporter"
-          imgsrc={chessreporterImg}
+          imgsrcs={chessreporterImg}
           href="https://twitter.com/ChessReporter/"
           hrefText="View on X (Twitter)"
           githubhref="https://gits-15.sys.kth.se/wver/projinda-twitter-bot"
@@ -349,7 +354,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="Note Hero"
-          imgsrc={noteheroImg}
+          imgsrcs={noteheroImg}
           tags={["Unity", "C#"]}
           icon={<FaMusic className="inline-block me-2 text-purple-500" />}
           date={"January - June 2022"}
@@ -369,7 +374,7 @@ export default function Projects() {
         </ProjectCard>
         <ProjectCard
           title="(React) Pathfinging Visualization"
-          imgsrc={pathvisReactImg}
+          imgsrcs={pathvisReactImg}
           githubhref={"https://github.com/dinesjo/joy-ui-site"}
           tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
           icon={<FaReact className="inline-block me-2 text-sky-400" />}
