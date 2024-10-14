@@ -76,6 +76,31 @@ export default function Courses() {
       year: 3,
       optional: true,
     },
+    {
+      code: "DA2210",
+      name: "Research Methodology for Computer Scienctists",
+      year: 4,
+    },
+    {
+      code: "IK2218",
+      name: "Protocols and Principles of the Internet",
+      year: 4,
+    },
+    {
+      code: "DD2440",
+      name: "Advanced Algorithms",
+      year: 4,
+    },
+    {
+      code: "DD2395",
+      name: "Computer Security",
+      year: 4,
+    },
+    {
+      code: "DD2380",
+      name: "Artificial Intelligence",
+      year: 4,
+    },
   ];
 
   // Add color to each course
@@ -96,6 +121,8 @@ export default function Courses() {
       course.color = "text-purple-500";
     } else if (course.code.startsWith("AL")) {
       course.color = "text-green-500";
+    } else if (course.code.startsWith("IK")) {
+      course.color = "text-cyan-500";
     } else {
       course.color = "text-gray-500";
     }
@@ -109,11 +136,11 @@ export default function Courses() {
         <FaBook className="inline-block me-5" /> Courses
       </h1>
       <h4 className="h4">Here are most of the courses I have taken at KTH.</h4>
-      <h5 className="h5 italic mt-1 text-gray-400">As of February 2024</h5>
+      <h5 className="h5 italic mt-1 text-gray-400">As of October 2024</h5>
 
       <div>
-        {/* Loop year 1-3 */}
-        {Array.from({ length: 3 }, (_, i) => i + 1).map((year) => (
+        {/* Loop years 1-4 */}
+        {Array.from({ length: 4 }, (_, i) => i + 1).map((year) => (
           <div key={year}>
             <div className="text-center">
               <h3 className="h3 mt-3 w-100">Year {year}</h3>
@@ -140,12 +167,6 @@ export default function Courses() {
             </ul>
           </div>
         ))}
-        <div>
-          <div className="text-center">
-            <h3 className="h3 mt-3 w-100">Year 4</h3>
-            <p className="text-gray-400">Starts August 2024</p>
-          </div>
-        </div>
         <div>
           <div className="text-center">
             <h3 className="h3 mt-3 w-100">Year 5</h3>
