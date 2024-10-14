@@ -18,7 +18,7 @@ export default function Home() {
           </h1>
         </div>
         <h4 className="h4">
-          <b className="text-indigo-500">Welcome!</b> I&apos;m a 3rd year student at{" "}
+          <b className="text-indigo-500">Welcome!</b> I&apos;m a 4th year student at{" "}
           <span className="text-indigo-500">
             <b>KTH</b> Stockholm
           </span>

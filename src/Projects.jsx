@@ -227,7 +227,7 @@ export default function Projects() {
           icon={<FaTree className="inline-block me-2 text-lime-400" />}
           date={"April 2024 - Present"}
         >
-          A personal life-organizer website used to growing new or existing habits. Uses firebase for authentication and
+          A personal life-organizer website used to grow new or existing habits. Uses Firebase for authentication and
           storage. It is developed <b>mobile-first</b>, and is available as a PWA to be downloaded to your device.
         </ProjectCard>
         <ProjectCard
