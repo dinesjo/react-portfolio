@@ -188,7 +188,7 @@ export default function Courses() {
           </div>
         ))}
         <div>
-          <div className="text-center">
+          <div className="text-center mb-5">
             <h3 className="h3 mt-3 w-100">Year 5</h3>
             <p className="text-gray-400">Starts August 2025</p>
           </div>

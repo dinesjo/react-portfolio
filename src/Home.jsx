@@ -20,9 +20,9 @@ export default function Home() {
         <h4 className="h4">
           <b className="text-indigo-500">Welcome!</b> I&apos;m a 4th year student at{" "}
           <span className="text-indigo-500">
-            <b>KTH</b> Stockholm
+            <b>KTH Stockholm</b>
           </span>
-          , persuing a <b>master&apos;s degree in Computer Science</b>.
+          , persuing a master&apos;s degree in Computer Science.
         </h4>
         <h5 className="h5 mt-5 text-gray-400">
           Please check out some of my{" "}

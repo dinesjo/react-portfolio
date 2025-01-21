@@ -14,6 +14,7 @@ import {
   FaLink,
   FaLock,
   FaMapPin,
+  FaMicrophoneAlt,
   FaMusic,
   FaPython,
   FaReact,
@@ -42,8 +43,10 @@ import typescriptImg from "./assets/typescript.png";
 import mui from "./assets/mui.png";
 import thisImg from "./assets/this.png";
 import logportalImg from "./assets/logportal.jpg";
+import aiDiary from "./assets/AI-diary.png";
 import { TabTitle } from "./utils/GeneralFunctions";
 import Alert from "./utils/Alert";
+import chatgptImg from "./assets/ChatGPT.png";
 
 const colorMap = {
   "c++": "teal",
@@ -64,6 +67,7 @@ const colorMap = {
   "material ui": "blue",
   firebase: "yellow",
   typescript: "sky",
+  chatgpt: "green",
 };
 
 const iconMap = {
@@ -85,6 +89,7 @@ const iconMap = {
   "material ui": <img src={mui} className="inline-block me-2 w-5" />,
   firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
   typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
+  chatgpt: <img src={chatgptImg} className="inline-block me-2 w-5 rounded-full" />,
 };
 
 function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
@@ -240,8 +245,8 @@ export default function Projects() {
           icon={<FaDumbbell className="inline-block me-2 text-amber-600" />}
           date={"March 2024 - Present"}
         >
-          A KTH course project with three other students where we develop a fitness tracking application using modern
-          web devlopment principles. The user should be able to track their workouts and progress over time, as well as
+          A KTH course project with three other students where we develop a fitness tracking app using modern web
+          devlopment principles. The user should be able to track their workouts and progress over time, as well as
           meals.
         </ProjectCard>
         <ProjectCard
@@ -268,6 +273,30 @@ export default function Projects() {
           software is part of a larger United Nations-funded project.
         </ProjectCard>
         <ProjectCard
+          title="AI-Diary"
+          imgsrcs={aiDiary}
+          tags={["React", "Material UI", "TypeScript", "ChatGPT"]}
+          icon={<FaMicrophoneAlt className="inline-block me-2 text-emerald-500" />}
+          date={"December 2025 - Present"}
+        >
+          I provided{" "}
+          <a
+            href="https://www.bravida.se/en/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-emerald-500 hover:text-emerald-600 hover:underline"
+          >
+            Bravida
+          </a>{" "}
+          a mobile-first web app where technicians answer brief questions about their workday in speech. The app uses
+          Azure&apos;s AI services for speech-to-text, and thereafter summarizes the text using ChatGPT. The output can
+          then be included in the customer&apos;s invoice, or for other documentation purposes.
+          <Alert type="info">
+            <FaLock className="inline-block text-blue-400 me-2" />
+            Unfortunately, the app cannot be viewed publicly.
+          </Alert>
+        </ProjectCard>
+        <ProjectCard
           title="LogPortal"
           imgsrcs={logportalImg}
           tags={["C#", "SQL", "ASP.NET", "JavaScript", "Bootstrap", "HTML", "CSS"]}
@@ -283,7 +312,7 @@ export default function Projects() {
           >
             Bravida
           </a>{" "}
-          a robust, secure web appplication with 3 uses:
+          a robust, secure web app with 3 uses:
           <ul className="list-disc list-inside">
             <li>
               <strong>Viewing Azure logs</strong>, previously hidden behind inaccessible KQL queries.
@@ -298,7 +327,7 @@ export default function Projects() {
           </ul>
           <Alert type="info">
             <FaLock className="inline-block text-blue-400 me-2" />
-            Unfortunately, the application cannot be viewed publicly.
+            Unfortunately, the app cannot be viewed publicly.
           </Alert>
         </ProjectCard>
         <ProjectCard
