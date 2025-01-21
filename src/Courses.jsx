@@ -101,6 +101,26 @@ export default function Courses() {
       name: "Artificial Intelligence",
       year: 4,
     },
+    {
+      code: "ID2216",
+      name: "Developing Mobile Applications",
+      year: 4,
+    },
+    {
+      code: "DD2525",
+      name: "Language-Based Security",
+      year: 4,
+    },
+    {
+      code: "DD2480",
+      name: "Software Engineering Fundamentals",
+      year: 4,
+    },
+    {
+      code: "DD2459",
+      name: "Software Reliability",
+      year: 4,
+    },
   ];
 
   // Add color to each course
@@ -136,7 +156,7 @@ export default function Courses() {
         <FaBook className="inline-block me-5" /> Courses
       </h1>
       <h4 className="h4">Here are most of the courses I have taken at KTH.</h4>
-      <h5 className="h5 italic mt-1 text-gray-400">As of October 2024</h5>
+      <h5 className="h5 italic mt-1 text-gray-400">As of January 2025</h5>
 
       <div>
         {/* Loop years 1-4 */}
