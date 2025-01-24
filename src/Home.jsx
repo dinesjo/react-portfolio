@@ -13,8 +13,8 @@ export default function Home() {
             alt="Portrait"
             className="w-60 xs:w-72 rounded-full mx-auto absolute bottom-0 transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
           />
-          <h1 className="h1 text-indigo-500 font-poppins z-10" style={{ textShadow: "2px 2px 4px #000000" }}>
-            Linus Dinesjö
+          <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "2px 2px 4px #000000" }}>
+            <span className="font-poppins">Linus Dinesjö</span>
           </h1>
         </div>
         <h4 className="h4">

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -18,28 +18,33 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.font-montserrat {
+  font-family: "Montserrat", "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
+
 .link {
   @apply text-blue-500 hover:text-blue-700 underline;
 }
 
 .h1 {
+  font-family: "Montserrat", "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
   @apply text-4xl xs:text-6xl font-semibold text-center;
 }
 
 .h2 {
-  @apply text-3xl xs:text-4xl font-semibold text-center;
+  @apply text-3xl xs:text-4xl font-semibold text-center font-light;
 }
 
 .h3 {
-  @apply text-2xl xs:text-3xl text-center;
+  @apply text-2xl xs:text-3xl text-center font-light;
 }
 
 .h4 {
-  @apply text-xl xs:text-2xl text-center;
+  @apply text-xl xs:text-2xl text-center font-light;
 }
 
 .h5 {
-  @apply text-lg xs:text-xl text-center;
+  @apply text-lg xs:text-xl text-center font-light;
 }
 
 .h6 {

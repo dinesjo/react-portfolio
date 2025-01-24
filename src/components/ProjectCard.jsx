@@ -69,7 +69,7 @@ const ICON_MAP = {
 export default function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
   return (
     <div
-      className="bg-slate-700 rounded-lg shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
+      className="bg-slate-700 rounded-3xl shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
       onMouseOver={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
       }}
@@ -106,13 +106,13 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
         </div>
 
         {/* TITLE */}
-        <h5 className="text-xl font-semibold mb-2 flex items-center">
+        <h5 className="text-xl font-semibold mb-2 flex items-center font-montserrat">
           {icon}
           {title}
         </h5>
 
         {/* DESCRIPTION */}
-        <p className="text-gray-400 mb-3">{children}</p>
+        <p className="text-gray-400 mb-3 font-light">{children}</p>
 
         {/* LINKS */}
         <div className="flex flex-col gap-3 sm:items-center sm:flex-row">
@@ -122,7 +122,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="mx-auto px-3 py-2 rounded-lg text-neutral-50 bg-indigo-500 hover:bg-indigo-600 inline-block transition-all"
+              className="mx-auto px-3 py-2 rounded-lg text-neutral-50 font-semibold bg-indigo-500 hover:bg-indigo-600 inline-block transition-all"
             >
               <FaLink className="inline-block me-2" />
               {hrefText}

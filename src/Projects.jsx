@@ -43,7 +43,7 @@ export default function Projects() {
       {/* SUBTITLE */}
       <h3 className="h4 mb-10 w-3/4">
         Here are some of the projects I have worked on, and which{" "}
-        <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-0.5 rounded-full items-center inline-flex">
+        <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-0 rounded-full items-center inline-flex">
           <FaCode className="inline-block me-2" />
           technologies
         </span>{" "}
