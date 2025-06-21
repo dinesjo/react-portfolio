@@ -45,7 +45,7 @@ export default function Projects() {
       <div className="rounded-2xl p-6 mb-12 max-w-4xl">
         <h3 className="h4 leading-relaxed">
           Here are some of the projects I have worked on, showcasing various{" "}
-          <span className="text-lg font-semibold text-indigo-300 bg-indigo-900/30 px-3 p-1 mt-1 rounded-full items-center inline-flex">
+          <span className="text-lg font-semibold dark:text-indigo-300 bg-indigo-900/30 px-3 p-1 mt-1 rounded-full items-center inline-flex">
             <FaCode className="inline-block me-2" />
             technologies
           </span>{" "}

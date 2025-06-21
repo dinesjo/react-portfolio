@@ -9,14 +9,26 @@
   line-height: 1.6;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.9); /* background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); */
   min-height: 100vh;
-
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    color: #e2e8f0; /* Light text color */
+  }
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    background-color: #f8fafc; /* Light background */
+    color: #1e293b; /* Dark text color */
+  }
 }
 
 /* Custom scrollbar */
@@ -55,30 +67,24 @@
 }
 
 .h3 {
-  @apply text-2xl xs:text-3xl text-center font-medium tracking-tight text-slate-200;
+  @apply text-2xl xs:text-3xl text-center font-medium tracking-tight text-slate-800 dark:text-slate-200;
 }
 
 .h4 {
-  @apply text-xl xs:text-2xl text-center font-medium tracking-tight text-slate-300;
+  @apply text-xl xs:text-2xl text-center font-medium tracking-tight text-slate-700 dark:text-slate-300;
 }
 
 .h5 {
-  @apply text-lg xs:text-xl text-center font-medium tracking-tight text-slate-300;
+  @apply text-lg xs:text-xl text-center font-medium tracking-tight text-slate-700 dark:text-slate-300;
 }
 
 .h6 {
-  @apply text-base xs:text-lg text-center font-medium text-slate-400;
+  @apply text-base xs:text-lg text-center font-medium text-slate-500 dark:text-slate-400;
 }
 
 /* Glassmorphism effect */
 .glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-raw {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);

@@ -97,7 +97,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               key={tag}
               className={`text-sm text-gray-200 bg-${
                 COLOR_MAP[tag.toLowerCase()]
-              }-700 bg-opacity-60 px-2 py-1 glass-raw rounded-full whitespace-nowrap items-center flex font-semibold`}
+              }-700 px-2 py-1 rounded-full whitespace-nowrap items-center flex font-semibold`}
             >
               {ICON_MAP[tag.toLowerCase()]}
               {tag}
@@ -135,7 +135,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               target="_blank"
               rel="noreferrer"
               title="View on GitHub"
-              className="mx-auto px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
+              className="mx-auto px-4 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-700/10 dark:hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
             >
               <FaGithub className="text-xl group-hover:scale-110 transition-transform" />
               <span className="text-lg font-medium">{githubhref.split("/").pop()}</span>
