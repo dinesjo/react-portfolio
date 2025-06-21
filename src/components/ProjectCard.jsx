@@ -97,7 +97,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               key={tag}
               className={`text-sm text-gray-200 bg-${
                 COLOR_MAP[tag.toLowerCase()]
-              }-700 bg-opacity-60 px-2 py-1 rounded-full whitespace-nowrap items-center flex font-semibold`}
+              }-700 bg-opacity-60 px-2 py-1 glass-raw rounded-full whitespace-nowrap items-center flex font-semibold`}
             >
               {ICON_MAP[tag.toLowerCase()]}
               {tag}

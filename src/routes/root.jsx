@@ -19,8 +19,8 @@ const NavBarItem = ({ name, icon, to }) => {
       to={to}
       className={`flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-200 ${
         current
-          ? "text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg"
-          : "text-slate-300 hover:text-white hover:bg-slate-700/50 hover:scale-105"
+          ? "text-white bg-gradient-to-r from-indigo-600 to-indigo-500 shadow-lg"
+          : "text-slate-300 hover:text-white hover:bg-slate-700/50"
       }`}
     >
       <span className="inline-block me-2">{icon}</span>
