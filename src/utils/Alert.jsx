@@ -1,20 +1,24 @@
 export default function Alert(props) {
-  let borderClassName;
+  let classNames;
   switch (props.type) {
     case "error":
-      borderClassName = "border-l-red-400";
+      classNames = "border-l-red-400 bg-red-500/10 text-red-200";
       break;
     case "success":
-      borderClassName = "border-l-green-500";
+      classNames = "border-l-green-500 bg-green-500/10 text-green-200";
       break;
     case "warning":
-      borderClassName = "border-l-amber-400";
+      classNames = "border-l-amber-400 bg-amber-500/10 text-amber-200";
       break;
     case "info":
-      borderClassName = "border-l-blue-400";
+      classNames = "border-l-blue-400 bg-blue-500/10 text-blue-200";
       break;
     default:
-      borderClassName = "border-l-amber-400";
+      classNames = "border-l-amber-400 bg-amber-500/10 text-amber-200";
   }
-  return <div className={`${borderClassName} border-l-4 my-2 pl-4`}>{props.children}</div>;
+  return (
+    <div className={`${classNames} border-l-4 my-3 pl-4 pr-3 py-3 rounded-l-sm rounded-r-lg backdrop-blur-sm`}>
+      {props.children}
+    </div>
+  );
 }

@@ -69,7 +69,7 @@ const ICON_MAP = {
 export default function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
   return (
     <div
-      className="bg-slate-700 rounded-3xl shadow-md overflow-hidden transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
+      className="glass rounded-3xl shadow-xl overflow-hidden card-hover"
       onMouseOver={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
       }}
@@ -81,7 +81,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
       <img
         src={imgsrcs}
         alt={title}
-        className={`w-full h-40 sm:h-60 object-cover transition-all duration-300 overflow-hidden ${
+        className={`w-full h-40 sm:h-60 object-cover transition-all duration-300 overflow-y-auto ${
           href && "xs:cursor-pointer"
         }`}
         onClick={() => {
@@ -115,17 +115,17 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
         <p className="text-gray-400 mb-3 font-light">{children}</p>
 
         {/* LINKS */}
-        <div className="flex flex-col gap-3 sm:items-center sm:flex-row">
+        <div className="flex flex-col gap-3 sm:items-center sm:flex-row my-5">
           {/* DYNAMIC LINK */}
           {href && (
             <a
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="mx-auto px-3 py-2 rounded-lg text-neutral-50 font-semibold bg-indigo-500 hover:bg-indigo-600 inline-block transition-all"
+              className="btn-primary text-white flex items-center justify-center mx-auto"
             >
               <FaLink className="inline-block me-2" />
-              {hrefText}
+              <span>{hrefText}</span>
             </a>
           )}
           {/* GITHUB LINK */}
@@ -135,15 +135,16 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               target="_blank"
               rel="noreferrer"
               title="View on GitHub"
-              className="truncate underline lg:no-underline mx-auto px-3 py-1 float-right flex flex-col items-center rounded-lg text-neutral-50 hover:bg-gray-600 transition-all"
+              className="mx-auto px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
             >
-              <FaGithub className="inline-block text-4xl" /> {githubhref.split("/").pop()}
+              <FaGithub className="text-xl group-hover:scale-110 transition-transform" />
+              <span className="text-lg font-medium">{githubhref.split("/").pop()}</span>
             </a>
           )}
         </div>
         {/* FOOTER with date */}
         {date && (
-          <div className="text-gray-400 text-sm font-semibold mt-1 flex">
+          <div className="text-gray-400 text-sm font-semibold flex">
             <FaCalendarDay className="inline-block me-2 text-lg" />
             {date}
           </div>

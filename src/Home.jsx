@@ -13,7 +13,7 @@ export default function Home() {
             alt="Portrait"
             className="w-60 xs:w-72 rounded-full mx-auto absolute bottom-0 transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
           />
-          <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "2px 2px 4px #000000" }}>
+          <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "1px 2px 4px #000000" }}>
             <span className="font-poppins">Linus Dinesjö</span>
           </h1>
         </div>
@@ -25,7 +25,7 @@ export default function Home() {
           , persuing a master&apos;s degree in Computer Science.
         </h4>
         <h5 className="h5 mt-5 text-gray-400">
-          Please check out some of my{" "}
+          Check out some of my{" "}
           <Link className="link" to="/projects">
             projects
           </Link>
@@ -33,7 +33,7 @@ export default function Home() {
           <Link className="link" to="/courses">
             courses
           </Link>{" "}
-          I have taken at KTH. If you want to get in touch, please check out the{" "}
+          I have taken at KTH. Feel free to get in touch, see the{" "}
           <Link className="link" to="/contact">
             contact
           </Link>{" "}

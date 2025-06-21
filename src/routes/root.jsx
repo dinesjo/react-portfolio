@@ -1,16 +1,9 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import {
-  FaHome,
-  FaEnvelope,
-  FaCertificate,
-  FaGithub,
-  FaLinkedin,
-  FaBook,
-} from "react-icons/fa";
+import { FaBook, FaCertificate, FaEnvelope, FaGithub, FaHome, FaLinkedin } from "react-icons/fa";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const NavBar = () => {
   return (
-    <div className="fixed w-full flex flex-wrap justify-center gap-2 bg-neutral-800 shadow z-50">
+    <div className="fixed w-full flex flex-wrap justify-center gap-4 navbar-blur shadow-lg z-50 py-4">
       <NavBarItem name="Home" icon={<FaHome />} to="/" />
       <NavBarItem name="Projects" icon={<FaCertificate />} to="/projects" />
       <NavBarItem name="Courses" icon={<FaBook />} to="/courses" />
@@ -24,8 +17,10 @@ const NavBarItem = ({ name, icon, to }) => {
   return (
     <Link
       to={to}
-      className={`flex items-center p-2 text-lg font-semibold rounded-md transition-all ${
-        current ? "text-indigo-500" : "text-zinc-300 hover:text-indigo-500"
+      className={`flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-200 ${
+        current
+          ? "text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg"
+          : "text-slate-300 hover:text-white hover:bg-slate-700/50 hover:scale-105"
       }`}
     >
       <span className="inline-block me-2">{icon}</span>
@@ -36,25 +31,31 @@ const NavBarItem = ({ name, icon, to }) => {
 
 const Footer = () => {
   return (
-    <div className="flex justify-center gap-10 mt-auto py-5 text-gray-300 bg-neutral-800">
+    <div className="flex justify-center gap-8 mt-auto py-8 text-slate-400 glass">
       <a
         href="https://github.com/dinesjo"
         target="_blank"
         rel="noopener noreferrer"
         title="View my GitHub"
+        className="group transition-all duration-200 hover:scale-110"
       >
-        <FaGithub className="text-4xl hover:text-gray-400 transition-all" />
+        <FaGithub className="text-4xl group-hover:text-slate-200 transition-all duration-200" />
       </a>
-      <a href={`mailto:dinesjo@kth.se`} title="Send me an email">
-        <FaEnvelope className="text-4xl hover:text-gray-400 transition-all" />
+      <a
+        href={`mailto:dinesjo@kth.se`}
+        title="Send me an email"
+        className="group transition-all duration-200 hover:scale-110"
+      >
+        <FaEnvelope className="text-4xl group-hover:text-indigo-400 transition-all duration-200" />
       </a>
       <a
         href="https://www.linkedin.com/in/dinesjo/"
         target="_blank"
         rel="noopener noreferrer"
         title="Open my LinkedIn"
+        className="group transition-all duration-200 hover:scale-110"
       >
-        <FaLinkedin className="text-4xl hover:text-gray-400 transition-all" />
+        <FaLinkedin className="text-4xl group-hover:text-blue-400 transition-all duration-200" />
       </a>
     </div>
   );

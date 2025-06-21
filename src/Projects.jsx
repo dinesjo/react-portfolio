@@ -26,32 +26,35 @@ import noteheroImg from "./assets/note-hero.png";
 import pathvisReactImg from "./assets/path-vis-react.png";
 import pathvisImg from "./assets/path-vis.png";
 import thisImg from "./assets/this.png";
+import ProjectCard from "./components/ProjectCard";
 import Alert from "./utils/Alert";
 import { TabTitle } from "./utils/GeneralFunctions";
-import ProjectCard from "./components/ProjectCard";
 
 export default function Projects() {
   TabTitle("Projects");
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center px-6">
       {/* TITLE */}
-      <h1 className="h1 flex items-end mb-10">
-        <FaCertificate className="inline-block me-5" /> Projects
+      <h1 className="h1 flex items-center mb-8">
+        <FaCertificate className="inline-block me-4 text-4xl xs:text-5xl" />
+        <span className="gradient-text">Projects</span>
       </h1>
 
       {/* SUBTITLE */}
-      <h3 className="h4 mb-10 w-3/4">
-        Here are some of the projects I have worked on, and which{" "}
-        <span className="text-lg font-semibold text-gray-200 bg-slate-500 bg-opacity-60 px-2 py-0 rounded-full items-center inline-flex">
-          <FaCode className="inline-block me-2" />
-          technologies
-        </span>{" "}
-        were used.
-      </h3>
+      <div className="rounded-2xl p-6 mb-12 max-w-4xl">
+        <h3 className="h4 leading-relaxed">
+          Here are some of the projects I have worked on, showcasing various{" "}
+          <span className="text-lg font-semibold text-indigo-300 bg-indigo-900/30 px-3 p-1 mt-1 rounded-full items-center inline-flex">
+            <FaCode className="inline-block me-2" />
+            technologies
+          </span>{" "}
+          and development approaches.
+        </h3>
+      </div>
 
       {/* Grid of cards, each one having an image, header and description */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 w-11/12 xs:w-3/4 md:1/2 mb-5 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full max-w-7xl mb-8 items-start">
         <ProjectCard
           title="Deadline Tracker"
           imgsrcs={deadlineTracker}

@@ -1,5 +1,5 @@
-import { TabTitle } from "./utils/GeneralFunctions";
 import { FaBook } from "react-icons/fa";
+import { TabTitle } from "./utils/GeneralFunctions";
 
 export default function Courses() {
   TabTitle("Courses");
@@ -151,46 +151,51 @@ export default function Courses() {
   const sortedCourses = courses.sort((a, b) => a.code.localeCompare(b.code));
 
   return (
-    <div className="flex flex-col items-center justify-center w-11/12 mx-auto">
-      <h1 className="h1 flex items-end mb-3">
-        <FaBook className="inline-block me-5" /> Courses
+    <div className="flex flex-col items-center justify-center px-6 max-w-6xl mx-auto">
+      <h1 className="h1 flex items-center mb-8">
+        <FaBook className="inline-block me-4 text-4xl xs:text-5xl" />
+        <span className="gradient-text">Courses</span>
       </h1>
-      <h4 className="h4">Here are most of the courses I have taken at KTH.</h4>
-      <h5 className="h5 italic mt-1 text-gray-400">As of January 2025</h5>
 
-      <div>
+      <div className="rounded-2xl p-6 mb-8 text-center max-w-4xl">
+        <h4 className="h4 leading-relaxed">Here are most of the courses I have taken at KTH.</h4>
+        <h5 className="h5 italic mt-2 text-slate-400">As of January 2025</h5>
+      </div>
+
+      <div className="w-full space-y-8 pb-10">
         {/* Loop years 1-4 */}
         {Array.from({ length: 4 }, (_, i) => i + 1).map((year) => (
-          <div key={year}>
-            <div className="text-center">
-              <h3 className="h3 mt-3 w-100">Year {year}</h3>
+          <div key={year} className="glass rounded-2xl p-6">
+            <div className="text-center mb-6">
+              <h3 className="h3 mb-2">Year {year}</h3>
               <a
                 href={`https://www.kth.se/student/kurser/program/CDATE/20212/arskurs${year}?l=en`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link"
+                className="link font-semibold"
               >
-                Link to KTH
+                View on KTH Website
               </a>
             </div>
-            <ul className="mt-2 space-y-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {sortedCourses
                 .filter((course) => {
                   return course.year === year;
                 })
                 .map((course) => (
-                  <li key={course.code} style={{ paddingLeft: "4rem", textIndent: "-4rem" }}>
+                  <div key={course.code} style={{ paddingLeft: "4rem", textIndent: "-4rem" }}>
                     <samp className={`${course.color}`}>{course.code}</samp> <span className="ml-1">{course.name}</span>
                     <span className="text-gray-400 italic text-sm ml-1">{course.optional && " (optional course)"}</span>
-                  </li>
+                  </div>
                 ))}
-            </ul>
+            </div>
           </div>
         ))}
-        <div>
-          <div className="text-center mb-5">
-            <h3 className="h3 mt-3 w-100">Year 5</h3>
-            <p className="text-gray-400">Starts August 2025</p>
+
+        <div className="glass rounded-2xl p-6">
+          <div className="text-center">
+            <h3 className="h3 mb-2">Year 5</h3>
+            <p className="text-slate-400">Starts August 2025</p>
           </div>
         </div>
       </div>
