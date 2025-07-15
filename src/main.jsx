@@ -35,7 +35,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: import.meta.env.DEV ? "/" : "/react-portfolio/" }
+  { basename: "/" }
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
