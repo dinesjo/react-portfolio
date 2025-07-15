@@ -17,14 +17,14 @@ const NavBarItem = ({ name, icon, to }) => {
   return (
     <Link
       to={to}
-      className={`flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-200 ${
+      className={`flex items-center px-3 sm:px-4 py-2 text-lg font-medium rounded-xl transition-all duration-200 ${
         current
           ? "text-white bg-gradient-to-r from-indigo-600 to-indigo-500 shadow-lg"
           : "dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50 hover:bg-slate-200 hover:text-slate-900 hover:shadow-md text-slate-700"
       }`}
     >
-      <span className="inline-block me-2">{icon}</span>
-      {name}
+      <span className="inline-block sm:me-2">{icon}</span>
+      <span className="hidden sm:inline">{name}</span>
     </Link>
   );
 };
@@ -65,7 +65,7 @@ export default function Root() {
   return (
     <div className="flex flex-col h-screen">
       <NavBar />
-      <div className="w-11/12 mx-auto flex flex-col items-center justify-center pt-28">
+      <div className="w-11/12 mx-auto flex flex-col items-center justify-center pt-20">
         <Outlet />
       </div>
       <Footer />

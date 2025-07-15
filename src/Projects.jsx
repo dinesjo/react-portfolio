@@ -54,7 +54,7 @@ export default function Projects() {
       </div>
 
       {/* Grid of cards, each one having an image, header and description */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full max-w-7xl mb-8 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl mb-8 items-start">
         <ProjectCard
           title="Deadline Tracker"
           imgsrcs={deadlineTracker}
