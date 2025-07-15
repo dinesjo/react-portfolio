@@ -8,10 +8,24 @@ export default function Home() {
     <>
       <div className="flex flex-col justify-center pt-56 md:w-1/2">
         <div className="flex justify-center relative mb-3">
-          <img
-            src="portrait.png"
-            alt="Portrait"
-            className="w-60 xs:w-72 glass rounded-full mx-auto absolute bottom-0 transition-all duration-300 outline outline-transparent xs:hover:outline-indigo-500"
+          <div
+            className="w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto absolute bottom-0 outline outline-transparent xs:hover:outline-indigo-500 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('portrait.png')",
+              backgroundSize: "101%",
+              backgroundPosition: "center center",
+              transition: "all 0.3s ease, background-size 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundSize = "125%";
+              e.target.style.backgroundPosition = "center center";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundSize = "101%";
+              e.target.style.backgroundPosition = "center center";
+            }}
+            role="img"
+            aria-label="Portrait"
           />
           <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "1px 2px 4px #000000" }}>
             <span className="font-poppins">Linus Dinesjö</span>
