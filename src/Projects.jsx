@@ -2,6 +2,7 @@ import {
   FaCalendarAlt,
   FaCertificate,
   FaChess,
+  FaCircle,
   FaCode,
   FaDumbbell,
   FaExclamationTriangle,
@@ -25,6 +26,7 @@ import logportalImg from "./assets/logportal.jpg";
 import noteheroImg from "./assets/note-hero.png";
 import pathvisReactImg from "./assets/path-vis-react.png";
 import pathvisImg from "./assets/path-vis.png";
+import snuskoll from "./assets/snuskoll.png";
 import thisImg from "./assets/this.png";
 import ProjectCard from "./components/ProjectCard";
 import Alert from "./utils/Alert";
@@ -56,38 +58,52 @@ export default function Projects() {
       {/* Grid of cards, each one having an image, header and description */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl mb-8 items-start">
         <ProjectCard
+          title={
+            <div className="flex items-center gap-2">
+              Snuskoll{" "}
+              <span
+                className={`text-sm text-white bg-sky-700 px-2 py-0.5 rounded-full whitespace-nowrap flex items-center font-semibold`}
+              >
+                New
+              </span>
+            </div>
+          }
+          imgsrcs={snuskoll}
+          href={"https://snuskoll.dinesjo.se/"}
+          hrefText={"Try Yourself"}
+          githubhref={"https://github.com/dinesjo/SnusKoll"}
+          tags={["ASP.NET", "Blazor", "C#", "SQL", "Tailwind CSS"]}
+          icon={<FaCircle className="inline-block me-2 text-slate-500" />}
+          date={"June 2025 - Present"}
+        >
+          A web app built for some friends and I to rate different snus products. It is built using ASP.NET and Blazor,
+          and uses a SQL database to store the data. The app is mobile-first, and is available as a PWA to be downloaded
+          to your device.
+        </ProjectCard>
+        <ProjectCard
+          title="HabitGrower"
+          imgsrcs={habitGrower}
+          href={"https://habitgrower.web.app/"}
+          hrefText={"Try Yourself"}
+          githubhref={"https://github.com/dinesjo/HabitGrower"}
+          tags={["React", "Material UI", "Firebase", "TypeScript"]}
+          icon={<FaTree className="inline-block me-2 text-lime-500" />}
+          date={"April 2024 - Present"}
+        >
+          A personal life-organizer website used to grow new or existing habits. Uses Firebase for authentication and
+          storage. It is developed <b>mobile-first</b>, and is available as a PWA to be downloaded to your device.
+        </ProjectCard>
+        <ProjectCard
           title="Deadline Tracker"
           imgsrcs={deadlineTracker}
           href={"https://dinesjo.github.io/deadline-tracker/"}
           hrefText={"Try Yourself"}
           githubhref={"https://github.com/dinesjo/deadline-tracker"}
           tags={["React", "Joy UI", "JavaScript", "HTML", "CSS"]}
-          icon={<FaCalendarAlt className="inline-block me-2 text-yellow-500" />}
+          icon={<FaCalendarAlt className="inline-block me-2 text-red-500" />}
           date={"September 2023 - October 2023"}
         >
           A personal project where I developed a website to track deadlines for my courses at KTH.
-        </ProjectCard>
-        <ProjectCard
-          title={
-            <div className="flex items-center gap-2">
-              HabitGrower{" "}
-              <span
-                className={`text-sm text-black bg-lime-400 px-2 py-0.5 rounded-full whitespace-nowrap flex items-center font-semibold`}
-              >
-                New
-              </span>
-            </div>
-          }
-          imgsrcs={habitGrower}
-          href={"https://habitgrower.web.app/"}
-          hrefText={"Try Yourself"}
-          githubhref={"https://github.com/dinesjo/HabitGrower"}
-          tags={["React", "Material UI", "Firebase", "TypeScript"]}
-          icon={<FaTree className="inline-block me-2 text-lime-400" />}
-          date={"April 2024 - Present"}
-        >
-          A personal life-organizer website used to grow new or existing habits. Uses Firebase for authentication and
-          storage. It is developed <b>mobile-first</b>, and is available as a PWA to be downloaded to your device.
         </ProjectCard>
         <ProjectCard
           title="FitTrackr"

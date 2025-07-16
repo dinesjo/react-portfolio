@@ -12,6 +12,7 @@ import {
   FaUnity,
 } from "react-icons/fa";
 import aspnetImg from "../assets/aspnet.png";
+import blazorImg from "../assets/blazor.png";
 import cppImg from "../assets/c++.png";
 import chatgptImg from "../assets/ChatGPT.png";
 import csharpImg from "../assets/csharp.png";
@@ -42,6 +43,7 @@ const COLOR_MAP = {
   firebase: "yellow",
   typescript: "sky",
   chatgpt: "green",
+  blazor: "purple",
 };
 
 const ICON_MAP = {
@@ -64,6 +66,7 @@ const ICON_MAP = {
   firebase: <img src={firebaseImg} className="inline-block me-2 w-5" />,
   typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
   chatgpt: <img src={chatgptImg} className="inline-block me-2 w-5 rounded-full" />,
+  blazor: <img src={blazorImg} className="inline-block me-2 w-5" />,
 };
 
 export default function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
