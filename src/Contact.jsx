@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaCopy, FaEnvelope } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa";
 import { TabTitle } from "./utils/GeneralFunctions";
 
 export default function Contact() {
@@ -15,13 +15,8 @@ export default function Contact() {
   TabTitle("Contact");
 
   return (
-    <div className="flex flex-col items-center justify-center px-6">
-      <h1 className="h1 flex items-center mb-8">
-        <FaEnvelope className="inline-block me-4 text-4xl xs:text-5xl" />
-        <span className="gradient-text">Contact</span>
-      </h1>
-
-      <div className="glass rounded-2xl p-8 max-w-2xl text-center space-y-6">
+    <div className="flex flex-col items-center justify-center px-6" style={{ minHeight: "calc(100vh - 16rem)" }}>
+      <div className="glass rounded-2xl max-w-2xl text-center space-y-6">
         <h4 className="h4 leading-relaxed">Get in touch by sending me an email:</h4>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

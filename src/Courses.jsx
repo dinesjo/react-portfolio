@@ -1,4 +1,3 @@
-import { FaBook } from "react-icons/fa";
 import { TabTitle } from "./utils/GeneralFunctions";
 
 export default function Courses() {
@@ -177,12 +176,7 @@ export default function Courses() {
 
   return (
     <div className="flex flex-col items-center justify-center px-6 max-w-6xl mx-auto">
-      <h1 className="h1 flex items-center mb-8">
-        <FaBook className="inline-block me-4 text-4xl xs:text-5xl" />
-        <span className="gradient-text">Courses</span>
-      </h1>
-
-      <div className="rounded-2xl p-6 mb-8 text-center max-w-4xl">
+      <div className="rounded-2xl p-4 pb-0 m-4 text-center max-w-4xl">
         <h4 className="h4 leading-relaxed">Here are most of the courses I have taken at KTH.</h4>
         <h5 className="h5 italic mt-2 text-slate-400">As of January 2025</h5>
       </div>

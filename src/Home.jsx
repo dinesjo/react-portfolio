@@ -28,17 +28,17 @@ export default function Home() {
             aria-label="Portrait"
           />
           <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "1px 2px 4px #000000" }}>
-            <span className="font-poppins">Linus Dinesjö</span>
+            <span className="font-iceland text-7xl">Linus Dinesjö</span>
           </h1>
         </div>
-        <h4 className="h4">
+        <h4 className="font-iceland h3">
           <b className="text-indigo-500">Welcome!</b> I&apos;m a 4th year student at{" "}
           <span className="text-indigo-500">
             <b>KTH Stockholm</b>
           </span>
           , persuing a master&apos;s degree in Computer Science.
         </h4>
-        <h5 className="h5 mt-5 text-gray-400">
+        <h5 className="font-iceland h5 mt-5 text-gray-400">
           Check out some of my{" "}
           <Link className="link" to="/projects">
             projects

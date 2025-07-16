@@ -1,6 +1,5 @@
 import {
   FaCalendarAlt,
-  FaCertificate,
   FaChess,
   FaCircle,
   FaCode,
@@ -14,7 +13,7 @@ import {
   FaRoad,
   FaServer,
   FaTree,
-  FaUnity,
+  FaUnity
 } from "react-icons/fa";
 import aiDiary from "./assets/AI-diary.png";
 import chessreporterImg from "./assets/chess-reporter.png";
@@ -37,15 +36,9 @@ export default function Projects() {
 
   return (
     <div className="flex flex-col items-center justify-center px-6">
-      {/* TITLE */}
-      <h1 className="h1 flex items-center mb-8">
-        <FaCertificate className="inline-block me-4 text-4xl xs:text-5xl" />
-        <span className="gradient-text">Projects</span>
-      </h1>
-
       {/* SUBTITLE */}
-      <div className="rounded-2xl p-6 mb-12 max-w-4xl">
-        <h3 className="h4 leading-relaxed">
+      <div className="rounded-2xl p-6 m-4 max-w-4xl">
+        <h3 className="h3 leading-relaxed">
           Here are some of the projects I have worked on, showcasing various{" "}
           <span className="text-lg font-semibold dark:text-indigo-300 bg-indigo-900/30 px-3 p-1 mt-1 rounded-full items-center inline-flex">
             <FaCode className="inline-block me-2" />

@@ -125,7 +125,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="btn-primary text-white flex items-center justify-center mx-auto"
+              className="btn-primary font-montserrat text-white flex items-center justify-center mx-auto"
             >
               <FaLink className="inline-block me-2" />
               <span>{hrefText}</span>
@@ -138,7 +138,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
               target="_blank"
               rel="noreferrer"
               title="View on GitHub"
-              className="mx-auto px-4 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-700/10 dark:hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
+              className="font-montserrat mx-auto px-4 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-700/10 dark:hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
             >
               <FaGithub className="text-xl group-hover:scale-110 transition-transform" />
               <span className="text-lg font-medium">{githubhref.split("/").pop()}</span>
@@ -147,7 +147,7 @@ export default function ProjectCard({ children, title, imgsrcs, hrefText, href, 
         </div>
         {/* FOOTER with date */}
         {date && (
-          <div className="text-gray-400 text-sm font-semibold flex">
+          <div className="font-montserrat text-gray-400 text-sm font-semibold flex">
             <FaCalendarDay className="inline-block me-2 text-lg" />
             {date}
           </div>
