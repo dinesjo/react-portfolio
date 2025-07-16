@@ -28,7 +28,7 @@ export default function Home() {
             aria-label="Portrait"
           />
           <h1 className="h1 text-indigo-500 z-10" style={{ textShadow: "1px 2px 4px #000000" }}>
-            <span className="font-iceland text-7xl">Linus Dinesjö</span>
+            <span className="font-iceland text-6xl sm:text-7xl whitespace-nowrap">Linus Dinesjö</span>
           </h1>
         </div>
         <h4 className="font-iceland h3">
