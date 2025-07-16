@@ -63,7 +63,7 @@
 
 .h1 {
   font-family: "Iceland", "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
-  @apply text-4xl xs:text-6xl font-bold text-center tracking-tight mt-14 md:mt-8;
+  @apply text-4xl xs:text-6xl font-bold text-center tracking-tight;
 }
 
 .h2 {

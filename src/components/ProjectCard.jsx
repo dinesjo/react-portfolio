@@ -69,7 +69,102 @@ const ICON_MAP = {
   blazor: <img src={blazorImg} className="inline-block me-2 w-5" />,
 };
 
-export default function ProjectCard({ children, title, imgsrcs, hrefText, href, tags, icon, githubhref, date }) {
+export default function ProjectCard({
+  children,
+  title,
+  imgsrcs,
+  hrefText,
+  href,
+  tags,
+  icon,
+  githubhref,
+  date,
+  minimal = false,
+  color = "sky",
+  iconSrc,
+}) {
+  // Only allow Tailwind-supported colors
+  const colorMap = {
+    sky: {
+      bg: "bg-sky-500",
+      bgBtn: "bg-sky-600",
+      bgBtnHover: "hover:bg-sky-700",
+      border: "border-sky-200",
+      text: "text-sky-700",
+      textDark: "dark:text-sky-300",
+      gradFrom: "from-sky-50/80",
+      gradVia: "via-white/90",
+      gradTo: "to-sky-100/80",
+      borderDark: "dark:border-sky-700",
+    },
+    lime: {
+      bg: "bg-lime-500",
+      bgBtn: "bg-lime-600",
+      bgBtnHover: "hover:bg-lime-700",
+      border: "border-lime-200",
+      text: "text-lime-700",
+      textDark: "dark:text-lime-300",
+      gradFrom: "from-lime-50/80",
+      gradVia: "via-white/90",
+      gradTo: "to-lime-100/80",
+      borderDark: "dark:border-lime-700",
+    },
+    slate: {
+      bg: "bg-slate-500",
+      bgBtn: "bg-slate-600",
+      bgBtnHover: "hover:bg-slate-700",
+      border: "border-slate-200",
+      text: "text-slate-700",
+      textDark: "dark:text-slate-300",
+      gradFrom: "from-slate-50/80",
+      gradVia: "via-white/90",
+      gradTo: "to-slate-100/80",
+      borderDark: "dark:border-slate-700",
+    },
+    // Add more colors as needed
+  };
+  const c = colorMap[color] || colorMap["sky"];
+
+  if (minimal) {
+    const CardContent = (
+      <>
+        <div
+          className={`absolute -top-6 left-1/2 -translate-x-1/2 ${c.bg} text-white rounded-full p-2 shadow-lg border-4 border-white dark:border-slate-900 flex items-center justify-center`}
+          style={{ width: 40, height: 40 }}
+        >
+          {iconSrc ? (
+            <img src={iconSrc} alt="logo" className="w-7 h-7 object-contain" />
+          ) : (
+            <FaLink className="text-xl" />
+          )}
+        </div>
+        <span className={`font-bold text-base ${c.text} ${c.textDark} mt-6 mb-1 tracking-wide drop-shadow-sm`}>
+          {title}
+        </span>
+        <span className="sr-only">{hrefText}</span>
+      </>
+    );
+
+    return href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} border ${c.border} ${c.borderDark} rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group cursor-pointer outline-none focus:ring-2 focus:ring-${color}-400`}
+        tabIndex={0}
+        aria-label={title}
+      >
+        {CardContent}
+      </a>
+    ) : (
+      <div
+        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} border ${c.border} ${c.borderDark} rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group`}
+      >
+        {CardContent}
+      </div>
+    );
+  }
+
   return (
     <div
       className="glass rounded-3xl shadow-xl overflow-hidden card-hover"
