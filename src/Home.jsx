@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col justify-center md:w-1/2 pt-48" style={{ minHeight: "calc(100vh - 12rem)" }}>
+      <div className="flex flex-col justify-center md:w-1/2 sm:pt-48" style={{ minHeight: "calc(100vh - 12rem)" }}>
         <div className="flex justify-center relative">
           <div
             className="w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto absolute bottom-0 outline outline-transparent xs:hover:outline-indigo-500 bg-cover bg-center"
