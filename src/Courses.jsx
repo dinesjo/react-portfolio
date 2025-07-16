@@ -175,8 +175,8 @@ export default function Courses() {
   const sortedCourses = courses.sort((a, b) => a.code.localeCompare(b.code));
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 max-w-6xl mx-auto">
-      <div className="rounded-2xl p-4 pb-0 m-4 text-center max-w-4xl">
+    <div className="flex flex-col items-center justify-center max-w-6xl mx-auto">
+      <div className="rounded-2xl py-4 pb-0 m-4 text-center max-w-4xl">
         <h4 className="h4 leading-relaxed">Here are most of the courses I have taken at KTH.</h4>
         <h5 className="h5 italic mt-2 text-slate-400">As of January 2025</h5>
       </div>
