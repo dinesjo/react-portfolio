@@ -1,37 +1,41 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { TabTitle } from "./utils/GeneralFunctions";
 import ProjectCard from "./components/ProjectCard";
+import { TabTitle } from "./utils/GeneralFunctions";
 
-import snuskollLogo from "./assets/snuskoll-logo.png";
 import habitGrowerIcon from "./assets/habit-grower-icon.png";
+import snuskollLogo from "./assets/snuskoll-logo.png";
+
+// PortraitFadeIn component for fade-in and hover effect
+function PortraitFadeIn() {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className={`w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto outline outline-transparent xs:hover:outline-indigo-500 bg-cover bg-center animate-fadein`}
+      style={{
+        backgroundImage: "url('portrait.png')",
+        backgroundSize: hovered ? "125%" : "101%",
+        backgroundPosition: "center center",
+        transition: "all 0.3s ease, background-size 0.3s ease",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      role="img"
+      aria-label="Portrait of Linus Dinesjö"
+      tabIndex={0}
+    />
+  );
+}
 
 export default function Home() {
   TabTitle("Home");
 
   return (
     <>
-      <div className="flex flex-col items-center md:w-1/2 pt-16 mx-auto" style={{ minHeight: "50vh" }}>
+      <div className="flex flex-col items-center md:w-1/2 py-16 mx-auto" style={{ minHeight: "50vh" }}>
         <div className="flex flex-col items-center gap-0">
-          <div
-            className="w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto outline outline-transparent xs:hover:outline-indigo-500 bg-cover bg-center"
-            style={{
-              backgroundImage: "url('portrait.png')",
-              backgroundSize: "101%",
-              backgroundPosition: "center center",
-              transition: "all 0.3s ease, background-size 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundSize = "125%";
-              e.target.style.backgroundPosition = "center center";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundSize = "101%";
-              e.target.style.backgroundPosition = "center center";
-            }}
-            role="img"
-            aria-label="Portrait"
-          />
-          <h1 className="h1 text-indigo-500 z-10 mt-0" style={{ textShadow: "1px 2px 4px #000000" }}>
+          <PortraitFadeIn />
+          <h1 className="h1 text-indigo-500 z-10 mt-0 animate-fadein" style={{ textShadow: "1px 2px 4px #000000" }}>
             <span className="font-iceland text-6xl sm:text-7xl whitespace-nowrap">Linus Dinesjö</span>
           </h1>
         </div>
@@ -60,8 +64,8 @@ export default function Home() {
       </div>
 
       {/* Divider and Minimal Cards Section */}
-      <div className="w-full py-20">
-        <div className="flex items-center w-full max-w-lg mx-auto mb-8">
+      <div className="w-full pb-20">
+        <div className="mt-8 flex items-center w-full max-w-lg mx-auto mb-8">
           <hr className="flex-grow border-t border-slate-300 dark:border-slate-700" />
           <span className="mx-4 text-slate-400 font-semibold uppercase tracking-widest text-xs">Quick Links</span>
           <hr className="flex-grow border-t border-slate-300 dark:border-slate-700" />

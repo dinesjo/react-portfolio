@@ -167,7 +167,7 @@ export default function ProjectCard({
 
   return (
     <div
-      className="glass rounded-3xl shadow-xl overflow-hidden card-hover"
+      className="glass rounded-3xl shadow-xl overflow-hidden card-hover transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
       onMouseOver={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
       }}
