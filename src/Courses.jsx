@@ -121,6 +121,31 @@ export default function Courses() {
       name: "Software Reliability",
       year: 4,
     },
+    {
+      code: "DD2528",
+      name: "Dependable Autonomous Systems",
+      year: 5,
+    },
+    {
+      code: "DD2497",
+      name: "Project course in System Security",
+      year: 5,
+    },
+    {
+      code: "DH2643",
+      name: "Advanced Interaction Programming",
+      year: 5,
+    },
+    {
+      code: "ID2221",
+      name: "Data-Intensive Computing",
+      year: 5,
+    },
+    {
+      code: "DA231X",
+      name: "Degree Project in Computer Science and Engineering (30 credits)",
+      year: 5,
+    },
   ];
 
   // Add color to each course
@@ -163,8 +188,8 @@ export default function Courses() {
       </div>
 
       <div className="w-full space-y-8 pb-10">
-        {/* Loop years 1-4 */}
-        {Array.from({ length: 4 }, (_, i) => i + 1).map((year) => (
+        {/* Loop years 1-5 */}
+        {Array.from({ length: 5 }, (_, i) => i + 1).map((year) => (
           <div key={year} className="glass rounded-2xl p-6">
             <div className="text-center mb-6">
               <h3 className="h3 mb-2">Year {year}</h3>
@@ -176,6 +201,7 @@ export default function Courses() {
               >
                 View on KTH Website
               </a>
+              {year === 5 && <p className="text-slate-400 mt-2">Starts August 2025</p>}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {sortedCourses
@@ -191,13 +217,6 @@ export default function Courses() {
             </div>
           </div>
         ))}
-
-        <div className="glass rounded-2xl p-6">
-          <div className="text-center">
-            <h3 className="h3 mb-2">Year 5</h3>
-            <p className="text-slate-400">Starts August 2025</p>
-          </div>
-        </div>
       </div>
     </div>
   );
