@@ -70,7 +70,7 @@ export default function Home() {
           <span className="mx-4 text-slate-400 font-semibold uppercase tracking-widest text-xs">Quick Links</span>
           <hr className="flex-grow border-t border-slate-300 dark:border-slate-700" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start w-fit mx-auto">
+        <div className="grid grid-cols-2 gap-6 items-start w-fit mx-auto">
           <ProjectCard
             minimal
             color="slate"
