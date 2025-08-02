@@ -74,7 +74,7 @@ export default function Home() {
           <ProjectCard
             minimal
             color="slate"
-            title="Snuskoll"
+            title="Snus Koll"
             href="https://snuskoll.dinesjo.se/"
             hrefText="Open"
             iconSrc={snuskollLogo}
@@ -82,7 +82,7 @@ export default function Home() {
           <ProjectCard
             minimal
             color="lime"
-            title="HabitGrower"
+            title="Habit Grower"
             href="https://habitgrower.web.app/"
             hrefText="Open"
             iconSrc={habitGrowerIcon}
