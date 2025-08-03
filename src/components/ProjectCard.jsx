@@ -2,6 +2,7 @@ import {
   FaBootstrap,
   FaCalendarDay,
   FaCss3Alt,
+  FaFlask,
   FaGithub,
   FaHtml5,
   FaJsSquare,
@@ -44,6 +45,7 @@ const COLOR_MAP = {
   typescript: "sky",
   chatgpt: "green",
   blazor: "purple",
+  research: "blue"
 };
 
 const ICON_MAP = {
@@ -67,6 +69,7 @@ const ICON_MAP = {
   typescript: <img src={typescriptImg} className="inline-block me-2 w-5" />,
   chatgpt: <img src={chatgptImg} className="inline-block me-2 w-5 rounded-full" />,
   blazor: <img src={blazorImg} className="inline-block me-2 w-5" />,
+  research: <FaFlask className="inline-block me-2" />,
 };
 
 export default function ProjectCard({

@@ -5,6 +5,7 @@ import {
   FaCode,
   FaDumbbell,
   FaExclamationTriangle,
+  FaFlask,
   FaLock,
   FaMapPin,
   FaMicrophoneAlt,
@@ -27,6 +28,7 @@ import pathvisReactImg from "./assets/path-vis-react.png";
 import pathvisImg from "./assets/path-vis.png";
 import snuskoll from "./assets/snuskoll.png";
 import thisImg from "./assets/this.png";
+import bachelorImg from "./assets/bachelor.png";
 import ProjectCard from "./components/ProjectCard";
 import Alert from "./utils/Alert";
 import { TabTitle } from "./utils/GeneralFunctions";
@@ -133,6 +135,18 @@ export default function Projects() {
         >
           <b>New and improved version</b> of the pathfinding visualization website. This time using React and a new
           React-UI framework: Joy UI.
+        </ProjectCard>
+        <ProjectCard
+          title="Efficacy of Context Summarization Techniques on Large Language Model Chatbots"
+          imgsrcs={bachelorImg}
+          href="https://urn.kb.se/resolve?urn=urn%3Anbn%3Ase%3Akth%3Adiva-351103"
+          hrefText="See Paper on Diva"
+          tags={["Research", "ChatGPT"]}
+          icon={<FaFlask className="inline-block me-2 text-blue-600" />}
+          date={"January - June 2024"}
+        >
+          Research paper on using context summarization of LLM chatbots to reduce operating costs. Findings include that 
+          cost-cutting upwards of <strong>92%</strong> is feasible without sacrificing significant performance.
         </ProjectCard>
         <ProjectCard
           title="3D drone relief software"
