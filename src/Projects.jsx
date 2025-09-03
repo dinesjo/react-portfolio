@@ -6,6 +6,8 @@ import {
   FaDumbbell,
   FaExclamationTriangle,
   FaFlask,
+  FaInfoCircle,
+  FaKeyboard,
   FaLock,
   FaMapPin,
   FaMicrophoneAlt,
@@ -17,6 +19,7 @@ import {
   FaUnity,
 } from "react-icons/fa";
 import aiDiary from "./assets/AI-diary.png";
+import bachelorImg from "./assets/bachelor.png";
 import chessreporterImg from "./assets/chess-reporter.png";
 import deadlineTracker from "./assets/deadline-tracker.png";
 import droneImg from "./assets/drone-software.png";
@@ -28,7 +31,7 @@ import pathvisReactImg from "./assets/path-vis-react.png";
 import pathvisImg from "./assets/path-vis.png";
 import snuskoll from "./assets/snuskoll.png";
 import thisImg from "./assets/this.png";
-import bachelorImg from "./assets/bachelor.png";
+import vim from "./assets/vim.png";
 import ProjectCard from "./components/ProjectCard";
 import Alert from "./utils/Alert";
 import { TabTitle } from "./utils/GeneralFunctions";
@@ -53,16 +56,7 @@ export default function Projects() {
       {/* Grid of cards, each one having an image, header and description */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl mb-8 items-start">
         <ProjectCard
-          title={
-            <div className="flex items-center gap-2">
-              Snuskoll{" "}
-              <span
-                className={`text-sm text-white bg-sky-700 px-2 py-0.5 rounded-full whitespace-nowrap flex items-center font-semibold`}
-              >
-                New
-              </span>
-            </div>
-          }
+          title={<div className="flex items-center gap-2">Snuskoll</div>}
           imgsrcs={snuskoll}
           href={"https://snuskoll.dinesjo.se/"}
           hrefText={"Try Yourself"}
@@ -72,8 +66,8 @@ export default function Projects() {
           date={"June 2025 - Present"}
         >
           A web app built for some friends and I to rate different snus products. It is built using ASP.NET and Blazor,
-          and uses a PostgreSQL database to persist data. The app is mobile-first, and is available as a PWA to be downloaded
-          to your device.
+          and uses a PostgreSQL database to persist data. The app is mobile-first, and is available as a PWA to be
+          downloaded to your device.
         </ProjectCard>
         <ProjectCard
           title="HabitGrower"
@@ -87,6 +81,32 @@ export default function Projects() {
         >
           A personal life-organizer website used to grow new or existing habits. Uses Firebase for authentication and
           storage. It is developed <b>mobile-first</b>, and is available as a PWA to be downloaded to your device.
+        </ProjectCard>
+        <ProjectCard
+          title={
+            <div className="flex items-center gap-2">
+              Interactive Vim motions guide{" "}
+              <span
+                className={`text-sm text-white bg-gray-700 px-2 py-0.5 rounded-full whitespace-nowrap flex items-center font-semibold`}
+              >
+                New
+              </span>
+            </div>
+          }
+          imgsrcs={vim}
+          href={"https://vim.dinesjo.se/"}
+          hrefText={"Try Yourself"}
+          githubhref={"https://github.com/dinesjo/vim-motions"}
+          tags={["HTML", "CSS", "JavaScript"]}
+          icon={<FaKeyboard className="inline-block me-2 text-gray-800" />}
+          date={"August 2025"}
+        >
+          A very simple web app built I built to help me learn various Vim keyboard shortcuts. It is built using HTML,
+          CSS, and JavaScript.
+          <Alert type="info">
+            <FaInfoCircle className="inline-block text-blue-400 me-2" />
+            The web app is best experienced on desktop with a physical keyboard.
+          </Alert>
         </ProjectCard>
         <ProjectCard
           title="Deadline Tracker"
@@ -145,7 +165,7 @@ export default function Projects() {
           icon={<FaFlask className="inline-block me-2 text-blue-600" />}
           date={"January - June 2024"}
         >
-          Research paper on using context summarization of LLM chatbots to reduce operating costs. Findings include that 
+          Research paper on using context summarization of LLM chatbots to reduce operating costs. Findings include that
           cost-cutting upwards of <strong>92%</strong> is feasible without sacrificing significant performance.
         </ProjectCard>
         <ProjectCard
