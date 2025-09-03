@@ -178,7 +178,7 @@ export default function Courses() {
     <div className="flex flex-col items-center justify-center max-w-6xl mx-auto">
       <div className="rounded-2xl py-4 pb-0 m-4 text-center max-w-4xl">
         <h4 className="h4 leading-relaxed">Here are most of the courses I have taken at KTH.</h4>
-        <h5 className="h5 italic mt-2 text-slate-400">As of January 2025</h5>
+        <h5 className="h5 italic mt-2 text-slate-400">As of September 2025</h5>
       </div>
 
       <div className="w-full space-y-8 pb-10">
@@ -186,7 +186,9 @@ export default function Courses() {
         {Array.from({ length: 5 }, (_, i) => i + 1).map((year) => (
           <div key={year} className="glass rounded-2xl p-6">
             <div className="text-center mb-6">
-              <h3 className="h3 mb-2">Year {year}</h3>
+              <h3 className="h3 mb-2">
+                Year {year} {year === 5 && <span className="text-lg">&ndash; preliminary</span>}
+              </h3>
               <a
                 href={`https://www.kth.se/student/kurser/program/CDATE/20212/arskurs${year}?l=en`}
                 target="_blank"
@@ -195,7 +197,7 @@ export default function Courses() {
               >
                 View on KTH Website
               </a>
-              {year === 5 && <p className="text-slate-400 mt-2">Starts August 2025</p>}
+              {year === 5 && <p className="text-slate-400 mt-2">Started August 2025</p>}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {sortedCourses

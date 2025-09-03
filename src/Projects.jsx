@@ -72,7 +72,7 @@ export default function Projects() {
           date={"June 2025 - Present"}
         >
           A web app built for some friends and I to rate different snus products. It is built using ASP.NET and Blazor,
-          and uses a SQL database to store the data. The app is mobile-first, and is available as a PWA to be downloaded
+          and uses a PostgreSQL database to persist data. The app is mobile-first, and is available as a PWA to be downloaded
           to your device.
         </ProjectCard>
         <ProjectCard
