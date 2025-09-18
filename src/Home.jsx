@@ -40,7 +40,7 @@ export default function Home() {
           </h1>
         </div>
         <h4 className="font-iceland h3">
-          <b className="text-indigo-500">Welcome!</b> I&apos;m a 4th year student at{" "}
+          <b className="text-indigo-500">Welcome!</b> I&apos;m a 5th year student at{" "}
           <span className="text-indigo-500">
             <b>KTH Stockholm</b>
           </span>
