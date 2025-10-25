@@ -56,7 +56,7 @@ const NavBarItem = ({ name, icon, onClick, active }) => {
       onClick={onClick}
       className={`font-iceland flex items-center px-3 sm:px-4 py-2 text-2xl font-medium rounded-xl transition-all duration-200 ${
         active
-          ? "text-white bg-gradient-to-r from-indigo-600 to-indigo-500 shadow-lg"
+          ? "text-white bg-gradient-to-r from-indigo-600 to-indigo-500 navbar-active-glow"
           : "dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50 hover:bg-slate-200 hover:text-slate-900 hover:shadow-md text-slate-700"
       }`}
     >
@@ -116,6 +116,16 @@ export default function App() {
           }
         }
       }
+
+      // Scroll animations
+      const animatedElements = document.querySelectorAll('.scroll-animate');
+      animatedElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight * 0.85;
+        if (isVisible) {
+          el.classList.add('scroll-visible');
+        }
+      });
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -134,50 +144,50 @@ export default function App() {
         </section>
 
         {/* Divider */}
-        <div id="projects" className="w-full max-w-4xl my-12">
-          <div className="flex items-center">
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
-            <span className="mx-6 text-indigo-400 font-semibold uppercase tracking-widest text-sm flex items-center gap-2">
-              <FaCertificate />
+        <div id="projects" className="w-full max-w-4xl my-16 scroll-animate">
+          <div className="flex items-center py-4 rounded-2xl">
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
+            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
+              <FaCertificate className="text-xl" />
               Projects
             </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
           </div>
         </div>
 
-        <section className="min-h-screen w-full flex flex-col items-center justify-center">
+        <section className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
           <Projects />
         </section>
 
         {/* Divider */}
-        <div id="courses" className="w-full max-w-4xl my-12">
-          <div className="flex items-center">
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
-            <span className="mx-6 text-indigo-400 font-semibold uppercase tracking-widest text-sm flex items-center gap-2">
-              <FaBook />
+        <div id="courses" className="w-full max-w-4xl my-16 scroll-animate">
+          <div className="flex items-center py-4 rounded-2xl">
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
+            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
+              <FaBook className="text-xl" />
               Courses
             </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
           </div>
         </div>
 
-        <section className="min-h-screen w-full flex flex-col items-center justify-center">
+        <section className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
           <Courses />
         </section>
 
         {/* Divider */}
-        <div id="contact" className="w-full max-w-4xl my-12">
-          <div className="flex items-center">
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
-            <span className="mx-6 text-indigo-400 font-semibold uppercase tracking-widest text-sm flex items-center gap-2">
-              <FaEnvelope />
+        <div id="contact" className="w-full max-w-4xl my-16 scroll-animate">
+          <div className="flex items-center py-4 rounded-2xl">
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
+            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
+              <FaEnvelope className="text-xl" />
               Contact
             </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/30" />
+            <hr className="flex-grow border-t-2 border-indigo-500/50" />
           </div>
         </div>
 
-        <section className="w-full flex flex-col items-center">
+        <section className="w-full flex flex-col items-center scroll-animate">
           <Contact />
         </section>
       </div>
