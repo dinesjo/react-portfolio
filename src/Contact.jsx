@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaCopy } from "react-icons/fa";
-import { TabTitle } from "./utils/GeneralFunctions";
 
 export default function Contact() {
   const email = "dinesjo@kth.se";
@@ -12,10 +11,8 @@ export default function Contact() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  TabTitle("Contact");
-
   return (
-    <div className="flex flex-col items-center justify-center px-6" style={{ minHeight: "calc(100vh - 16rem)" }}>
+    <div className="flex flex-col items-center justify-center px-6 mb-12" style={{ minHeight: "16rem" }}>
       <div className="glass p-6 rounded-2xl max-w-2xl text-center space-y-6">
         <h4 className="h4 leading-relaxed">Get in touch by sending me an email:</h4>
 

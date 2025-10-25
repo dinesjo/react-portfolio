@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import ProjectCard from "./components/ProjectCard";
-import { TabTitle } from "./utils/GeneralFunctions";
 
 import habitGrowerIcon from "./assets/habit-grower-icon.png";
 import snuskollLogo from "./assets/snuskoll-logo.png";
@@ -28,8 +26,6 @@ function PortraitFadeIn() {
 }
 
 export default function Home() {
-  TabTitle("Home");
-
   return (
     <>
       <div className="flex flex-col items-center md:w-1/2 py-16 mx-auto" style={{ minHeight: "50vh" }}>
@@ -47,19 +43,8 @@ export default function Home() {
           , persuing a master&apos;s degree in Computer Science.
         </h4>
         <h5 className="font-iceland h5 mt-5 text-gray-400">
-          Check out some of my{" "}
-          <Link className="link" to="/projects">
-            projects
-          </Link>
-          , as well as the{" "}
-          <Link className="link" to="/courses">
-            courses
-          </Link>{" "}
-          I have taken at KTH. Feel free to get in touch, see the{" "}
-          <Link className="link" to="/contact">
-            contact
-          </Link>{" "}
-          page.
+          Scroll down to check out some of my <span className="text-indigo-400">projects</span>, as well as the{" "}
+          <span className="text-indigo-400">courses</span> I have taken at KTH. Feel free to get in touch below.
         </h5>
       </div>
 
