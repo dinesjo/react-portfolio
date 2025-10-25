@@ -104,21 +104,31 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["home", "projects", "courses", "contact"];
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      const navbarHeight = 150; // Account for navbar height
+      
+      // Find which section is currently most visible in the viewport
+      let currentSection = "home";
+      let maxVisibility = 0;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
         if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
+          const rect = element.getBoundingClientRect();
+          const elementTop = Math.max(rect.top, navbarHeight);
+          const elementBottom = Math.min(rect.bottom, window.innerHeight);
+          const visibleHeight = Math.max(0, elementBottom - elementTop);
+          
+          if (visibleHeight > maxVisibility) {
+            maxVisibility = visibleHeight;
+            currentSection = sectionId;
           }
         }
       }
+      
+      setActiveSection(currentSection);
 
       // Scroll animations
-      const animatedElements = document.querySelectorAll('.scroll-animate');
+      const animatedElements = document.querySelectorAll('.scroll-animate, .scroll-animate-delay');
       animatedElements.forEach(el => {
         const rect = el.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight * 0.85;
@@ -144,7 +154,7 @@ export default function App() {
         </section>
 
         {/* Divider */}
-        <div id="projects" className="w-full max-w-4xl my-16 scroll-animate">
+        <div className="w-full max-w-4xl my-16 scroll-animate">
           <div className="flex items-center py-4 rounded-2xl">
             <hr className="flex-grow border-t-2 border-indigo-500/50" />
             <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
@@ -155,12 +165,12 @@ export default function App() {
           </div>
         </div>
 
-        <section className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
+        <section id="projects" className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
           <Projects />
         </section>
 
         {/* Divider */}
-        <div id="courses" className="w-full max-w-4xl my-16 scroll-animate">
+        <div className="w-full max-w-4xl my-16 scroll-animate">
           <div className="flex items-center py-4 rounded-2xl">
             <hr className="flex-grow border-t-2 border-indigo-500/50" />
             <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
@@ -171,12 +181,12 @@ export default function App() {
           </div>
         </div>
 
-        <section className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
+        <section id="courses" className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
           <Courses />
         </section>
 
         {/* Divider */}
-        <div id="contact" className="w-full max-w-4xl my-16 scroll-animate">
+        <div className="w-full max-w-4xl my-16 scroll-animate">
           <div className="flex items-center py-4 rounded-2xl">
             <hr className="flex-grow border-t-2 border-indigo-500/50" />
             <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
@@ -187,7 +197,7 @@ export default function App() {
           </div>
         </div>
 
-        <section className="w-full flex flex-col items-center scroll-animate">
+        <section id="contact" className="w-full flex flex-col items-center scroll-animate-delay">
           <Contact />
         </section>
       </div>
