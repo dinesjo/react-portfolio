@@ -53,7 +53,7 @@ export default function Projects() {
       {/* Grid of cards, each one having an image, header and description */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl mb-8 items-start">
         <ProjectCard
-          title={<div className="flex items-center gap-2">Snuskoll</div>}
+          title={<div className="flex items-center gap-2">SnusKoll</div>}
           imgsrcs={snuskoll}
           href={"https://snuskoll.dinesjo.se/"}
           hrefText={"Try Yourself"}
@@ -132,16 +132,7 @@ export default function Projects() {
           meals.
         </ProjectCard>
         <ProjectCard
-          title={
-            <div className="flex items-center gap-2">
-              (React) Pathfinding Visualization{" "}
-              <span
-                className={`text-sm text-white bg-sky-700 px-2 py-0.5 rounded-full whitespace-nowrap flex items-center font-semibold`}
-              >
-                New
-              </span>
-            </div>
-          }
+          title="(React) Pathfinding Visualization"
           imgsrcs={pathvisReactImg}
           githubhref={"https://github.com/dinesjo/react-pathfinding-vis"}
           href={"https://dinesjo.github.io/react-pathfinding-vis/"}

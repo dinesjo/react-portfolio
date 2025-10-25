@@ -50,7 +50,7 @@ export default function Home() {
 
       {/* Divider and Minimal Cards Section */}
       <div className="w-full pb-20">
-        <div className="mt-8 flex items-center w-full max-w-lg mx-auto mb-8">
+        <div className="mt-8 flex items-center w-full max-w-xs mx-auto mb-8">
           <hr className="flex-grow border-t border-slate-300 dark:border-slate-700" />
           <span className="mx-4 text-slate-400 font-semibold uppercase tracking-widest text-xs">Quick Links</span>
           <hr className="flex-grow border-t border-slate-300 dark:border-slate-700" />
@@ -59,7 +59,7 @@ export default function Home() {
           <ProjectCard
             minimal
             color="slate"
-            title="Snus Koll"
+            title="SnusKoll"
             href="https://snuskoll.dinesjo.se/"
             hrefText="Open"
             iconSrc={snuskollLogo}

@@ -101,28 +101,34 @@ export default function ProjectCard({
       borderDark: "dark:border-sky-700",
     },
     lime: {
-      bg: "bg-lime-500",
+      bg: "bg-lime-600",
       bgBtn: "bg-lime-600",
       bgBtnHover: "hover:bg-lime-700",
-      border: "border-lime-200",
-      text: "text-lime-700",
+      border: "border-lime-300",
+      text: "text-green-800",
       textDark: "dark:text-lime-300",
-      gradFrom: "from-lime-50/80",
-      gradVia: "via-white/90",
-      gradTo: "to-lime-100/80",
-      borderDark: "dark:border-lime-700",
+      gradFrom: "from-lime-100",
+      gradVia: "via-green-50",
+      gradTo: "to-emerald-100",
+      borderDark: "border-lime-600",
+      darkGradFrom: "dark:from-lime-950",
+      darkGradVia: "dark:via-green-950",
+      darkGradTo: "dark:to-emerald-950",
     },
     slate: {
-      bg: "bg-slate-500",
+      bg: "bg-slate-700",
       bgBtn: "bg-slate-600",
       bgBtnHover: "hover:bg-slate-700",
-      border: "border-slate-200",
+      border: "border-slate-300",
       text: "text-slate-700",
-      textDark: "dark:text-slate-300",
-      gradFrom: "from-slate-50/80",
-      gradVia: "via-white/90",
-      gradTo: "to-slate-100/80",
-      borderDark: "dark:border-slate-700",
+      textDark: "dark:text-slate-200",
+      gradFrom: "from-slate-100",
+      gradVia: "via-slate-50",
+      gradTo: "to-gray-100",
+      borderDark: "border-slate-600",
+      darkGradFrom: "dark:from-slate-800",
+      darkGradVia: "dark:via-slate-900",
+      darkGradTo: "dark:to-gray-900",
     },
     // Add more colors as needed
   };
@@ -153,7 +159,7 @@ export default function ProjectCard({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} border ${c.border} ${c.borderDark} dark:bg-gradient-to-br dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 dark:border-slate-700 dark:text-slate-200 rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group cursor-pointer outline-none focus:ring-2 focus:ring-${color}-400`}
+        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} ${c.darkGradFrom} ${c.darkGradVia} ${c.darkGradTo} border-2 ${c.border} dark:${c.borderDark} rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group cursor-pointer outline-none focus:ring-2 focus:ring-${color}-400`}
         tabIndex={0}
         aria-label={title}
       >
@@ -161,7 +167,7 @@ export default function ProjectCard({
       </a>
     ) : (
       <div
-        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} border ${c.border} ${c.borderDark} dark:bg-gradient-to-br dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 dark:border-slate-700 dark:text-slate-200 rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group`}
+        className={`relative bg-gradient-to-br ${c.gradFrom} ${c.gradVia} ${c.gradTo} ${c.darkGradFrom} ${c.darkGradVia} ${c.darkGradTo} border-2 ${c.border} dark:${c.borderDark} rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center max-w-[14rem] transition hover:scale-105 hover:shadow-2xl duration-200 group`}
       >
         {CardContent}
       </div>
