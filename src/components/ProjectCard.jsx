@@ -45,7 +45,7 @@ const COLOR_MAP = {
   typescript: "sky",
   chatgpt: "green",
   blazor: "purple",
-  research: "blue"
+  research: "blue",
 };
 
 const ICON_MAP = {
@@ -229,7 +229,7 @@ export default function ProjectCard({
               href={href}
               target="_blank"
               rel="noreferrer"
-              className="btn-primary font-montserrat text-white flex items-center justify-center mx-auto"
+              className="px-6 py-3 rounded-xl font-semibold font-montserrat flex items-center justify-center mx-auto text-white bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-200 hover:scale-[1.03] hover:shadow-xl hover:shadow-indigo-500/40 group"
             >
               <FaLink className="inline-block me-2" />
               <span>{hrefText}</span>
@@ -244,7 +244,7 @@ export default function ProjectCard({
               title="View on GitHub"
               className="font-montserrat mx-auto px-4 py-3 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-700/10 dark:hover:bg-slate-700/50 transition-all duration-200 flex items-center gap-2 group"
             >
-              <FaGithub className="text-xl group-hover:scale-110 transition-transform" />
+              <FaGithub className="text-xl" />
               <span className="text-lg font-medium">{githubhref.split("/").pop()}</span>
             </a>
           )}

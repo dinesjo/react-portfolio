@@ -19,8 +19,10 @@ export default function Contact() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={handleCopy}
-            className={`btn-primary text-white flex items-center transition-all duration-200 ${
-              copied ? "bg-green-600 hover:bg-green-700" : ""
+            className={`px-6 py-3 rounded-xl font-semibold font-montserrat flex items-center justify-center text-white transition-all duration-200 hover:scale-[1.03] hover:shadow-xl ${
+              copied
+                ? "bg-green-600 hover:shadow-green-500/40"
+                : "bg-gradient-to-r from-indigo-500 to-indigo-700 hover:shadow-indigo-500/40"
             }`}
           >
             <FaCopy className="inline-block mr-2" />
