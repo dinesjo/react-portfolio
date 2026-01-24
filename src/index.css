@@ -104,34 +104,6 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
-/* Improved button styles */
-.btn-primary {
-  @apply px-6 py-3 rounded-xl font-semibold relative overflow-hidden;
-  --bg-from: #6366f1;
-  --bg-to: #8b5cf6;
-  background: linear-gradient(135deg, var(--bg-from), var(--bg-to));
-  transition: all 200ms ease;
-}
-
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  opacity: 0;
-  transition: opacity 200ms ease;
-  border-radius: inherit;
-}
-
-.btn-primary:hover::before {
-  opacity: 1;
-}
-
-.btn-primary * {
-  position: relative;
-  z-index: 1;
-}
-
 /* Enhanced navbar */
 .navbar-blur {
   background: rgba(255, 255, 255, 0.05);
