@@ -9,13 +9,13 @@ const NavBar = ({ activeSection }) => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const navbarHeight = 100; // Approximate height of navbar
+      const navbarHeight = 250; // Approximate height of navbar
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - navbarHeight;
-      
+
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
@@ -104,8 +104,8 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["home", "projects", "courses", "contact"];
-      const navbarHeight = 150; // Account for navbar height
-      
+      const navbarHeight = 80; // Account for navbar height
+
       // Find which section is currently most visible in the viewport
       let currentSection = "home";
       let maxVisibility = 0;
@@ -117,23 +117,23 @@ export default function App() {
           const elementTop = Math.max(rect.top, navbarHeight);
           const elementBottom = Math.min(rect.bottom, window.innerHeight);
           const visibleHeight = Math.max(0, elementBottom - elementTop);
-          
+
           if (visibleHeight > maxVisibility) {
             maxVisibility = visibleHeight;
             currentSection = sectionId;
           }
         }
       }
-      
+
       setActiveSection(currentSection);
 
       // Scroll animations
-      const animatedElements = document.querySelectorAll('.scroll-animate, .scroll-animate-delay');
-      animatedElements.forEach(el => {
+      const animatedElements = document.querySelectorAll(".scroll-animate");
+      animatedElements.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight * 0.85;
         if (isVisible) {
-          el.classList.add('scroll-visible');
+          el.classList.add("scroll-visible");
         }
       });
     };
@@ -147,7 +147,7 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar activeSection={activeSection} />
-      
+
       <div className="w-11/12 mx-auto flex flex-col items-center pt-20">
         <section id="home" className="min-h-screen w-full flex flex-col items-center justify-center">
           <Home />
@@ -197,7 +197,7 @@ export default function App() {
           </div>
         </div>
 
-        <section id="contact" className="w-full flex flex-col items-center scroll-animate-delay">
+        <section id="contact" className="w-full flex flex-col items-center">
           <Contact />
         </section>
       </div>

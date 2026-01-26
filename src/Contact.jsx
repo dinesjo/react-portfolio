@@ -12,8 +12,8 @@ export default function Contact() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 mb-12" style={{ minHeight: "16rem" }}>
-      <div className="glass p-6 rounded-2xl max-w-2xl text-center space-y-6">
+    <div className="flex flex-col items-center justify-center px-6 mb-24" style={{ minHeight: "16rem" }}>
+      <div className="glass p-6 rounded-2xl max-w-2xl text-center space-y-6 scroll-animate">
         <h4 className="h4 leading-relaxed">Get in touch by sending me an email:</h4>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

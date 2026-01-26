@@ -9,12 +9,13 @@ function PortraitFadeIn() {
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className={`w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto outline outline-transparent xs:hover:outline-indigo-500 bg-cover bg-center animate-fadein`}
+      className={`w-60 xs:w-72 h-60 xs:h-72 glass rounded-full mx-auto outline outline-transparent bg-cover bg-center animate-fadein xs:hover:outline-indigo-500 transition-all duration-300 ease-[cubic-bezier(0.175, 0.885, 0.32, 1.275)]`}
       style={{
         backgroundImage: "url('portrait.png')",
         backgroundSize: hovered ? "125%" : "101%",
         backgroundPosition: "center center",
-        transition: "all 0.3s ease, background-size 0.3s ease",
+        // transition: "all 0.3s ease, background-size 0.3s ease",
+        filter: hovered ? "grayscale(0%)" : "grayscale(20%)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

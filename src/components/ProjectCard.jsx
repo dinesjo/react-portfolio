@@ -176,25 +176,29 @@ export default function ProjectCard({
 
   return (
     <div
-      className="glass rounded-3xl shadow-xl overflow-hidden card-hover transition-transform duration-200 hover:scale-105 hover:shadow-2xl"
+      className="glass rounded-3xl shadow-xl overflow-hidden transition-transform duration-200 hover:scale-[1.07] hover:shadow-2xl"
       onMouseOver={(e) => {
-        e.currentTarget.querySelector("img").style.transform = "scale(1.05)";
+        e.currentTarget.querySelector("img").style.transform = "scale(1.10)";
+        e.currentTarget.querySelector("img").style.filter = "grayscale(0%)";
       }}
       onMouseOut={(e) => {
         e.currentTarget.querySelector("img").style.transform = "scale(1)";
+        e.currentTarget.querySelector("img").style.filter = "grayscale(50%)";
       }}
     >
       {/* IMAGE */}
-      <img
-        src={imgsrcs}
-        alt={title}
-        className={`w-full h-40 sm:h-60 object-cover transition-all duration-300 overflow-y-auto ${
-          href && "xs:cursor-pointer"
-        }`}
-        onClick={() => {
-          if (href && window.innerWidth > 768) window.open(href, "_blank"); // hack to prevent mobile click
-        }}
-      />
+      <div className="overflow-hidden">
+        <img
+          src={imgsrcs}
+          alt={title}
+          className={`w-full h-40 sm:h-60 object-cover grayscale-[50%] transition-all duration-300 ${
+            href && "xs:cursor-pointer"
+          }`}
+          onClick={() => {
+            if (href && window.innerWidth > 768) window.open(href, "_blank"); // hack to prevent mobile click
+          }}
+        />
+      </div>
 
       <div className="p-6">
         {/* TAGS */}
