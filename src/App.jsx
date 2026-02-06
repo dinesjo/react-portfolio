@@ -1,208 +1,96 @@
 import { useEffect, useState } from "react";
-import { FaBook, FaCertificate, FaEnvelope, FaGithub, FaHome, FaLinkedin } from "react-icons/fa";
-import Home from "./Home.jsx";
-import Projects from "./Projects.jsx";
-import Courses from "./Courses.jsx";
-import Contact from "./Contact.jsx";
-
-const NavBar = ({ activeSection }) => {
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const navbarHeight = 250; // Approximate height of navbar
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - navbarHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  return (
-    <div className="fixed w-full flex flex-wrap justify-center gap-4 navbar-blur shadow-lg z-50 py-4">
-      <NavBarItem
-        name="Home"
-        icon={<FaHome />}
-        onClick={() => scrollToSection("home")}
-        active={activeSection === "home"}
-      />
-      <NavBarItem
-        name="Projects"
-        icon={<FaCertificate />}
-        onClick={() => scrollToSection("projects")}
-        active={activeSection === "projects"}
-      />
-      <NavBarItem
-        name="Courses"
-        icon={<FaBook />}
-        onClick={() => scrollToSection("courses")}
-        active={activeSection === "courses"}
-      />
-      <NavBarItem
-        name="Contact"
-        icon={<FaEnvelope />}
-        onClick={() => scrollToSection("contact")}
-        active={activeSection === "contact"}
-      />
-    </div>
-  );
-};
-
-const NavBarItem = ({ name, icon, onClick, active }) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`font-iceland flex items-center px-3 sm:px-4 py-2 text-2xl font-medium rounded-xl transition-all duration-200 ${
-        active
-          ? "text-white bg-gradient-to-r from-indigo-600 to-indigo-500 navbar-active-glow"
-          : "dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50 hover:bg-slate-200 hover:text-slate-900 hover:shadow-md text-slate-700"
-      }`}
-    >
-      <span className="inline-block sm:me-2">{icon}</span>
-      <span className="hidden sm:inline">{name}</span>
-    </button>
-  );
-};
-
-const Footer = () => {
-  return (
-    <div className="flex justify-center gap-8 py-8 text-slate-400 glass">
-      <a
-        href="https://github.com/dinesjo"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="View my GitHub"
-        className="group transition-all duration-200 hover:scale-110"
-      >
-        <FaGithub className="text-4xl group-hover:text-slate-200 transition-all duration-200" />
-      </a>
-      <a
-        href={`mailto:dinesjo@kth.se`}
-        title="Send me an email"
-        className="group transition-all duration-200 hover:scale-110"
-      >
-        <FaEnvelope className="text-4xl group-hover:text-indigo-400 transition-all duration-200" />
-      </a>
-      <a
-        href="https://www.linkedin.com/in/dinesjo/"
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Open my LinkedIn"
-        className="group transition-all duration-200 hover:scale-110"
-      >
-        <FaLinkedin className="text-4xl group-hover:text-blue-400 transition-all duration-200" />
-      </a>
-    </div>
-  );
-};
+import { FaChevronUp } from "react-icons/fa";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import FeaturedProjects from "./components/FeaturedProjects";
+import CoursesCarousel from "./components/CoursesCarousel";
+import ProjectsGrid from "./components/ProjectsGrid";
+import CoursesList from "./components/CoursesList";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 export default function App() {
-  const [activeSection, setActiveSection] = useState("home");
+  const [showTop, setShowTop] = useState(false);
 
+  // Scroll-based reveal using IntersectionObserver
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["home", "projects", "courses", "contact"];
-      const navbarHeight = 80; // Account for navbar height
-
-      // Find which section is currently most visible in the viewport
-      let currentSection = "home";
-      let maxVisibility = 0;
-
-      for (const sectionId of sections) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          const elementTop = Math.max(rect.top, navbarHeight);
-          const elementBottom = Math.min(rect.bottom, window.innerHeight);
-          const visibleHeight = Math.max(0, elementBottom - elementTop);
-
-          if (visibleHeight > maxVisibility) {
-            maxVisibility = visibleHeight;
-            currentSection = sectionId;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
           }
-        }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -40px 0px",
       }
+    );
 
-      setActiveSection(currentSection);
-
-      // Scroll animations
-      const animatedElements = document.querySelectorAll(".scroll-animate");
-      animatedElements.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight * 0.85;
-        if (isVisible) {
-          el.classList.add("scroll-visible");
-        }
+    const observe = () => {
+      document.querySelectorAll(".reveal:not(.revealed)").forEach((el) => {
+        observer.observe(el);
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial position
+    observe();
+    const timer = setTimeout(observe, 200);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, []);
+
+  // Show scroll-to-top button
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 500);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <NavBar activeSection={activeSection} />
+    <div className="relative min-h-screen">
+      {/* Skip to content */}
+      <a
+        href="#home"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-blue-500 focus:text-white focus:rounded-xl focus:font-semibold"
+      >
+        Skip to content
+      </a>
 
-      <div className="w-11/12 mx-auto flex flex-col items-center pt-20">
-        <section id="home" className="min-h-screen w-full flex flex-col items-center justify-center">
-          <Home />
-        </section>
+      {/* Background gradient */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-b from-sky-50 via-blue-50 to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950" />
 
-        {/* Divider */}
-        <div className="w-full max-w-4xl my-16 scroll-animate">
-          <div className="flex items-center py-4 rounded-2xl">
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
-              <FaCertificate className="text-xl" />
-              Projects
-            </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-          </div>
-        </div>
-
-        <section id="projects" className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
-          <Projects />
-        </section>
-
-        {/* Divider */}
-        <div className="w-full max-w-4xl my-16 scroll-animate">
-          <div className="flex items-center py-4 rounded-2xl">
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
-              <FaBook className="text-xl" />
-              Courses
-            </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-          </div>
-        </div>
-
-        <section id="courses" className="min-h-screen w-full flex flex-col items-center justify-center scroll-animate">
-          <Courses />
-        </section>
-
-        {/* Divider */}
-        <div className="w-full max-w-4xl my-16 scroll-animate">
-          <div className="flex items-center py-4 rounded-2xl">
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-            <span className="mx-8 text-indigo-400 font-bold uppercase tracking-widest text-base flex items-center gap-3">
-              <FaEnvelope className="text-xl" />
-              Contact
-            </span>
-            <hr className="flex-grow border-t-2 border-indigo-500/50" />
-          </div>
-        </div>
-
-        <section id="contact" className="w-full flex flex-col items-center">
-          <Contact />
-        </section>
+      {/* Decorative blurred blobs */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-blue-200/30 dark:bg-blue-900/20 blur-3xl" />
+        <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] rounded-full bg-sky-200/25 dark:bg-sky-900/15 blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-indigo-200/20 dark:bg-indigo-900/15 blur-3xl" />
       </div>
 
+      <Navbar />
+
+      <main>
+        <Hero />
+        <FeaturedProjects />
+        <CoursesCarousel />
+        <ProjectsGrid />
+        <CoursesList />
+        <Contact />
+      </main>
+
       <Footer />
+
+      {/* Scroll to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Scroll to top"
+        className={`fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-xl glass-card text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300 ${showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+      >
+        <FaChevronUp />
+      </button>
     </div>
   );
 }

@@ -3,42 +3,40 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
-      colors: {
-        primary: "#00040f",
-        secondary: "#00f6ff",
-        dimWhite: "rgba(255, 255, 255, 0.7)",
-        dimBlue: "rgba(9, 151, 124, 0.1)",
-      },
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        iceland: ["Iceland", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
+      },
+      colors: {
+        glass: {
+          white: "rgba(255, 255, 255, 0.45)",
+          border: "rgba(255, 255, 255, 0.55)",
+          hover: "rgba(255, 255, 255, 0.6)",
+        },
+      },
+      keyframes: {
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
+      animation: {
+        "fade-up": "fade-up 0.8s ease-out forwards",
+        float: "float 6s ease-in-out infinite",
       },
     },
     screens: {
       xs: "480px",
-      ss: "620px",
-      sm: "768px",
-      md: "1060px",
-      lg: "1200px",
-      xl: "1700px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
     },
   },
   plugins: [],
-  safelist: [
-    "bg-teal-700",
-    "bg-lime-700",
-    "bg-green-700",
-    "bg-indigo-700",
-    "bg-red-700",
-    "bg-orange-700",
-    "bg-blue-700",
-    "bg-pink-700",
-    "bg-cyan-700",
-    "bg-emerald-700",
-    "bg-purple-700",
-    "bg-amber-700",
-    "bg-fuchsia-700",
-    "bg-yellow-700",
-    "bg-sky-700",
-  ],
-}
-
+};
