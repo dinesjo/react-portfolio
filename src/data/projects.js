@@ -2,6 +2,8 @@ import snuskollImg from "../assets/snuskoll.png";
 import snuskollLogo from "../assets/snuskoll-logo.png";
 import habitGrowerImg from "../assets/habit-grower.png";
 import habitGrowerIcon from "../assets/habit-grower-icon.png";
+import thesisTrackerImg from "../assets/thesis-tracker.jpeg"
+import thesisTrackerIcon from "../assets/thesis-tracker.png"
 import vimImg from "../assets/vim.png";
 import deadlineTrackerImg from "../assets/deadline-tracker.png";
 import fittrackrImg from "../assets/fittrackr.png";
@@ -30,6 +32,21 @@ export const projects = [
       github: "https://github.com/dinesjo/SnusKoll",
     },
     date: "June 2025 - Present",
+    featured: false,
+  },
+  {
+    id: "thesis-tracker",
+    title: "Thesis Tracker",
+    image: thesisTrackerImg,
+    icon: thesisTrackerIcon,
+    description: "I built this web app to track my progress throughout my master's thesis. It features a Kanban board that organizes tasks across project phases and links directly to key deliverables",
+    technologies: ["React", "Tailwind CSS", "TypeScript"],
+    category: "Web",
+    links: {
+      live: "https://thesis.dinesjo.se/",
+      github: "https://github.com/dinesjo/thesis-tracker",
+    },
+    date: "February 2025 - Present",
     featured: true,
   },
   {
