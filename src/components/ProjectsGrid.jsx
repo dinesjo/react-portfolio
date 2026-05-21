@@ -1,125 +1,144 @@
 import { useState } from "react";
-import { projects, categories } from "../data/projects";
+import { projects, projectContexts } from "../data/projects";
+import ProjectImageFrame from "./ProjectImageFrame";
 import TechBadge from "./TechBadge";
 import { FaExternalLinkAlt, FaGithub, FaLock } from "react-icons/fa";
 
 export default function ProjectsGrid() {
-  const [loaded, setLoaded] = useState({});
   const [filter, setFilter] = useState("All");
 
-  const filtered = filter === "All" ? projects : projects.filter((p) => p.category === filter);
+  const filtered = filter === "All" ? projects : projects.filter((p) => p.context === filter);
 
   return (
-    <section id="projects" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-iceland text-4xl sm:text-5xl font-bold text-slate-700 dark:text-slate-200 text-center mb-4 reveal">
-          All Projects
-        </h2>
-        <p className="text-center text-slate-500 dark:text-slate-400 font-inter mb-16 max-w-2xl mx-auto reveal">
-          A collection of projects spanning web development, research, game
-          development, and more.
-        </p>
+    <section id="projects" className="py-20">
+      <div className="section-shell">
+        <div className="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+          <div className="reveal">
+            <span className="section-eyebrow">Archive</span>
+            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
+              Work by context.
+            </h2>
+          </div>
+          <p className="section-copy reveal max-w-2xl lg:justify-self-end">
+            A compact archive grouped by professional, personal, and academic
+            work, so the constraints behind each project are easier to see.
+          </p>
+        </div>
 
-        {/* Category filters */}
-        <div className="flex justify-center gap-2 mb-10 flex-wrap reveal">
-          {categories.map((cat) => (
+        {/* Context filters */}
+        <div className="mb-8 flex flex-wrap gap-2 reveal">
+          {projectContexts.map((context) => (
             <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-4 py-1.5 rounded-xl text-sm font-montserrat font-semibold transition-all duration-300 ${
-                filter === cat
-                  ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
-                  : "glass-card text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white"
+              key={context}
+              type="button"
+              aria-pressed={filter === context}
+              onClick={() => setFilter(context)}
+              className={`rounded-md border px-4 py-2 text-sm font-montserrat font-bold transition-all duration-200 ${
+                filter === context
+                  ? "border-slate-950 bg-slate-950 text-white"
+                  : "border-slate-300 bg-white/70 text-slate-500 hover:border-slate-500 hover:text-slate-950"
               }`}
             >
-              {cat}
+              {context}
             </button>
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((project) => (
-            <div
-              key={project.id}
-              className="glass-card rounded-2xl overflow-hidden group flex flex-col"
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden h-44">
-                {!loaded[project.id] && (
-                  <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse" />
-                )}
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  loading="lazy"
-                  onLoad={() => setLoaded((p) => ({ ...p, [project.id]: true }))}
-                  className={`w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!loaded[project.id] ? "opacity-0" : "opacity-100"}`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/60 dark:from-slate-900/60 to-transparent" />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((project, index) => {
+            const isTwoColumnTail =
+              filtered.length > 1 && filtered.length % 2 === 1 && index === filtered.length - 1;
 
-                {/* Badges */}
-                <div className="absolute top-3 right-3 flex gap-2">
-                  {project.isNew && (
-                    <span className="px-2.5 py-1 bg-blue-500 text-white text-xs font-bold rounded-full shadow">
-                      New
+            return (
+              <article
+                key={project.id}
+                className={`surface-card group overflow-hidden rounded-lg ${
+                  isTwoColumnTail
+                    ? "sm:col-span-2 sm:grid sm:grid-cols-[0.9fr_1.1fr] lg:col-span-1 lg:flex lg:flex-col"
+                    : "flex flex-col"
+                }`}
+              >
+                {/* Image */}
+                <ProjectImageFrame
+                  project={project}
+                  frameClassName={`overflow-hidden border-b border-slate-200 bg-slate-200 ${
+                    isTwoColumnTail
+                      ? "h-40 sm:h-full sm:min-h-56 sm:border-b-0 sm:border-r lg:h-40 lg:min-h-0 lg:border-b lg:border-r-0"
+                      : "h-40"
+                  }`}
+                  imageClassName="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
+                >
+                  <div className="absolute left-3 top-3 flex gap-2">
+                    <span className="rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                      {project.context}
                     </span>
-                  )}
-                  {project.isPrivate && (
-                    <span className="px-2.5 py-1 bg-slate-500/80 text-white text-xs font-semibold rounded-full shadow flex items-center gap-1">
-                      <FaLock className="text-[10px]" /> Private
+                    <span className="rounded-md bg-white px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">
+                      {project.category}
                     </span>
-                  )}
+                    {project.isNew && (
+                      <span className="rounded-md bg-[var(--coral)] px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                        New
+                      </span>
+                    )}
+                    {project.isPrivate && (
+                      <span className="flex items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+                        <FaLock className="text-[10px]" /> Private
+                      </span>
+                    )}
+                  </div>
+                </ProjectImageFrame>
+
+                {/* Content */}
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="mb-3 flex items-start justify-between gap-4">
+                    <h3 className="font-montserrat text-lg font-extrabold leading-tight text-slate-950">
+                      {project.title}
+                    </h3>
+                    <span className="max-w-24 text-right text-[0.68rem] font-semibold uppercase leading-snug tracking-[0.08em] text-slate-400">
+                      {project.date}
+                    </span>
+                  </div>
+
+                  <p className="mb-4 flex-1 text-sm leading-relaxed text-slate-600">
+                    {project.description}
+                  </p>
+
+                  {/* Tech badges */}
+                  <div className="mb-5 flex flex-wrap gap-1.5">
+                    {project.technologies.map((tech) => (
+                      <TechBadge key={tech} name={tech} />
+                    ))}
+                  </div>
+
+                  {/* Links */}
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    {project.links.live && (
+                      <a
+                        href={project.links.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="sharp-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-transform duration-200 hover:-translate-y-0.5"
+                      >
+                        <FaExternalLinkAlt className="text-[10px]" />
+                        {project.links.liveText || "Try it"}
+                      </a>
+                    )}
+                    {project.links.github && (
+                      <a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="quiet-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors duration-200 hover:bg-white"
+                      >
+                        <FaGithub />
+                        Code
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-montserrat text-lg font-bold text-slate-800 dark:text-white mb-1">
-                  {project.title}
-                </h3>
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-inter mb-3">
-                  {project.date}
-                </span>
-
-                <p className="text-sm text-slate-500 dark:text-slate-400 font-inter leading-relaxed mb-4 flex-1">
-                  {project.description}
-                </p>
-
-                {/* Tech badges */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {project.technologies.map((tech) => (
-                    <TechBadge key={tech} name={tech} />
-                  ))}
-                </div>
-
-                {/* Links */}
-                <div className="flex gap-2 mt-auto">
-                  {project.links.live && (
-                    <a
-                      href={project.links.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-500 text-white rounded-xl font-inter font-medium text-xs hover:bg-blue-600 hover:shadow-md transition-all duration-300"
-                    >
-                      <FaExternalLinkAlt className="text-[10px]" />
-                      {project.links.liveText || "Try it"}
-                    </a>
-                  )}
-                  {project.links.github && (
-                    <a
-                      href={project.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/50 dark:bg-white/10 text-slate-600 dark:text-slate-300 rounded-xl font-inter font-medium text-xs hover:bg-white dark:hover:bg-white/20 hover:shadow-md transition-all duration-300 border border-slate-200/40 dark:border-white/10"
-                    >
-                      <FaGithub />
-                      Code
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

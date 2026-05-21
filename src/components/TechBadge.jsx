@@ -54,7 +54,7 @@ export default function TechBadge({ name }) {
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold font-inter whitespace-nowrap"
+      className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold whitespace-nowrap"
       style={{
         backgroundColor: `${color}12`,
         color: color,

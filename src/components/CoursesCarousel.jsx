@@ -1,138 +1,85 @@
-import { useRef, useEffect, useCallback } from "react";
 import { courses, getCourseColor } from "../data/courses";
 
-const featured = courses.filter((c) =>
-  [
-    "DD2350",
-    "DH2642",
-    "DD2395",
-    "DD2480",
-    "DD2525",
-    "DD2380",
-  ].includes(c.code)
-);
+const selectedCodes = ["DD2480", "DD2395", "DD2525", "DD2380", "DD2350", "DH2642"];
+
+const selectedNotes = {
+  DD2480: "Engineering process, testing, delivery",
+  DD2395: "Systems security and threat modeling",
+  DD2525: "Language security and program analysis",
+  DD2380: "Search, planning, and evaluation methods",
+  DD2350: "Algorithms and complexity fundamentals",
+  DH2642: "Modern web interaction patterns",
+};
+
+const featured = selectedCodes
+  .map((code) => courses.find((course) => course.code === code))
+  .filter(Boolean);
 
 export default function CoursesCarousel() {
-  const scrollRef = useRef(null);
-  const pausedRef = useRef(false);
-  const timeoutRef = useRef(null);
-
-  const pause = useCallback(() => {
-    pausedRef.current = true;
-    clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      pausedRef.current = false;
-    }, 3000);
-  }, []);
-
-  // Auto-scroll with requestAnimationFrame
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let direction = 1;
-    let lastTime = 0;
-    let rafId;
-
-    const step = (time) => {
-      rafId = requestAnimationFrame(step);
-      if (pausedRef.current || !el) return;
-
-      // Move ~1px per 30ms
-      if (time - lastTime < 30) return;
-      lastTime = time;
-
-      const maxScroll = el.scrollWidth - el.offsetWidth;
-      if (el.scrollLeft >= maxScroll - 1) direction = -1;
-      else if (el.scrollLeft <= 0) direction = 1;
-
-      el.scrollLeft += direction;
-    };
-
-    rafId = requestAnimationFrame(step);
-
-    el.addEventListener("pointerdown", pause);
-    el.addEventListener("wheel", pause, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(timeoutRef.current);
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("wheel", pause);
-    };
-  }, [pause]);
-
-  const handleKeyDown = (e) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    if (e.key === "ArrowRight") {
-      el.scrollBy({ left: 288, behavior: "smooth" });
-      pause();
-    } else if (e.key === "ArrowLeft") {
-      el.scrollBy({ left: -288, behavior: "smooth" });
-      pause();
-    }
-  };
-
   return (
-    <section id="courses-carousel" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-iceland text-4xl sm:text-5xl font-bold text-slate-700 dark:text-slate-200 text-center mb-4 reveal">
-          Featured Courses
-        </h2>
-        <p className="text-center text-slate-500 dark:text-slate-400 font-inter mb-12 max-w-2xl mx-auto reveal">
-          A few highlights from my studies at KTH Stockholm.
-        </p>
+    <section id="courses-carousel" className="py-20">
+      <div className="section-shell">
+        <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div className="reveal lg:sticky lg:top-28">
+            <span className="section-eyebrow">Coursework</span>
+            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
+              Coursework behind the projects.
+            </h2>
+            <p className="section-copy mt-5">
+              These courses map directly to the systems, security, web, and
+              algorithm work shown above.
+            </p>
+            <div className="mt-8 grid grid-cols-2 overflow-hidden rounded-lg border border-slate-300 bg-white">
+              {[
+                ["5", "study years"],
+                [String(courses.length), "courses"],
+              ].map(([value, label]) => (
+                <div key={label} className="border-r border-slate-200 p-4 last:border-r-0">
+                  <p className="font-montserrat text-2xl font-extrabold text-slate-950">
+                    {value}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Carousel wrapper */}
-        <div className="relative reveal">
-          {/* Scrollable track */}
-          <div
-            ref={scrollRef}
-            tabIndex={0}
-            role="region"
-            aria-label="Featured courses"
-            onKeyDown={handleKeyDown}
-            onFocus={pause}
-            className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide outline-none"
-          >
-            {featured.map((course) => {
+          <div className="grid gap-3 sm:grid-cols-2">
+            {featured.map((course, index) => {
               const color = getCourseColor(course.code);
               return (
-                <div
+                <article
                   key={course.code}
-                  className="glass-card flex-shrink-0 w-72 rounded-2xl p-5 group"
+                  className="surface-card reveal rounded-lg p-5"
+                  style={{ transitionDelay: `${index * 0.07}s` }}
                 >
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-start justify-between gap-4">
                     <span
-                      className="text-sm font-bold font-mono px-2.5 py-0.5 rounded-md"
+                      className="rounded-md border px-2.5 py-1 font-mono text-sm font-bold"
                       style={{
-                        backgroundColor: `${color}15`,
-                        color: color,
+                        backgroundColor: `${color}10`,
+                        borderColor: `${color}30`,
+                        color,
                       }}
                     >
                       {course.code}
                     </span>
-                    <span className="text-xs text-slate-400 dark:text-slate-500 font-inter">
+                    <span className="font-montserrat text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
                       Year {course.year}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 font-inter leading-snug">
+                  <h3 className="mt-4 font-montserrat text-lg font-extrabold leading-tight text-slate-950">
                     {course.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                    {selectedNotes[course.code]}
                   </p>
-                  {course.optional && (
-                    <span className="text-xs text-slate-400 dark:text-slate-500 italic mt-1 inline-block">
-                      Elective
-                    </span>
-                  )}
-                </div>
+                </article>
               );
             })}
           </div>
-
-          {/* Fade edges */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-sky-50/50 dark:from-slate-950/80 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-sky-50/50 dark:from-slate-950/80 to-transparent" />
         </div>
       </div>
     </section>

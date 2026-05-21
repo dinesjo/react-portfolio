@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 const navItems = [
   { id: "home", label: "Home" },
-  { id: "projects", label: "Projects" },
-  { id: "courses", label: "Courses" },
+  { id: "featured", label: "Work" },
+  { id: "courses-carousel", label: "Courses" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -19,12 +19,14 @@ const allSections = [
 // Map sections to their nav parent
 const sectionToNav = {
   home: "home",
-  featured: "home",
-  "courses-carousel": "home",
-  projects: "projects",
-  courses: "courses",
+  featured: "featured",
+  "courses-carousel": "courses-carousel",
+  projects: "featured",
+  courses: "courses-carousel",
   contact: "contact",
 };
+
+const navOffset = 112;
 
 export default function Navbar() {
   const [active, setActive] = useState("home");
@@ -40,7 +42,7 @@ export default function Navbar() {
         const el = document.getElementById(id);
         if (!el) continue;
         const rect = el.getBoundingClientRect();
-        const top = Math.max(rect.top, 80);
+        const top = Math.max(rect.top, navOffset);
         const bottom = Math.min(rect.bottom, window.innerHeight);
         const vis = Math.max(0, bottom - top);
         if (vis > maxVis) {
@@ -60,25 +62,27 @@ export default function Navbar() {
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
-      const offset = id === "home" ? 0 : el.offsetTop - 80;
+      const offset = id === "home" ? 0 : el.offsetTop - navOffset;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex gap-1 rounded-2xl px-2 py-2 transition-all duration-500 ${
-        scrolled ? "glass-card shadow-lg shadow-blue-500/5" : "bg-transparent"
+      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 border-slate-300 shadow-lg shadow-slate-900/5"
+          : "bg-white/92 border-slate-200/80"
       }`}
     >
       {navItems.map((item) => (
         <button
           key={item.id}
           onClick={() => scrollTo(item.id)}
-          className={`px-3 sm:px-5 py-1.5 rounded-xl text-sm font-montserrat font-semibold transition-all duration-300 whitespace-nowrap ${
+          className={`relative rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-all duration-200 whitespace-nowrap ${
             active === item.id
-              ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
-              : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-white/40 dark:hover:bg-white/10"
+              ? "bg-slate-950 text-white"
+              : "text-slate-500 hover:bg-slate-100 hover:text-slate-950"
           }`}
         >
           {item.label}

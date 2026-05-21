@@ -8,22 +8,40 @@
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   font-weight: 400;
-  color: #334155;
-  color-scheme: light dark;
+  color: #172033;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --paper: #f6f8fb;
+  --paper-strong: #ffffff;
+  --ink: #172033;
+  --muted: #667085;
+  --line: #d8dee8;
+  --blue: #2563eb;
+  --cyan: #0f8aa6;
+  --coral: #ef4d5b;
+  --amber: #b7791f;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: #cbd5e1;
+    color: #172033;
   }
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+}
+
+body {
+  background: var(--paper);
+}
+
+section[id] {
+  scroll-margin-top: 7rem;
 }
 
 /* ───────────────────────── Focus ───────────────────────── */
@@ -37,7 +55,7 @@ html {
 /* ───────────────────────── Portrait ───────────────────────── */
 
 .portrait-img {
-  filter: grayscale(20%);
+  filter: grayscale(8%) contrast(1.02);
   transform: scale(1);
 }
 
@@ -56,12 +74,36 @@ html {
 
 /* ───────────────────────── Glass ───────────────────────── */
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 4px 24px rgba(59, 130, 246, 0.06);
+.site-backdrop {
+  background:
+    linear-gradient(rgba(23, 32, 51, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 51, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at top left, rgba(239, 77, 91, 0.08), transparent 28rem),
+    var(--paper);
+  background-size: 48px 48px, 48px 48px, auto, auto;
+}
+
+.site-backdrop::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  background-image: linear-gradient(
+    135deg,
+    rgba(23, 32, 51, 0.05) 0,
+    rgba(23, 32, 51, 0.05) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+  background-size: 12px 12px;
+}
+
+.glass-card,
+.surface-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 48px rgba(23, 32, 51, 0.07);
   transition:
     background 0.3s ease,
     border-color 0.3s ease,
@@ -69,23 +111,26 @@ html {
     transform 0.5s ease;
 }
 
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.55);
-  border-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 16px 48px rgba(59, 130, 246, 0.12);
+.glass-card:hover,
+.surface-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: #bac5d6;
+  box-shadow: 0 24px 56px rgba(23, 32, 51, 0.11);
 }
 
 @media (prefers-color-scheme: dark) {
-  .glass-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  .glass-card,
+  .surface-card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 48px rgba(23, 32, 51, 0.07);
   }
 
-  .glass-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  .glass-card:hover,
+  .surface-card:hover {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: #bac5d6;
+    box-shadow: 0 24px 56px rgba(23, 32, 51, 0.11);
   }
 }
 
@@ -104,8 +149,9 @@ html {
   transform: translateY(0);
 }
 
-/* Once reveal finishes, restore glass-card hover transitions */
-.glass-card.revealed {
+/* Once reveal finishes, restore hover transitions */
+.glass-card.revealed,
+.surface-card.revealed {
   transition:
     background 0.3s ease,
     border-color 0.3s ease,
@@ -143,6 +189,61 @@ html {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+/* ───────────────────────── Shared Design Primitives ───────────────────────── */
+
+.section-shell {
+  width: min(100% - 48px, 1180px);
+  margin-inline: auto;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--coral);
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.section-eyebrow::before {
+  content: "";
+  width: 2.5rem;
+  height: 2px;
+  background: currentColor;
+}
+
+.section-title {
+  color: var(--ink);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 0.98;
+}
+
+.section-copy {
+  color: var(--muted);
+  font-family: "Inter", sans-serif;
+  line-height: 1.75;
+}
+
+.sharp-button {
+  border-radius: 8px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: white;
+  box-shadow: 4px 4px 0 rgba(239, 77, 91, 0.25);
+}
+
+.quiet-button {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
 }
 
 /* ───────────────────────── Scrollbar ───────────────────────── */
