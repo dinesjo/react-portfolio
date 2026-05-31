@@ -14,6 +14,7 @@ const projectImages = [
   "fittrackr",
   "habit-grower",
   "logportal",
+  "master-thesis-kgqa",
   "note-hero",
   "pathfinding-visualizer",
   "portfolio-site",
@@ -24,6 +25,7 @@ const projectImages = [
 ];
 
 const sourceFiles = {
+  "master-thesis-kgqa": "master-thesis.png",
   "thesis-tracker": "thesis-tracker.jpg",
 };
 

@@ -15,6 +15,8 @@ import habitGrowerFull from "../assets/project-optimized/habit-grower-full.webp"
 import habitGrowerIcon from "../assets/project-optimized/icons/habit-grower-icon.webp";
 import logportalCard from "../assets/project-optimized/logportal-card.webp";
 import logportalFull from "../assets/project-optimized/logportal-full.webp";
+import masterThesisKgqaCard from "../assets/project-optimized/master-thesis-kgqa-card.webp";
+import masterThesisKgqaFull from "../assets/project-optimized/master-thesis-kgqa-full.webp";
 import noteHeroCard from "../assets/project-optimized/note-hero-card.webp";
 import noteHeroFull from "../assets/project-optimized/note-hero-full.webp";
 import pathvisCard from "../assets/project-optimized/pathfinding-visualizer-card.webp";
@@ -34,6 +36,23 @@ import vimFull from "../assets/project-optimized/vim-motions-guide-full.webp";
 
 export const projects = [
   {
+    id: "master-thesis-kgqa",
+    title: "Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering",
+    image: masterThesisKgqaCard,
+    imageFull: masterThesisKgqaFull,
+    description:
+      "Master's thesis evaluating natural-language access strategies for Traton's MAZE industrial knowledge graph, comparing retrieval-based answers with direct graph queries for compatibility question answering.",
+    featuredDescription:
+      "This master's thesis explores how industrial knowledge graphs can become usable without requiring people to know the database structure or where compatibility rules are stored. The work studies natural-language access to Traton's MAZE graph so engineers and support teams could ask whether configurations work together and get grounded answers from the underlying constraints. It compares a fast search-based approach with direct graph queries to understand when quick answers are enough, and when traceable reasoning is worth the extra cost.",
+    technologies: ["Research", "Python", "RAG", "SPARQL", "LLMs"],
+    category: "Research",
+    context: "Academic",
+    links: {},
+    date: "January 2026 - Present",
+    isNew: true,
+    featured: true,
+  },
+  {
     id: "thesis-tracker",
     title: "Thesis Tracker",
     image: thesisTrackerCard,
@@ -48,7 +67,6 @@ export const projects = [
       github: "https://github.com/dinesjo/thesis-tracker",
     },
     date: "February 2026 - Present",
-    featured: true,
   },
   {
     id: "snuskoll",
@@ -74,8 +92,8 @@ export const projects = [
     image: aiDiaryCard,
     imageFull: aiDiaryFull,
     description:
-      "A mobile-first web app for Bravida where technicians answer brief questions about their workday in speech. The app uses Azure Speech for transcription and ChatGPT to summarize entries.",
-    technologies: ["React", "Material UI", "TypeScript", "ChatGPT"],
+      "A mobile-first web app for Bravida where technicians answer brief questions about their workday in speech. The app uses Azure Speech for transcription and LLMs to summarize entries.",
+    technologies: ["React", "Material UI", "TypeScript", "LLMs"],
     category: "Web",
     context: "Professional",
     links: {},
@@ -103,7 +121,7 @@ export const projects = [
     imageFull: bachelorFull,
     description:
       "Bachelor's thesis on context summarization for LLM chatbots. The experiments found cost reductions up to 92% without significant performance loss.",
-    technologies: ["Research", "ChatGPT"],
+    technologies: ["Research", "LLMs", "Python"],
     category: "Research",
     context: "Academic",
     links: {
@@ -144,7 +162,6 @@ export const projects = [
       github: "https://github.com/dinesjo/vim-motions",
     },
     date: "August 2025",
-    isNew: true,
   },
   {
     id: "habitgrower",

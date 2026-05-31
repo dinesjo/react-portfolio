@@ -6,11 +6,17 @@ const normalizeImages = (project) => {
   if (Array.isArray(project.images) && project.images.length > 0) {
     return project.images.map((image) => {
       if (typeof image === "string") {
-        return { src: image, alt: project.title, caption: project.title };
+        return {
+          src: image,
+          previewSrc: image,
+          alt: project.title,
+          caption: project.title,
+        };
       }
 
       return {
         src: image.src,
+        previewSrc: image.previewSrc || image.thumbnail || image.src,
         alt: image.alt || project.title,
         caption: image.caption || project.title,
       };
@@ -19,6 +25,7 @@ const normalizeImages = (project) => {
 
   return [{
     src: project.imageFull || project.image,
+    previewSrc: project.image,
     alt: project.title,
     caption: project.title,
   }];
@@ -31,6 +38,7 @@ export default function ProjectImageFrame({
   children,
 }) {
   const [loaded, setLoaded] = useState(false);
+  const [loadedFullImages, setLoadedFullImages] = useState(() => new Set());
   const [isOpen, setIsOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const closeButtonRef = useRef(null);
@@ -39,8 +47,29 @@ export default function ProjectImageFrame({
   const images = useMemo(() => normalizeImages(project), [project]);
   const hasMultipleImages = images.length > 1;
   const currentImage = images[activeImage];
+  const hasPreviewImage = currentImage.previewSrc && currentImage.previewSrc !== currentImage.src;
+  const isFullImageLoaded =
+    !hasPreviewImage || loadedFullImages.has(currentImage.src);
 
   const closeModal = useCallback(() => setIsOpen(false), []);
+  const markFullImageReady = useCallback((src, imageElement) => {
+    const markReady = () => setLoadedFullImages((current) => {
+      if (current.has(src)) return current;
+      const next = new Set(current);
+      next.add(src);
+      return next;
+    });
+
+    if (typeof imageElement.decode === "function") {
+      imageElement
+        .decode()
+        .catch(() => undefined)
+        .then(() => window.requestAnimationFrame(markReady));
+      return;
+    }
+
+    markReady();
+  }, []);
   const showPrevious = useCallback(
     () => setActiveImage((current) => (current - 1 + images.length) % images.length),
     [images.length]
@@ -151,11 +180,29 @@ export default function ProjectImageFrame({
             </div>
 
             <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px] p-2 sm:p-4">
-              <img
-                src={currentImage.src}
-                alt={currentImage.alt}
-                className="max-h-[calc(100vh-9rem)] max-w-full rounded bg-white object-contain shadow-xl"
-              />
+              <div className="relative max-h-[calc(100vh-9rem)] max-w-full">
+                {hasPreviewImage && !isFullImageLoaded && (
+                  <img
+                    src={currentImage.previewSrc}
+                    alt=""
+                    aria-hidden="true"
+                    className="max-h-[calc(100vh-9rem)] max-w-full rounded bg-white object-contain shadow-xl"
+                  />
+                )}
+
+                <img
+                  src={currentImage.src}
+                  alt={currentImage.alt}
+                  aria-hidden={hasPreviewImage && !isFullImageLoaded ? "true" : undefined}
+                  decoding="async"
+                  onLoad={(event) => markFullImageReady(currentImage.src, event.currentTarget)}
+                  className={`${
+                    hasPreviewImage && !isFullImageLoaded
+                      ? "absolute inset-0 h-full w-full opacity-0"
+                      : "max-h-[calc(100vh-9rem)] max-w-full"
+                  } rounded bg-white object-contain shadow-xl`}
+                />
+              </div>
 
               {hasMultipleImages && (
                 <>

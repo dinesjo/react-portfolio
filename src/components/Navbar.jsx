@@ -69,7 +69,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
+      className={`safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
         scrolled
           ? "bg-white/95 border-slate-300 shadow-lg shadow-slate-900/5"
           : "bg-white/92 border-slate-200/80"

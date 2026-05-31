@@ -8,6 +8,9 @@ import {
   FaBootstrap,
   FaTwitter,
   FaFlask,
+  FaSearch,
+  FaDatabase,
+  FaBrain,
 } from "react-icons/fa";
 
 import aspnetImg from "../assets/aspnet.png";
@@ -33,6 +36,9 @@ const techConfig = {
   Bootstrap: { icon: FaBootstrap, color: "#7c3aed" },
   "Twitter API": { icon: FaTwitter, color: "#0ea5e9" },
   Research: { icon: FaFlask, color: "#2563eb" },
+  RAG: { icon: FaSearch, color: "#0f766e" },
+  SPARQL: { icon: FaDatabase, color: "#7c3aed" },
+  LLMs: { icon: FaBrain, color: "#db2777" },
   "ASP.NET": { image: aspnetImg, color: "#6d28d9" },
   Blazor: { image: blazorImg, color: "#6d28d9" },
   "C++": { image: cppImg, color: "#0369a1" },

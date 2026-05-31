@@ -4,10 +4,11 @@ import TechBadge from "./TechBadge";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const caseStudyNotes = {
-  "thesis-tracker": [
-    "Kanban board mapped to thesis phases and deliverables",
-    "Built to manage the long-running thesis workflow day to day",
-    "Kept narrow so the UI stays fast and the data model stays clear",
+  "master-thesis-kgqa": [
+    "Turns graph-encoded configuration constraints into questions people can ask in ordinary language",
+    "Evaluates whether the system can reliably tell when product configurations work together or conflict",
+    "Shows a search-based approach can be a strong practical default, answering correctly in 96.4% of benchmark cases",
+    "Shows direct graph querying can be slightly more accurate and easier to audit, but is slower and more expensive to run",
   ],
   snuskoll: [
     "Full-stack PWA built with ASP.NET, Blazor, PostgreSQL, and Tailwind",
@@ -28,9 +29,10 @@ export default function FeaturedProjects() {
             </h2>
           </div>
           <p className="section-copy reveal max-w-2xl text-base lg:justify-self-end">
-            Two current projects: one thesis workflow tool and one full-stack
-            product. Together they show how I handle interface scope, data, and
-            maintainable implementation.
+            Two current projects: one research thesis on industrial knowledge
+            graph question answering and one full-stack product. Together they
+            show how I handle evaluation design, data access, and maintainable
+            implementation.
           </p>
         </div>
 
@@ -72,7 +74,9 @@ export default function FeaturedProjects() {
                     <h3 className="mt-3 font-montserrat text-3xl font-extrabold leading-tight text-slate-950">
                       {project.title}
                     </h3>
-                    <p className="section-copy mt-4">{project.description}</p>
+                    <p className="section-copy mt-4">
+                      {project.featuredDescription || project.description}
+                    </p>
 
                     <ul className="mt-6 space-y-3">
                       {(caseStudyNotes[project.id] || []).map((note) => (

@@ -23,6 +23,12 @@
   --cyan: #0f8aa6;
   --coral: #ef4d5b;
   --amber: #b7791f;
+  --site-backdrop-background:
+    linear-gradient(rgba(23, 32, 51, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 51, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at top left, rgba(239, 77, 91, 0.08), transparent 28rem),
+    var(--paper);
+  --site-backdrop-size: 48px 48px, 48px 48px, auto, auto;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,15 +39,34 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 7rem;
-}
-
-body {
+  scroll-padding-top: calc(7rem + env(safe-area-inset-top, 0px));
   background: var(--paper);
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--paper);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  height: env(safe-area-inset-top, 0px);
+  pointer-events: none;
+  background: var(--site-backdrop-background);
+  background-size: var(--site-backdrop-size);
+}
+
 section[id] {
-  scroll-margin-top: 7rem;
+  scroll-margin-top: calc(7rem + env(safe-area-inset-top, 0px));
 }
 
 /* ───────────────────────── Focus ───────────────────────── */
@@ -75,12 +100,12 @@ section[id] {
 /* ───────────────────────── Glass ───────────────────────── */
 
 .site-backdrop {
-  background:
-    linear-gradient(rgba(23, 32, 51, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 32, 51, 0.045) 1px, transparent 1px),
-    radial-gradient(circle at top left, rgba(239, 77, 91, 0.08), transparent 28rem),
-    var(--paper);
-  background-size: 48px 48px, 48px 48px, auto, auto;
+  background: var(--site-backdrop-background);
+  background-size: var(--site-backdrop-size);
+}
+
+.safe-top-nav {
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
 }
 
 .site-backdrop::after {
