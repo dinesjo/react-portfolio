@@ -17,6 +17,21 @@ const caseStudyNotes = {
   ],
 };
 
+const overlayStyles = {
+  light: {
+    container:
+      "border-white/60 bg-white/60 text-slate-950 shadow-xl shadow-slate-950/20 backdrop-blur-md",
+    label: "text-slate-600",
+    icon: "bg-white/70",
+  },
+  dark: {
+    container:
+      "border-white/25 bg-slate-950/78 text-white shadow-xl shadow-slate-950/20 backdrop-blur-sm",
+    label: "text-white/60",
+    icon: "bg-white",
+  },
+};
+
 export default function FeaturedProjects() {
   return (
     <section id="featured" className="pb-14 pt-24">
@@ -37,34 +52,38 @@ export default function FeaturedProjects() {
         </div>
 
         <div className="space-y-8">
-          {featuredProjects.map((project, i) => (
-            <article
-              key={project.id}
-              className="surface-card group reveal overflow-hidden rounded-lg"
-              style={{ transitionDelay: `${i * 0.15}s` }}
-            >
-              <div className={`grid lg:grid-cols-[1.06fr_0.94fr] ${i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
-                <ProjectImageFrame
-                  project={project}
-                  frameClassName="min-h-72 overflow-hidden border-b border-slate-200 bg-slate-900 lg:border-b-0 lg:border-r"
-                  imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
-                >
-                  <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-md border border-white/25 bg-slate-950/72 px-3 py-2 text-white backdrop-blur-sm">
-                    {project.icon && (
-                      <img
-                        src={project.icon}
-                        alt=""
-                        className="h-8 w-8 rounded bg-white p-1 object-contain"
-                      />
-                    )}
-                    <div>
-                      <p className="font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.16em] text-white/60">
-                        Active project
-                      </p>
-                      <p className="text-sm font-semibold">{project.date}</p>
+          {featuredProjects.map((project, i) => {
+            const overlayTone = project.featuredOverlayTone || project.imageOverlayTone;
+            const overlayStyle = overlayStyles[overlayTone] || overlayStyles.dark;
+
+            return (
+              <article
+                key={project.id}
+                className="surface-card group reveal overflow-hidden rounded-lg"
+                style={{ transitionDelay: `${i * 0.15}s` }}
+              >
+                <div className={`grid lg:grid-cols-[1.06fr_0.94fr] ${i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+                  <ProjectImageFrame
+                    project={project}
+                    frameClassName="min-h-72 overflow-hidden border-b border-slate-200 bg-slate-900 lg:border-b-0 lg:border-r"
+                    imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                  >
+                    <div className={`absolute bottom-4 left-4 flex items-center gap-3 rounded-md border px-3 py-2 ${overlayStyle.container}`}>
+                      {project.icon && (
+                        <img
+                          src={project.icon}
+                          alt=""
+                          className={`h-8 w-8 rounded p-1 object-contain ${overlayStyle.icon}`}
+                        />
+                      )}
+                      <div>
+                        <p className={`font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.16em] ${overlayStyle.label}`}>
+                          Active project
+                        </p>
+                        <p className="text-sm font-semibold">{project.date}</p>
+                      </div>
                     </div>
-                  </div>
-                </ProjectImageFrame>
+                  </ProjectImageFrame>
 
                 <div className="flex flex-col justify-between p-6 sm:p-8">
                   <div>
@@ -120,8 +139,9 @@ export default function FeaturedProjects() {
                   </div>
                 </div>
               </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

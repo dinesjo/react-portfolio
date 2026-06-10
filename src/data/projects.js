@@ -51,6 +51,7 @@ export const projects = [
     date: "January 2026 - Present",
     isNew: true,
     featured: true,
+    imageOverlayTone: "light",
   },
   {
     id: "thesis-tracker",
@@ -59,14 +60,13 @@ export const projects = [
     imageFull: thesisTrackerFull,
     icon: thesisTrackerIcon,
     description: "A thesis progress tracker with a Kanban board organized around project phases and direct links to key deliverables.",
+    statusNote: "This project has been decommissioned and is no longer publicly available.",
     technologies: ["React", "Tailwind CSS", "TypeScript"],
     category: "Web",
     context: "Academic",
-    links: {
-      live: "https://thesis.dinesjo.se/",
-      github: "https://github.com/dinesjo/thesis-tracker",
-    },
-    date: "February 2026 - Present",
+    links: {},
+    date: "February 2026 - Decommissioned",
+    isDecommissioned: true,
   },
   {
     id: "snuskoll",

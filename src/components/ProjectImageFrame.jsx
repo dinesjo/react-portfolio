@@ -31,6 +31,39 @@ const normalizeImages = (project) => {
   }];
 };
 
+const imageOverlayStyles = {
+  light: {
+    expand:
+      "border-white/60 bg-white/60 text-slate-950 shadow-lg shadow-slate-950/20 backdrop-blur-md",
+    view:
+      "bg-gradient-to-t from-white/90 via-white/60 to-white/0 text-slate-950",
+    modalShell:
+      "border-white/30 bg-white/95 shadow-2xl shadow-slate-950/30",
+    modalHeader: "border-slate-200 text-slate-950",
+    modalKicker: "text-slate-500",
+    modalClose:
+      "border-slate-300 bg-slate-950/5 text-slate-950 hover:bg-slate-950/10 focus-visible:ring-slate-950",
+    modalPager:
+      "border-white/60 bg-white/70 text-slate-950 backdrop-blur-md hover:bg-white/90 focus-visible:ring-slate-950",
+    modalCounter: "border-slate-200 text-slate-500",
+  },
+  dark: {
+    expand:
+      "border-white/25 bg-slate-950/72 text-white shadow-lg backdrop-blur-sm",
+    view:
+      "bg-gradient-to-t from-slate-950/86 to-slate-950/0 text-white",
+    modalShell:
+      "border-white/15 bg-slate-950 shadow-2xl shadow-slate-950/40",
+    modalHeader: "border-white/10 text-white",
+    modalKicker: "text-white/45",
+    modalClose:
+      "border-white/15 bg-white/10 text-white hover:bg-white/20 focus-visible:ring-white",
+    modalPager:
+      "border-white/15 bg-slate-950/70 text-white backdrop-blur-sm hover:bg-slate-800 focus-visible:ring-white",
+    modalCounter: "border-white/10 text-white/55",
+  },
+};
+
 export default function ProjectImageFrame({
   project,
   frameClassName = "",
@@ -45,6 +78,8 @@ export default function ProjectImageFrame({
   const previousFocusRef = useRef(null);
 
   const images = useMemo(() => normalizeImages(project), [project]);
+  const overlayTone = project.imageOverlayTone || project.featuredOverlayTone;
+  const overlayStyle = imageOverlayStyles[overlayTone] || imageOverlayStyles.dark;
   const hasMultipleImages = images.length > 1;
   const currentImage = images[activeImage];
   const hasPreviewImage = currentImage.previewSrc && currentImage.previewSrc !== currentImage.src;
@@ -128,11 +163,11 @@ export default function ProjectImageFrame({
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-md border border-white/25 bg-slate-950/72 text-white opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100">
+          <span className={`absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-md border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
 
-          <span className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-slate-950/86 to-slate-950/0 px-4 pb-4 pt-12 text-right font-montserrat text-[0.68rem] font-extrabold uppercase tracking-[0.16em] text-white transition duration-200 group-hover/image:translate-y-0 group-focus-visible/image:translate-y-0">
+          <span className={`absolute inset-x-0 bottom-0 translate-y-full px-4 pb-4 pt-12 text-right font-montserrat text-[0.68rem] font-extrabold uppercase tracking-[0.16em] transition duration-200 group-hover/image:translate-y-0 group-focus-visible/image:translate-y-0 ${overlayStyle.view}`}>
             View image
           </span>
         </button>
@@ -157,10 +192,10 @@ export default function ProjectImageFrame({
             className="absolute inset-0 cursor-zoom-out bg-slate-950/88 backdrop-blur-md"
           />
 
-          <div className="relative z-10 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-lg border border-white/15 bg-slate-950 shadow-2xl shadow-slate-950/40">
-            <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 text-white sm:px-5">
+          <div className={`relative z-10 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-lg border ${overlayStyle.modalShell}`}>
+            <div className={`flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-5 ${overlayStyle.modalHeader}`}>
               <div className="min-w-0">
-                <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-white/45">
+                <p className={`font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] ${overlayStyle.modalKicker}`}>
                   Project image
                 </p>
                 <h3 className="truncate font-montserrat text-base font-extrabold sm:text-lg">
@@ -173,7 +208,7 @@ export default function ProjectImageFrame({
                 type="button"
                 aria-label="Close image preview"
                 onClick={closeModal}
-                className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-md border border-white/15 bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className={`grid h-10 w-10 flex-shrink-0 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalClose}`}
               >
                 <FaTimes />
               </button>
@@ -210,7 +245,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Previous project image"
                     onClick={showPrevious}
-                    className="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border border-white/15 bg-slate-950/70 text-white backdrop-blur-sm transition hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className={`absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronLeft />
                   </button>
@@ -218,7 +253,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Next project image"
                     onClick={showNext}
-                    className="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border border-white/15 bg-slate-950/70 text-white backdrop-blur-sm transition hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className={`absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronRight />
                   </button>
@@ -227,7 +262,7 @@ export default function ProjectImageFrame({
             </div>
 
             {hasMultipleImages && (
-              <div className="border-t border-white/10 px-4 py-3 text-center font-montserrat text-xs font-bold uppercase tracking-[0.16em] text-white/55">
+              <div className={`border-t px-4 py-3 text-center font-montserrat text-xs font-bold uppercase tracking-[0.16em] ${overlayStyle.modalCounter}`}>
                 {activeImage + 1} / {images.length}
               </div>
             )}
