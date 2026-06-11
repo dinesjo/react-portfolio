@@ -32,7 +32,7 @@ export default function ProjectsGrid() {
               type="button"
               aria-pressed={filter === context}
               onClick={() => setFilter(context)}
-              className={`rounded-md border px-4 py-2 text-sm font-montserrat font-bold transition-all duration-200 ${
+              className={`filter-pill rounded-md border px-4 py-2 text-sm font-montserrat font-bold transition-all duration-200 ${
                 filter === context
                   ? "border-slate-950 bg-slate-950 text-white"
                   : "border-slate-300 bg-white/70 text-slate-500 hover:border-slate-500 hover:text-slate-950"
@@ -50,12 +50,13 @@ export default function ProjectsGrid() {
 
             return (
               <article
-                key={project.id}
-                className={`surface-card group overflow-hidden rounded-lg ${
+                key={`${filter}-${project.id}`}
+                className={`surface-card motion-card project-card group overflow-hidden rounded-lg ${
                   isTwoColumnTail
                     ? "sm:col-span-2 sm:grid sm:grid-cols-[0.9fr_1.1fr] lg:col-span-1 lg:flex lg:flex-col"
                     : "flex flex-col"
                 }`}
+                style={{ animationDelay: `${index * 0.045}s` }}
               >
                 {/* Image */}
                 <ProjectImageFrame
@@ -68,24 +69,24 @@ export default function ProjectsGrid() {
                   imageClassName="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
                 >
                   <div className="absolute left-3 top-3 flex gap-2">
-                    <span className="rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                    <span className="project-tag rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
                       {project.context}
                     </span>
-                    <span className="rounded-md bg-white px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">
+                    <span className="project-tag rounded-md bg-white px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">
                       {project.category}
                     </span>
                     {project.isNew && (
-                      <span className="rounded-md bg-[var(--coral)] px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                      <span className="project-tag rounded-md bg-[var(--coral)] px-2.5 py-1 text-xs font-bold text-white shadow-sm">
                         New
                       </span>
                     )}
                     {project.isPrivate && (
-                      <span className="flex items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+                      <span className="project-tag flex items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
                         <FaLock className="text-[10px]" /> Private
                       </span>
                     )}
                     {project.isDecommissioned && (
-                      <span className="flex items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+                      <span className="project-tag flex items-center gap-1 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
                         <FaArchive className="text-[10px]" /> Decommissioned
                       </span>
                     )}

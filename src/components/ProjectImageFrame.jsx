@@ -154,7 +154,7 @@ export default function ProjectImageFrame({
             setActiveImage(0);
             setIsOpen(true);
           }}
-          className="group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--coral)] focus-visible:ring-offset-2"
+          className="work-image-trigger group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--coral)] focus-visible:ring-offset-2"
         >
           <img
             src={displayImageSrc || project.image}
@@ -164,11 +164,11 @@ export default function ProjectImageFrame({
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className={`absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-md border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
+          <span className={`work-image-expand absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-md border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
 
-          <span className={`absolute inset-x-0 bottom-0 translate-y-full px-4 pb-4 pt-12 text-right font-montserrat text-[0.68rem] font-extrabold uppercase tracking-[0.16em] transition duration-200 group-hover/image:translate-y-0 group-focus-visible/image:translate-y-0 ${overlayStyle.view}`}>
+          <span className={`work-image-view absolute inset-x-0 bottom-0 translate-y-full px-4 pb-4 pt-12 text-right font-montserrat text-[0.68rem] font-extrabold uppercase tracking-[0.16em] transition duration-200 group-hover/image:translate-y-0 group-focus-visible/image:translate-y-0 ${overlayStyle.view}`}>
             View image
           </span>
         </button>
@@ -190,10 +190,10 @@ export default function ProjectImageFrame({
           <div
             aria-hidden="true"
             onClick={closeModal}
-            className="absolute inset-0 cursor-zoom-out bg-slate-950/88 backdrop-blur-md"
+            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-slate-950/88 backdrop-blur-md"
           />
 
-          <div className={`relative z-10 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-lg border ${overlayStyle.modalShell}`}>
+          <div className={`image-modal-shell relative z-10 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-lg border ${overlayStyle.modalShell}`}>
             <div className={`flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-5 ${overlayStyle.modalHeader}`}>
               <div className="min-w-0">
                 <p className={`font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] ${overlayStyle.modalKicker}`}>
@@ -216,13 +216,13 @@ export default function ProjectImageFrame({
             </div>
 
             <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px] p-2 sm:p-4">
-              <div className="relative max-h-[calc(100vh-9rem)] max-w-full">
+              <div key={currentImage.src} className="relative max-h-[calc(100vh-9rem)] max-w-full">
                 {hasPreviewImage && !isFullImageLoaded && (
                   <img
                     src={currentImage.previewSrc}
                     alt=""
                     aria-hidden="true"
-                    className="max-h-[calc(100vh-9rem)] max-w-full rounded bg-white object-contain shadow-xl"
+                    className="work-modal-image max-h-[calc(100vh-9rem)] max-w-full rounded bg-white object-contain shadow-xl"
                   />
                 )}
 
@@ -236,7 +236,7 @@ export default function ProjectImageFrame({
                     hasPreviewImage && !isFullImageLoaded
                       ? "absolute inset-0 h-full w-full opacity-0"
                       : "max-h-[calc(100vh-9rem)] max-w-full"
-                  } rounded bg-white object-contain shadow-xl`}
+                  } work-modal-image rounded bg-white object-contain shadow-xl`}
                 />
               </div>
 
@@ -246,7 +246,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Previous work image"
                     onClick={showPrevious}
-                    className={`absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    className={`modal-pager absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronLeft />
                   </button>
@@ -254,7 +254,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Next work image"
                     onClick={showNext}
-                    className={`absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    className={`modal-pager absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronRight />
                   </button>

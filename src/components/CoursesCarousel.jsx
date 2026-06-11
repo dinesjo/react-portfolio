@@ -54,12 +54,15 @@ export default function CoursesCarousel() {
               return (
                 <article
                   key={course.code}
-                  className="surface-card reveal rounded-lg p-5"
-                  style={{ transitionDelay: `${index * 0.07}s` }}
+                  className="surface-card motion-card course-card reveal rounded-lg p-5"
+                  style={{
+                    transitionDelay: `${index * 0.07}s`,
+                    "--course-color": color,
+                  }}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <span
-                      className="rounded-md border px-2.5 py-1 font-mono text-sm font-bold"
+                      className="course-card-code rounded-md border px-2.5 py-1 font-mono text-sm font-bold"
                       style={{
                         backgroundColor: `${color}10`,
                         borderColor: `${color}30`,

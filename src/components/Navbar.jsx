@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -31,10 +31,28 @@ const navOffset = 112;
 export default function Navbar() {
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
+  const navRefs = useRef([]);
+  const activeIndex = Math.max(0, navItems.findIndex((item) => item.id === active));
+
+  const updateIndicator = useCallback(() => {
+    const activeButton = navRefs.current[activeIndex];
+    if (!activeButton) return;
+
+    setIndicator({
+      left: activeButton.offsetLeft,
+      width: activeButton.offsetWidth,
+      ready: true,
+    });
+  }, [activeIndex]);
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const nextProgress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+      setScrollProgress(Math.min(100, Math.max(0, nextProgress)));
 
       let current = "home";
       let maxVis = 0;
@@ -59,6 +77,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const animationFrame = window.requestAnimationFrame(updateIndicator);
+    window.addEventListener("resize", updateIndicator);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [updateIndicator]);
+
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -69,19 +97,33 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
+      className={`site-nav safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
         scrolled
           ? "bg-white/95 border-slate-300 shadow-lg shadow-slate-900/5"
           : "bg-white/92 border-slate-200/80"
       }`}
+      style={{ "--scroll-progress": `${scrollProgress}%` }}
     >
+      <span
+        aria-hidden="true"
+        className="site-nav__indicator"
+        style={{
+          opacity: indicator.ready ? 1 : 0,
+          transform: `translateX(${indicator.left}px)`,
+          width: `${indicator.width}px`,
+        }}
+      />
+      <span aria-hidden="true" className="site-nav__progress" />
       {navItems.map((item) => (
         <button
           key={item.id}
+          ref={(node) => {
+            navRefs.current[navItems.findIndex((navItem) => navItem.id === item.id)] = node;
+          }}
           onClick={() => scrollTo(item.id)}
-          className={`relative rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-all duration-200 whitespace-nowrap ${
+          className={`nav-item rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-colors duration-200 whitespace-nowrap ${
             active === item.id
-              ? "bg-slate-950 text-white"
+              ? "text-white"
               : "text-slate-500 hover:bg-slate-100 hover:text-slate-950"
           }`}
         >

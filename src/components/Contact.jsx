@@ -73,9 +73,9 @@ export default function Contact() {
               <button
                 onClick={handleCopy}
                 aria-live="polite"
-                className={`inline-flex w-fit items-center gap-2 rounded-md px-5 py-2.5 font-montserrat text-sm font-bold transition-all duration-300 ${
+                className={`copy-button inline-flex w-fit items-center gap-2 rounded-md px-5 py-2.5 font-montserrat text-sm font-bold transition-all duration-300 ${
                   copyStatus === "copied"
-                    ? "bg-emerald-600 text-white"
+                    ? "copy-button--copied bg-emerald-600 text-white"
                     : copyStatus === "failed"
                       ? "bg-rose-600 text-white"
                       : "sharp-button hover:-translate-y-0.5"

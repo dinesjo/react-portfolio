@@ -1,15 +1,42 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import portraitSrc from "../assets/project-optimized/portrait.webp";
 
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
+  const briefCardRef = useRef(null);
+  const portraitFrameRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleBriefPointerMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--brief-x", `${event.clientX - rect.left}px`);
+    event.currentTarget.style.setProperty("--brief-y", `${event.clientY - rect.top}px`);
+  };
+
+  const resetBriefPointer = () => {
+    briefCardRef.current?.style.setProperty("--brief-x", "50%");
+    briefCardRef.current?.style.setProperty("--brief-y", "50%");
+  };
+
+  const handlePortraitPointerMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+    event.currentTarget.style.setProperty("--portrait-shift-x", `${x * -8}px`);
+    event.currentTarget.style.setProperty("--portrait-shift-y", `${y * -8}px`);
+  };
+
+  const resetPortraitPointer = () => {
+    portraitFrameRef.current?.style.setProperty("--portrait-shift-x", "0px");
+    portraitFrameRef.current?.style.setProperty("--portrait-shift-y", "0px");
+  };
 
   return (
     <section id="home" className="relative px-6 pb-16 pt-28 sm:pt-32 lg:min-h-[760px]">
@@ -33,7 +60,7 @@ export default function Hero() {
               }}
               className="sharp-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold transition-transform duration-200 hover:-translate-y-0.5"
             >
-              View work <FaArrowRight className="text-xs" />
+              View work <FaArrowRight className="button-arrow text-xs" />
             </button>
             <a
               href="mailto:dinesjo@kth.se"
@@ -49,7 +76,7 @@ export default function Hero() {
               ["Current", "Master thesis"],
               ["Location", "Strängnäs, Sweden"],
             ].map(([label, value]) => (
-              <div key={label} className="border-l-2 border-slate-300 pl-3">
+              <div key={label} className="hero-stat border-l-2 pl-3">
                 <dt className="font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-400">
                   {label}
                 </dt>
@@ -60,7 +87,10 @@ export default function Hero() {
         </div>
 
         <aside
-          className="surface-card animate-fade-up overflow-hidden rounded-lg"
+          ref={briefCardRef}
+          className="surface-card hero-brief-card animate-fade-up overflow-hidden rounded-lg"
+          onPointerMove={handleBriefPointerMove}
+          onPointerLeave={resetBriefPointer}
           style={{ animationDelay: "0.15s" }}
         >
           <div className="grid grid-cols-[1fr_auto] border-b border-slate-200 bg-white">
@@ -80,9 +110,12 @@ export default function Hero() {
 
           <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr]">
             <div
+              ref={portraitFrameRef}
               className="aspect-[4/5] overflow-hidden bg-slate-200"
               role="img"
               aria-label="Portrait of Linus Dinesjö"
+              onPointerMove={handlePortraitPointerMove}
+              onPointerLeave={resetPortraitPointer}
             >
               <img
                 src={portraitSrc}

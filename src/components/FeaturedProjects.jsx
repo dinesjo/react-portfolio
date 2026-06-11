@@ -57,7 +57,7 @@ export default function FeaturedProjects() {
             return (
               <article
                 key={project.id}
-                className="surface-card group reveal overflow-hidden rounded-lg"
+                className="surface-card motion-card group reveal overflow-hidden rounded-lg"
                 style={{ transitionDelay: `${i * 0.15}s` }}
               >
                 <div className={`grid lg:grid-cols-[1.06fr_0.94fr] ${i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
