@@ -66,6 +66,7 @@ const imageOverlayStyles = {
 
 export default function ProjectImageFrame({
   project,
+  displayImageSrc,
   frameClassName = "",
   imageClassName = "",
   children,
@@ -148,7 +149,7 @@ export default function ProjectImageFrame({
 
         <button
           type="button"
-          aria-label={`Open ${project.title} image`}
+          aria-label={`Open ${project.title} work image`}
           onClick={() => {
             setActiveImage(0);
             setIsOpen(true);
@@ -156,7 +157,7 @@ export default function ProjectImageFrame({
           className="group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--coral)] focus-visible:ring-offset-2"
         >
           <img
-            src={project.image}
+            src={displayImageSrc || project.image}
             alt={project.title}
             loading="lazy"
             onLoad={() => setLoaded(true)}
@@ -183,7 +184,7 @@ export default function ProjectImageFrame({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`${project.title} image preview`}
+          aria-label={`${project.title} work image preview`}
           className="fixed inset-0 z-[80] flex items-center justify-center px-3 py-4 sm:px-6"
         >
           <div
@@ -196,7 +197,7 @@ export default function ProjectImageFrame({
             <div className={`flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-5 ${overlayStyle.modalHeader}`}>
               <div className="min-w-0">
                 <p className={`font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] ${overlayStyle.modalKicker}`}>
-                  Project image
+                  Work image
                 </p>
                 <h3 className="truncate font-montserrat text-base font-extrabold sm:text-lg">
                   {currentImage.caption}
@@ -243,7 +244,7 @@ export default function ProjectImageFrame({
                 <>
                   <button
                     type="button"
-                    aria-label="Previous project image"
+                    aria-label="Previous work image"
                     onClick={showPrevious}
                     className={`absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
@@ -251,7 +252,7 @@ export default function ProjectImageFrame({
                   </button>
                   <button
                     type="button"
-                    aria-label="Next project image"
+                    aria-label="Next work image"
                     onClick={showNext}
                     className={`absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-md border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >

@@ -43,7 +43,7 @@ export const projects = [
     description:
       "Master's thesis evaluating natural-language access strategies for Traton's MAZE industrial knowledge graph, comparing retrieval-based answers with direct graph queries for compatibility question answering.",
     featuredDescription:
-      "This master's thesis explores how industrial knowledge graphs can become usable without requiring people to know the database structure or where compatibility rules are stored. The work studies natural-language access to Traton's MAZE graph so engineers and support teams could ask whether configurations work together and get grounded answers from the underlying constraints. It compares a fast search-based approach with direct graph queries to understand when quick answers are enough, and when traceable reasoning is worth the extra cost.",
+      "This master's thesis studies natural-language access to Traton's MAZE industrial knowledge graph, comparing fast retrieval-based answers with direct graph queries for compatibility questions where traceability matters.",
     technologies: ["Research", "Python", "RAG", "SPARQL", "LLMs"],
     category: "Research",
     context: "Academic",
@@ -59,8 +59,8 @@ export const projects = [
     image: thesisTrackerCard,
     imageFull: thesisTrackerFull,
     icon: thesisTrackerIcon,
-    description: "A thesis progress tracker with a Kanban board organized around project phases and direct links to key deliverables.",
-    statusNote: "This project has been decommissioned and is no longer publicly available.",
+    description: "A thesis progress tracker with a Kanban board organized around thesis phases and direct links to key deliverables.",
+    statusNote: "This work has been decommissioned and is no longer publicly available.",
     technologies: ["React", "Tailwind CSS", "TypeScript"],
     category: "Web",
     context: "Academic",
@@ -136,7 +136,7 @@ export const projects = [
     image: droneCard,
     imageFull: droneFull,
     description:
-      "Collaborative project with seven KTH students to build a desktop interface for I-CONIC's 3D drone software, used in disaster relief planning for a UN-funded project.",
+      "Collaborative KTH build with seven students: a desktop interface for I-CONIC's 3D drone software, used in UN-funded disaster relief planning.",
     technologies: ["C++", "wxWidgets"],
     category: "Desktop",
     context: "Academic",
@@ -202,7 +202,7 @@ export const projects = [
     image: fittrackrCard,
     imageFull: fittrackrFull,
     description:
-      "A KTH group project for tracking workouts, progress, and meals with React, Firebase, and TypeScript.",
+      "A KTH group build for tracking workouts, progress, and meals with React, Firebase, and TypeScript.",
     technologies: ["React", "Firebase", "Material UI", "TypeScript"],
     category: "Web",
     context: "Academic",
@@ -218,7 +218,7 @@ export const projects = [
     image: deadlineTrackerCard,
     imageFull: deadlineTrackerFull,
     description:
-      "A personal project to track deadlines for my courses at KTH.",
+      "A personal tool for tracking deadlines across my KTH courses.",
     technologies: ["React", "Joy UI", "JavaScript"],
     category: "Web",
     context: "Personal",
@@ -234,7 +234,7 @@ export const projects = [
     image: pathvisCard,
     imageFull: pathvisFull,
     description:
-      "Upper secondary school graduate project for comparing pathfinding algorithms and showing how their behavior differs on a grid.",
+      "Upper secondary school final-year work comparing pathfinding algorithms and showing how their behavior differs on a grid.",
     technologies: ["JavaScript", "HTML", "CSS"],
     category: "Web",
     context: "Academic",
@@ -250,7 +250,7 @@ export const projects = [
     image: portfolioSiteCard,
     imageFull: portfolioSiteFull,
     description:
-      "This portfolio site, built with React and Tailwind CSS, with optimized project images and a lightweight static deployment.",
+      "This portfolio site, built with React and Tailwind CSS, with optimized images and a lightweight static deployment.",
     technologies: ["React", "Tailwind CSS", "JavaScript"],
     category: "Web",
     context: "Personal",

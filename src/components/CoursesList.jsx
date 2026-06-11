@@ -1,4 +1,5 @@
 import { getCoursesByYear, getCourseColor } from "../data/courses";
+import SectionIntro from "./SectionIntro";
 
 export default function CoursesList() {
   const years = [1, 2, 3, 4, 5];
@@ -6,22 +7,16 @@ export default function CoursesList() {
   return (
     <section id="courses" className="pb-24 pt-16">
       <div className="section-shell">
-        <div className="mb-8 grid gap-6 lg:grid-cols-[0.72fr_1fr] lg:items-end">
-          <div className="reveal">
-            <span className="section-eyebrow">Full record</span>
-            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
-              KTH course record.
-            </h2>
-          </div>
-          <div className="reveal lg:justify-self-end">
-            <p className="section-copy max-w-2xl">
-              Completed and ongoing KTH courses, grouped by study year.
-            </p>
-            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-              Updated May 2026
-            </p>
-          </div>
-        </div>
+        <SectionIntro
+          align="right"
+          eyebrow="Full record"
+          title="KTH course record."
+          index="04"
+          meta="Updated May 2026"
+          className="mb-8"
+        >
+          Completed and ongoing KTH courses, grouped by study year.
+        </SectionIntro>
 
         <div className="surface-card reveal overflow-hidden rounded-lg">
           {years.map((year) => {

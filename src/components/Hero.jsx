@@ -69,7 +69,7 @@ export default function Hero() {
                 Portfolio brief
               </p>
               <p className="mt-2 text-sm text-slate-600">
-                KTH coursework, research, side projects, and production
+                KTH coursework, research, side work, and production
                 software.
               </p>
             </div>

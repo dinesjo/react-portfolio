@@ -1,5 +1,6 @@
 import { featuredProjects } from "../data/projects";
 import ProjectImageFrame from "./ProjectImageFrame";
+import SectionIntro from "./SectionIntro";
 import TechBadge from "./TechBadge";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
@@ -36,20 +37,17 @@ export default function FeaturedProjects() {
   return (
     <section id="featured" className="pb-14 pt-24">
       <div className="section-shell">
-        <div className="mb-12 grid gap-6 lg:grid-cols-[0.78fr_1fr] lg:items-end">
-          <div className="reveal">
-            <span className="section-eyebrow">Selected work</span>
-            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
-              Current projects, in detail.
-            </h2>
-          </div>
-          <p className="section-copy reveal max-w-2xl text-base lg:justify-self-end">
-            Two current projects: one research thesis on industrial knowledge
-            graph question answering and one full-stack product. Together they
-            show how I handle evaluation design, data access, and maintainable
-            implementation.
-          </p>
-        </div>
+        <SectionIntro
+          eyebrow="Featured work"
+          title="Current work, in detail."
+          index="01"
+          className="mb-12"
+        >
+          A closer look at current work, from industrial knowledge graph
+          question answering to a full-stack product. Both show how I
+          approach evaluation design, data access, and maintainable
+          implementation.
+        </SectionIntro>
 
         <div className="space-y-8">
           {featuredProjects.map((project, i) => {
@@ -65,6 +63,7 @@ export default function FeaturedProjects() {
                 <div className={`grid lg:grid-cols-[1.06fr_0.94fr] ${i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
                   <ProjectImageFrame
                     project={project}
+                    displayImageSrc={project.imageFull || project.image}
                     frameClassName="min-h-72 overflow-hidden border-b border-slate-200 bg-slate-900 lg:border-b-0 lg:border-r"
                     imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
                   >
@@ -78,7 +77,7 @@ export default function FeaturedProjects() {
                       )}
                       <div>
                         <p className={`font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.16em] ${overlayStyle.label}`}>
-                          Active project
+                          Active work
                         </p>
                         <p className="text-sm font-semibold">{project.date}</p>
                       </div>
@@ -88,7 +87,7 @@ export default function FeaturedProjects() {
                 <div className="flex flex-col justify-between p-6 sm:p-8">
                   <div>
                     <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--coral)]">
-                      Case study 0{i + 1}
+                      Work spotlight 0{i + 1}
                     </p>
                     <h3 className="mt-3 font-montserrat text-3xl font-extrabold leading-tight text-slate-950">
                       {project.title}

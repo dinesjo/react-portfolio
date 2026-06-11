@@ -1,4 +1,5 @@
 import { courses, getCourseColor } from "../data/courses";
+import SectionIntro from "./SectionIntro";
 
 const selectedCodes = ["DD2480", "DD2395", "DD2525", "DD2380", "DD2350", "DH2642"];
 
@@ -20,16 +21,17 @@ export default function CoursesCarousel() {
     <section id="courses-carousel" className="py-20">
       <div className="section-shell">
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-          <div className="reveal lg:sticky lg:top-28">
-            <span className="section-eyebrow">Coursework</span>
-            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
-              Coursework behind the projects.
-            </h2>
-            <p className="section-copy mt-5">
+          <div className="lg:sticky lg:top-28">
+            <SectionIntro
+              eyebrow="Coursework"
+              title="Courses behind the work."
+              index="03"
+              className="mb-8"
+            >
               These courses map directly to the systems, security, web, and
               algorithm work shown above.
-            </p>
-            <div className="mt-8 grid grid-cols-2 overflow-hidden rounded-lg border border-slate-300 bg-white">
+            </SectionIntro>
+            <div className="reveal grid grid-cols-2 overflow-hidden rounded-lg border border-slate-300 bg-white">
               {[
                 ["5", "study years"],
                 [String(courses.length), "courses"],

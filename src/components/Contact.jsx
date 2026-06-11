@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaCopy, FaCheck, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import SectionIntro from "./SectionIntro";
 
 export default function Contact() {
   const email = "dinesjo@kth.se";
@@ -47,14 +48,15 @@ export default function Contact() {
       <div className="section-shell">
         <div className="surface-card reveal grid overflow-hidden rounded-lg lg:grid-cols-[0.85fr_1.15fr]">
           <div className="border-b border-slate-200 p-6 sm:p-8 lg:border-b-0 lg:border-r">
-            <span className="section-eyebrow">Contact</span>
-            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
-              Let&apos;s talk.
-            </h2>
-            <p className="section-copy mt-5">
-              Best for project questions, collaboration, or anything that needs
-              more context than a short LinkedIn message.
-            </p>
+            <SectionIntro
+              eyebrow="Contact"
+              title="Let's talk."
+              index="05"
+              className="section-intro--in-card"
+            >
+              Best for questions about the work, collaboration, or anything
+              that needs more context than a short LinkedIn message.
+            </SectionIntro>
           </div>
 
           <div className="p-6 sm:p-8">

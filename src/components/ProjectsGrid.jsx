@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { projects, projectContexts } from "../data/projects";
 import ProjectImageFrame from "./ProjectImageFrame";
+import SectionIntro from "./SectionIntro";
 import TechBadge from "./TechBadge";
 import { FaArchive, FaExternalLinkAlt, FaGithub, FaInfoCircle, FaLock } from "react-icons/fa";
 
@@ -12,18 +13,16 @@ export default function ProjectsGrid() {
   return (
     <section id="projects" className="py-20">
       <div className="section-shell">
-        <div className="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1fr] lg:items-end">
-          <div className="reveal">
-            <span className="section-eyebrow">Archive</span>
-            <h2 className="section-title mt-4 text-4xl sm:text-5xl">
-              Work by context.
-            </h2>
-          </div>
-          <p className="section-copy reveal max-w-2xl lg:justify-self-end">
-            A compact archive grouped by professional, personal, and academic
-            work, so the constraints behind each project are easier to see.
-          </p>
-        </div>
+        <SectionIntro
+          align="right"
+          eyebrow="Selected work"
+          title="Work by context."
+          index="02"
+          className="mb-10"
+        >
+          A curated set of professional, personal, and academic work, grouped
+          so the constraints behind each piece of work are easier to compare.
+        </SectionIntro>
 
         {/* Context filters */}
         <div className="mb-8 flex flex-wrap gap-2 reveal">
