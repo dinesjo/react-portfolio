@@ -4,8 +4,68 @@
 
 /* ───────────────────────── Base ───────────────────────── */
 
+@font-face {
+  font-family: "Iceland";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/iceland-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/inter-latin-ext-300-700.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/inter-latin-300-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin-ext-400-800.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F,
+    U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin-400-800.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: Montserrat, var(--font-body);
+  --font-accent: Iceland, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family: var(--font-body);
   line-height: 1.6;
   font-weight: 400;
   color: #172033;
@@ -318,7 +378,7 @@ section[id] {
   align-items: center;
   gap: 0.5rem;
   color: var(--coral);
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -334,7 +394,7 @@ section[id] {
 
 .section-title {
   color: var(--ink);
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: 0;
   line-height: 0.98;
@@ -342,7 +402,7 @@ section[id] {
 
 .section-copy {
   color: var(--muted);
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-body);
   line-height: 1.75;
 }
 
@@ -381,7 +441,7 @@ section[id] {
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 3px 3px 0 rgba(239, 77, 91, 0.18);
   color: var(--coral);
-  font-family: "Iceland", sans-serif;
+  font-family: var(--font-accent);
   font-size: 1.35rem;
   line-height: 1;
   transition:
@@ -411,7 +471,7 @@ section[id] {
 .section-intro__meta {
   margin-top: 0.65rem;
   color: #98a2b3;
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
