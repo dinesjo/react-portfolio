@@ -215,6 +215,10 @@ section[id] {
   box-shadow: var(--shadow-card-hover);
 }
 
+.scroll-top-button {
+  position: fixed;
+}
+
 .motion-card {
   isolation: isolate;
   overflow: hidden;
@@ -824,6 +828,20 @@ section[id] {
   }
 }
 
+@media (hover: none), (max-width: 639px) {
+  .work-image-trigger::before {
+    opacity: 1;
+  }
+
+  .work-image-expand {
+    opacity: 1;
+  }
+
+  .work-image-view {
+    transform: translateY(0);
+  }
+}
+
 .work-image-expand,
 .work-image-view {
   z-index: 3;
@@ -908,38 +926,6 @@ section[id] {
     transform: translateY(-2px);
     background-color: white;
   }
-}
-
-.course-year-toggle {
-  transition:
-    color var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out);
-}
-
-.course-year-toggle-icon {
-  transition: transform var(--motion-medium) var(--ease-out);
-}
-
-.course-year-toggle[aria-expanded="true"] .course-year-toggle-icon {
-  transform: rotate(180deg);
-}
-
-.course-year-body {
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transition:
-    grid-template-rows var(--motion-medium) var(--ease-out),
-    opacity var(--motion-fast) ease;
-}
-
-.course-year-body > div {
-  overflow: hidden;
-}
-
-.course-year-body--closed {
-  grid-template-rows: 0fr;
-  opacity: 0;
 }
 
 .course-row {

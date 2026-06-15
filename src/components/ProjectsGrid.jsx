@@ -68,7 +68,7 @@ export default function ProjectsGrid() {
                   }`}
                   imageClassName="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
                 >
-                  <div className="absolute left-3 top-3 flex gap-2">
+                  <div className="absolute left-3 top-3 flex max-w-[calc(100%-4rem)] flex-wrap gap-1.5">
                     <span className="project-tag rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
                       {project.context}
                     </span>

@@ -76,7 +76,7 @@ export default function App() {
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Scroll to top"
-        className={`fixed bottom-5 right-5 z-50 w-10 h-10 flex items-center justify-center rounded-lg surface-card text-slate-600 hover:text-slate-950 transition-all duration-300 ${showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+        className={`scroll-top-button fixed bottom-5 right-5 z-50 w-10 h-10 flex items-center justify-center rounded-lg surface-card text-slate-600 hover:text-slate-950 transition-all duration-300 ${showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
       >
         <FaChevronUp />
       </button>
