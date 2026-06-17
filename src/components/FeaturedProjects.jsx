@@ -12,9 +12,9 @@ const caseStudyNotes = {
     "Shows direct graph querying can be slightly more accurate and easier to audit, but is slower and more expensive to run",
   ],
   snuskoll: [
-    "Full-stack PWA built with ASP.NET, Blazor, PostgreSQL, and Tailwind",
-    "Real product catalog with search, filters, ratings, and favorites",
-    "Covers product data, user ratings, and a relational backend",
+    "Splits the product into a Blazor WebAssembly frontend, ASP.NET API, shared DTOs, and Dockerized services",
+    "Uses Supabase for authentication and product/user data, with contract tests around authorization boundaries",
+    "Supports catalog search, filters, personal ratings, favorites, wishlists, random discovery, and recent public reviews",
   ],
 };
 
@@ -46,7 +46,7 @@ export default function FeaturedProjects() {
           A closer look at current work, from industrial knowledge graph
           question answering to a full-stack product. Both show how I
           approach evaluation design, data access, and maintainable
-          implementation.
+          software boundaries.
         </SectionIntro>
 
         <div className="space-y-8">
@@ -64,7 +64,7 @@ export default function FeaturedProjects() {
                   <ProjectImageFrame
                     project={project}
                     displayImageSrc={project.imageFull || project.image}
-                    frameClassName="min-h-72 overflow-hidden border-b border-slate-200 bg-slate-900 lg:border-b-0 lg:border-r"
+                    frameClassName="min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
                     imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
                   >
                     <div className={`absolute bottom-4 left-4 flex items-center gap-3 rounded-md border px-3 py-2 ${overlayStyle.container}`}>

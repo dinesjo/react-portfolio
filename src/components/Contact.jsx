@@ -47,7 +47,7 @@ export default function Contact() {
     <section id="contact" className="py-20">
       <div className="section-shell">
         <div className="surface-card reveal grid overflow-hidden rounded-lg lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="border-b border-slate-200 p-6 sm:p-8 lg:border-b-0 lg:border-r">
+          <div className="border-b border-slate-200/60 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-slate-200/60">
             <SectionIntro
               eyebrow="Contact"
               title="Let's talk."

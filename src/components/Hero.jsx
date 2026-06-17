@@ -1,17 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import portraitSrc from "../assets/project-optimized/portrait.webp";
 
 export default function Hero() {
-  const [scrolled, setScrolled] = useState(false);
   const briefCardRef = useRef(null);
   const portraitFrameRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 100);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const handleBriefPointerMove = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -39,7 +32,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" className="relative px-6 pb-16 pt-28 sm:pt-32 lg:min-h-[760px]">
+    <section id="home" className="relative px-6 pb-12 pt-28 sm:pt-32 lg:min-h-[700px]">
       <div className="section-shell grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
         <div className="animate-fade-up">
           <span className="section-eyebrow">KTH Computer Science</span>
@@ -93,7 +86,7 @@ export default function Hero() {
           onPointerLeave={resetBriefPointer}
           style={{ animationDelay: "0.15s" }}
         >
-          <div className="grid grid-cols-[1fr_auto] border-b border-slate-200 bg-white">
+          <div className="grid grid-cols-[1fr_auto] border-b border-slate-200/60 bg-white/90">
             <div className="p-5">
               <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
                 Portfolio brief
@@ -103,7 +96,7 @@ export default function Hero() {
                 software.
               </p>
             </div>
-            <div className="flex items-center border-l border-slate-200 px-5 font-iceland text-4xl text-[var(--coral)]">
+            <div className="flex items-center border-l border-slate-200/60 px-5 font-iceland text-4xl text-[var(--coral)]">
               LD
             </div>
           </div>
@@ -123,7 +116,7 @@ export default function Hero() {
                 className="portrait-img h-full w-full object-cover transition-all duration-500"
               />
             </div>
-            <div className="flex flex-col justify-between border-t border-slate-200 p-5 sm:border-l sm:border-t-0">
+            <div className="flex flex-col justify-between border-t border-slate-200/60 p-5 sm:border-l sm:border-t-0">
               <div>
                 <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
                   Current focus
@@ -155,15 +148,6 @@ export default function Hero() {
             </div>
           </div>
         </aside>
-      </div>
-
-      <div
-        className={`pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-slate-400 transition-opacity duration-500 sm:flex ${scrolled ? "opacity-0" : "opacity-100"}`}
-      >
-        <span className="font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.22em]">
-          Selected work below
-        </span>
-        <span className="h-8 w-px bg-slate-300" />
       </div>
     </section>
   );

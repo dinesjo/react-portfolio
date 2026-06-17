@@ -62,9 +62,9 @@ export default function TechBadge({ name }) {
     <span
       className="tech-badge inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold whitespace-nowrap"
       style={{
-        backgroundColor: `${color}12`,
+        backgroundColor: `${color}10`,
         color: color,
-        border: `1px solid ${color}25`,
+        border: `1px solid ${color}18`,
       }}
     >
       {config?.image && (

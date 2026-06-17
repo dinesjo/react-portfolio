@@ -59,7 +59,8 @@ export const projects = [
     image: thesisTrackerCard,
     imageFull: thesisTrackerFull,
     icon: thesisTrackerIcon,
-    description: "A thesis progress tracker with a Kanban board organized around thesis phases and direct links to key deliverables.",
+    description:
+      "A decommissioned React and TypeScript tracker that organized thesis work into phase-based Kanban columns and linked directly to key deliverables.",
     statusNote: "This work has been decommissioned and is no longer publicly available.",
     technologies: ["React", "Tailwind CSS", "TypeScript"],
     category: "Web",
@@ -75,7 +76,9 @@ export const projects = [
     imageFull: snuskollFull,
     icon: snuskollLogo,
     description:
-      "A mobile-first PWA for rating snus products with friends, built in ASP.NET and Blazor with PostgreSQL persistence.",
+      "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
+    featuredDescription:
+      "SnusKoll is a mobile-first product catalog and review app for snus. It combines a Blazor WebAssembly frontend, ASP.NET API, Supabase-backed data, authenticated personal ratings, wishlists, favorites, and a small social review feed.",
     technologies: ["ASP.NET", "Blazor", "C#", "SQL", "Tailwind CSS"],
     category: "Web",
     context: "Personal",
@@ -92,7 +95,7 @@ export const projects = [
     image: aiDiaryCard,
     imageFull: aiDiaryFull,
     description:
-      "A mobile-first web app for Bravida where technicians answer brief questions about their workday in speech. The app uses Azure Speech for transcription and LLMs to summarize entries.",
+      "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
     technologies: ["React", "Material UI", "TypeScript", "LLMs"],
     category: "Web",
     context: "Professional",
@@ -106,7 +109,7 @@ export const projects = [
     image: logportalCard,
     imageFull: logportalFull,
     description:
-      "A secure internal Bravida web app for viewing Azure logs, toggling automations remotely, and helping support teams track orders.",
+      "A secure Bravida support portal for Azure log lookup, order tracing, and remote automation toggles behind a controlled internal web UI.",
     technologies: ["C#", "SQL", "ASP.NET", "JavaScript", "Bootstrap"],
     category: "Web",
     context: "Professional",
@@ -120,7 +123,7 @@ export const projects = [
     image: bachelorCard,
     imageFull: bachelorFull,
     description:
-      "Bachelor's thesis on context summarization for LLM chatbots. The experiments found cost reductions up to 92% without significant performance loss.",
+      "Bachelor's thesis testing whether summarized chatbot history can cut LLM cost while preserving answer quality; experiments reduced cost up to 92% without significant performance loss.",
     technologies: ["Research", "LLMs", "Python"],
     category: "Research",
     context: "Academic",
@@ -136,7 +139,7 @@ export const projects = [
     image: droneCard,
     imageFull: droneFull,
     description:
-      "Collaborative KTH build with seven students: a desktop interface for I-CONIC's 3D drone software, used in UN-funded disaster relief planning.",
+      "KTH team project for I-CONIC: a C++/wxWidgets measurement tool for images with hidden depth maps, turning video-derived 3D model data into distance, height, area, and volume checks.",
     technologies: ["C++", "wxWidgets"],
     category: "Desktop",
     context: "Academic",
@@ -153,7 +156,7 @@ export const projects = [
     image: vimCard,
     imageFull: vimFull,
     description:
-      "A simple desktop-first web app for practicing Vim motions. Built with vanilla HTML, CSS, and JavaScript.",
+      "Desktop-first Vim trainer with an interactive keyboard, command stream, mini editor, operators, text objects, and normal/shift/control command hints.",
     technologies: ["HTML", "CSS", "JavaScript"],
     category: "Web",
     context: "Personal",
@@ -170,7 +173,7 @@ export const projects = [
     imageFull: habitGrowerFull,
     icon: habitGrowerIcon,
     description:
-      "A mobile-first habit organizer for building new routines, with Firebase authentication and storage behind a PWA shell.",
+      "React and TypeScript PWA for habit tracking with Firebase auth/storage, custom habit icons and colors, activity heatmaps, and scheduled reminder notifications.",
     technologies: ["React", "Material UI", "Firebase", "TypeScript"],
     category: "Web",
     context: "Personal",
@@ -186,7 +189,7 @@ export const projects = [
     image: pathvisReactCard,
     imageFull: pathvisReactFull,
     description:
-      "A React rewrite of my original pathfinding visualizer with cleaner controls and Joy UI components.",
+      "React and Joy UI pathfinding playground for drawing obstacles and comparing Dijkstra and A* with animated visited nodes and shortest paths.",
     technologies: ["React", "Joy UI", "JavaScript"],
     category: "Web",
     context: "Personal",
@@ -202,7 +205,7 @@ export const projects = [
     image: fittrackrCard,
     imageFull: fittrackrFull,
     description:
-      "A KTH group build for tracking workouts, progress, and meals with React, Firebase, and TypeScript.",
+      "KTH group fitness dashboard for workout logging, goals, exercise search APIs, Firebase auth/database, Redux state, and Recharts progress visualizations.",
     technologies: ["React", "Firebase", "Material UI", "TypeScript"],
     category: "Web",
     context: "Academic",
@@ -218,7 +221,7 @@ export const projects = [
     image: deadlineTrackerCard,
     imageFull: deadlineTrackerFull,
     description:
-      "A personal tool for tracking deadlines across my KTH courses.",
+      "Local-first course deadline tracker with a FullCalendar month view, draggable due dates, course management, archive flow, and PWA support.",
     technologies: ["React", "Joy UI", "JavaScript"],
     category: "Web",
     context: "Personal",
@@ -234,7 +237,7 @@ export const projects = [
     image: pathvisCard,
     imageFull: pathvisFull,
     description:
-      "Upper secondary school final-year work comparing pathfinding algorithms and showing how their behavior differs on a grid.",
+      "Framework-free final-year project comparing A* and Dijkstra on a hand-built grid, including wall drawing, diagonal movement rules, and path animation.",
     technologies: ["JavaScript", "HTML", "CSS"],
     category: "Web",
     context: "Academic",
@@ -250,7 +253,7 @@ export const projects = [
     image: portfolioSiteCard,
     imageFull: portfolioSiteFull,
     description:
-      "This portfolio site, built with React and Tailwind CSS, with optimized images and a lightweight static deployment.",
+      "This Vite and React portfolio, with Tailwind styling, optimized WebP project images, filterable project data, and GitHub Pages deployment scripts.",
     technologies: ["React", "Tailwind CSS", "JavaScript"],
     category: "Web",
     context: "Personal",
@@ -265,7 +268,7 @@ export const projects = [
     image: chessReporterCard,
     imageFull: chessReporterFull,
     description:
-      "A Twitter bot that posts Python-generated GIFs of high-profile chess games. Part of the KTH course DD1349.",
+      "KTH course bot that generated Python GIF recaps of notable chess games and published them to Twitter/X.",
     technologies: ["Python", "Twitter API"],
     category: "Other",
     context: "Academic",
@@ -282,7 +285,7 @@ export const projects = [
     image: noteHeroCard,
     imageFull: noteHeroFull,
     description:
-      "A rhythm game inspired by Guitar Hero. Developed with other students to gamify music theory, using a device's microphone to detect live instruments. Part of KTH course DH1620.",
+      "Unity and C# rhythm game prototype that used microphone input to recognize live instrument notes and turn music-theory practice into a Guitar Hero-style exercise.",
     technologies: ["Unity", "C#"],
     category: "Other",
     context: "Academic",

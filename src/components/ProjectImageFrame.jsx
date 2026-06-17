@@ -38,29 +38,29 @@ const imageOverlayStyles = {
     view:
       "bg-gradient-to-t from-white/90 via-white/60 to-white/0 text-slate-950",
     modalShell:
-      "border-white/30 bg-white/95 shadow-2xl shadow-slate-950/30",
-    modalHeader: "border-slate-200 text-slate-950",
+      "border-white/40 bg-white/95 shadow-2xl shadow-slate-950/28",
+    modalHeader: "border-slate-200/60 text-slate-950",
     modalKicker: "text-slate-500",
     modalClose:
-      "border-slate-300 bg-slate-950/5 text-slate-950 hover:bg-slate-950/10 focus-visible:ring-slate-950",
+      "border-slate-200/70 bg-slate-950/5 text-slate-950 hover:bg-slate-950/10 focus-visible:ring-slate-950",
     modalPager:
       "border-white/60 bg-white/70 text-slate-950 backdrop-blur-md hover:bg-white/90 focus-visible:ring-slate-950",
-    modalCounter: "border-slate-200 text-slate-500",
+    modalCounter: "border-slate-200/60 text-slate-500",
   },
   dark: {
     expand:
-      "border-white/25 bg-slate-950/72 text-white shadow-lg backdrop-blur-sm",
+      "border-white/25 bg-slate-950/75 text-white shadow-lg backdrop-blur-sm",
     view:
       "bg-gradient-to-t from-slate-950/86 to-slate-950/0 text-white",
     modalShell:
       "border-white/15 bg-slate-950 shadow-2xl shadow-slate-950/40",
     modalHeader: "border-white/10 text-white",
-    modalKicker: "text-white/45",
+    modalKicker: "text-white/50",
     modalClose:
       "border-white/15 bg-white/10 text-white hover:bg-white/20 focus-visible:ring-white",
     modalPager:
       "border-white/15 bg-slate-950/70 text-white backdrop-blur-sm hover:bg-slate-800 focus-visible:ring-white",
-    modalCounter: "border-white/10 text-white/55",
+    modalCounter: "border-white/10 text-white/60",
   },
 };
 
@@ -190,7 +190,7 @@ export default function ProjectImageFrame({
           <div
             aria-hidden="true"
             onClick={closeModal}
-            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-slate-950/88 backdrop-blur-md"
+            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-slate-950/90 backdrop-blur-md"
           />
 
           <div className={`image-modal-shell relative z-10 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-lg border ${overlayStyle.modalShell}`}>

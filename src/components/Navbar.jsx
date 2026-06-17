@@ -97,10 +97,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`site-nav safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 transition-all duration-300 ${
+      className={`site-nav safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 backdrop-blur-md transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 border-slate-300 shadow-lg shadow-slate-900/5"
-          : "bg-white/92 border-slate-200/80"
+          ? "border-slate-300/40 bg-white/95 shadow-lg shadow-slate-900/5"
+          : "border-white/75 bg-white/75 shadow-sm shadow-slate-900/5"
       }`}
       style={{ "--scroll-progress": `${scrollProgress}%` }}
     >
@@ -124,7 +124,7 @@ export default function Navbar() {
           className={`nav-item rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-colors duration-200 whitespace-nowrap ${
             active === item.id
               ? "text-white"
-              : "text-slate-500 hover:bg-slate-100 hover:text-slate-950"
+              : "text-slate-500 hover:bg-white/70 hover:text-slate-950"
           }`}
         >
           {item.label}

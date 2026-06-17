@@ -31,12 +31,12 @@ export default function CoursesCarousel() {
               These courses map directly to the systems, security, web, and
               algorithm work shown above.
             </SectionIntro>
-            <div className="reveal grid grid-cols-2 overflow-hidden rounded-lg border border-slate-300 bg-white">
+            <div className="surface-card reveal grid grid-cols-2 overflow-hidden rounded-lg bg-white/80">
               {[
                 ["5", "study years"],
                 [String(courses.length), "courses"],
               ].map(([value, label]) => (
-                <div key={label} className="border-r border-slate-200 p-4 last:border-r-0">
+                <div key={label} className="border-r border-slate-200/60 p-4 last:border-r-0">
                   <p className="font-montserrat text-2xl font-extrabold text-slate-950">
                     {value}
                   </p>
@@ -65,7 +65,7 @@ export default function CoursesCarousel() {
                       className="course-card-code rounded-md border px-2.5 py-1 font-mono text-sm font-bold"
                       style={{
                         backgroundColor: `${color}10`,
-                        borderColor: `${color}30`,
+                        borderColor: `${color}20`,
                         color,
                       }}
                     >

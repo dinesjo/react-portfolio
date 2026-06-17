@@ -35,7 +35,7 @@ export default function ProjectsGrid() {
               className={`filter-pill rounded-md border px-4 py-2 text-sm font-montserrat font-bold transition-all duration-200 ${
                 filter === context
                   ? "border-slate-950 bg-slate-950 text-white"
-                  : "border-slate-300 bg-white/70 text-slate-500 hover:border-slate-500 hover:text-slate-950"
+                  : "border-slate-200/70 bg-white/60 text-slate-500 hover:border-slate-300 hover:bg-white/80 hover:text-slate-950"
               }`}
             >
               {context}
@@ -47,24 +47,40 @@ export default function ProjectsGrid() {
           {filtered.map((project, index) => {
             const isTwoColumnTail =
               filtered.length > 1 && filtered.length % 2 === 1 && index === filtered.length - 1;
+            const isThreeColumnTail =
+              filtered.length > 1 && filtered.length % 3 === 1 && index === filtered.length - 1;
 
             return (
               <article
                 key={`${filter}-${project.id}`}
-                className={`surface-card motion-card project-card group overflow-hidden rounded-lg ${
+                className={`surface-card motion-card project-card group flex flex-col overflow-hidden rounded-lg ${
                   isTwoColumnTail
-                    ? "sm:col-span-2 sm:grid sm:grid-cols-[0.9fr_1.1fr] lg:col-span-1 lg:flex lg:flex-col"
-                    : "flex flex-col"
+                    ? `sm:col-span-2 sm:grid sm:grid-cols-[0.9fr_1.1fr] ${
+                        isThreeColumnTail ? "" : "lg:col-span-1 lg:flex lg:flex-col"
+                      }`
+                    : ""
+                } ${
+                  isThreeColumnTail
+                    ? "lg:col-span-3 lg:grid lg:grid-cols-[0.72fr_1.28fr]"
+                    : ""
                 }`}
                 style={{ animationDelay: `${index * 0.045}s` }}
               >
                 {/* Image */}
                 <ProjectImageFrame
                   project={project}
-                  frameClassName={`overflow-hidden border-b border-slate-200 bg-slate-200 ${
+                  frameClassName={`overflow-hidden border-b border-slate-200/50 bg-slate-200 ${
                     isTwoColumnTail
-                      ? "h-40 sm:h-full sm:min-h-56 sm:border-b-0 sm:border-r lg:h-40 lg:min-h-0 lg:border-b lg:border-r-0"
+                      ? `h-40 sm:h-full sm:min-h-56 sm:border-b-0 sm:border-r sm:border-slate-200/50 ${
+                          isThreeColumnTail
+                            ? ""
+                            : "lg:h-40 lg:min-h-0 lg:border-b lg:border-r-0"
+                        }`
                       : "h-40"
+                  } ${
+                    isThreeColumnTail
+                      ? "lg:h-full lg:min-h-64 lg:border-b-0"
+                      : ""
                   }`}
                   imageClassName="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
                 >
@@ -95,11 +111,11 @@ export default function ProjectsGrid() {
 
                 {/* Content */}
                 <div className="flex flex-1 flex-col p-5">
-                  <div className="mb-3 flex items-start justify-between gap-4">
+                  <div className="mb-3 space-y-2">
                     <h3 className="font-montserrat text-lg font-extrabold leading-tight text-slate-950">
                       {project.title}
                     </h3>
-                    <span className="max-w-24 text-right text-[0.68rem] font-semibold uppercase leading-snug tracking-[0.08em] text-slate-400">
+                    <span className="block text-left text-[0.66rem] font-semibold uppercase leading-snug tracking-[0.08em] text-slate-400">
                       {project.date}
                     </span>
                   </div>
@@ -109,7 +125,7 @@ export default function ProjectsGrid() {
                   </p>
 
                   {project.statusNote && (
-                    <p className="mb-4 flex items-start gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold leading-relaxed text-slate-600">
+                    <p className="mb-4 flex items-start gap-2 rounded-md border border-slate-200/60 bg-slate-50/70 px-3 py-2 text-xs font-semibold leading-relaxed text-slate-600">
                       <FaInfoCircle className="mt-0.5 flex-shrink-0 text-slate-400" />
                       <span>{project.statusNote}</span>
                     </p>

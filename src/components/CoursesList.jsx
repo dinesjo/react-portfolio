@@ -25,7 +25,7 @@ export default function CoursesList() {
             return (
               <section
                 key={year}
-                className="grid gap-5 border-b border-slate-200 p-5 last:border-b-0 sm:p-6 lg:grid-cols-[11rem_1fr]"
+                className="grid gap-5 border-b border-slate-200/60 p-5 last:border-b-0 sm:p-6 lg:grid-cols-[11rem_1fr]"
               >
                 <div className="flex items-start justify-between gap-4 lg:block">
                   <div className="text-left">
@@ -49,7 +49,7 @@ export default function CoursesList() {
                     href={`https://www.kth.se/student/kurser/program/CDATE/20212/arskurs${year}?l=en`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-md border border-slate-300 bg-white/70 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:border-slate-500 hover:text-slate-950 lg:mt-5 lg:inline-flex"
+                    className="rounded-md border border-slate-200/70 bg-white/60 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:border-slate-300 hover:bg-white/90 hover:text-slate-950 lg:mt-5 lg:inline-flex"
                   >
                     View on KTH
                   </a>
@@ -67,7 +67,7 @@ export default function CoursesList() {
                           className="mt-0.5 w-fit justify-self-start rounded-md border px-2 py-0.5 font-mono text-xs font-bold"
                           style={{
                             backgroundColor: `${color}12`,
-                            borderColor: `${color}25`,
+                            borderColor: `${color}18`,
                             color: color,
                           }}
                         >
