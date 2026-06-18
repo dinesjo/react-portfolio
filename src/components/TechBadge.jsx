@@ -11,9 +11,13 @@ import {
   FaSearch,
   FaDatabase,
   FaBrain,
+  FaDocker,
+  FaMicrophone,
 } from "react-icons/fa";
 
 import aspnetImg from "../assets/aspnet.png";
+import awsImg from "../assets/aws.svg";
+import azureImg from "../assets/azure.svg";
 import blazorImg from "../assets/blazor.png";
 import cppImg from "../assets/c++.png";
 import chatgptImg from "../assets/ChatGPT.png";
@@ -39,8 +43,20 @@ const techConfig = {
   RAG: { icon: FaSearch, color: "#0f766e" },
   SPARQL: { icon: FaDatabase, color: "#7c3aed" },
   LLMs: { icon: FaBrain, color: "#db2777" },
+  Supabase: { icon: FaDatabase, color: "#16a34a" },
+  Docker: { icon: FaDocker, color: "#2563eb" },
+  "Azure Speech": { icon: FaMicrophone, color: "#0f8aa6" },
+  AWS: { image: awsImg, color: "#ff9900" },
+  Azure: { image: azureImg, color: "#0078d4" },
   "ASP.NET": { image: aspnetImg, color: "#6d28d9" },
-  Blazor: { image: blazorImg, color: "#6d28d9" },
+  Blazor: {
+    image: blazorImg,
+    color: "#6d28d9",
+    imageStyle: {
+      filter:
+        "brightness(0) saturate(100%) invert(22%) sepia(89%) saturate(2863%) hue-rotate(259deg) brightness(88%) contrast(93%)",
+    },
+  },
   "C++": { image: cppImg, color: "#0369a1" },
   ChatGPT: { image: chatgptImg, color: "#16a34a" },
   "C#": { image: csharpImg, color: "#16a34a" },
@@ -68,7 +84,12 @@ export default function TechBadge({ name }) {
       }}
     >
       {config?.image && (
-        <img src={config.image} alt="" className="w-3.5 h-3.5 object-contain" />
+        <img
+          src={config.image}
+          alt=""
+          className="w-3.5 h-3.5 object-contain"
+          style={config.imageStyle}
+        />
       )}
       {config?.icon && <config.icon className="text-sm" />}
       {name}

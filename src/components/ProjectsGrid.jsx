@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { projects, projectContexts } from "../data/projects";
+import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
-import TechBadge from "./TechBadge";
 import { FaArchive, FaExternalLinkAlt, FaGithub, FaInfoCircle, FaLock } from "react-icons/fa";
 
 export default function ProjectsGrid() {
@@ -131,12 +131,7 @@ export default function ProjectsGrid() {
                     </p>
                   )}
 
-                  {/* Tech badges */}
-                  <div className="mb-5 flex flex-wrap gap-1.5">
-                    {project.technologies.map((tech) => (
-                      <TechBadge key={tech} name={tech} />
-                    ))}
-                  </div>
+                  <ProjectBadges project={project} className="mb-5" />
 
                   {/* Links */}
                   <div className="mt-auto flex flex-wrap gap-2">

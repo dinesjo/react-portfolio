@@ -40,9 +40,10 @@ export default function Hero() {
             Linus Dinesj&ouml;
           </h1>
           <p className="section-copy mt-6 max-w-2xl text-lg sm:text-xl">
-            Final-year computer science student near Stockholm, building
-            web systems, internal tools, and small products that stay
-            maintainable after the first release.
+            Final-year KTH computer science student near Stockholm. I build
+            full-stack products, research tools, and internal systems with a
+            bias for clear architecture, measurable outcomes, and software
+            that survives real use.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -65,8 +66,8 @@ export default function Hero() {
 
           <dl className="mt-10 grid max-w-2xl grid-cols-1 gap-3 xs:grid-cols-3">
             {[
-              ["Focus", "Web systems"],
-              ["Current", "Master thesis"],
+              ["Focus", "Full-stack systems"],
+              ["Current", "KG QA thesis"],
               ["Location", "Strängnäs, Sweden"],
             ].map(([label, value]) => (
               <div key={label} className="hero-stat border-l-2 pl-3">
@@ -92,8 +93,8 @@ export default function Hero() {
                 Portfolio brief
               </p>
               <p className="mt-2 text-sm text-slate-600">
-                KTH coursework, research, side work, and production
-                software.
+                Research, internal tools, public products, and
+                production-minded web systems.
               </p>
             </div>
             <div className="flex items-center border-l border-slate-200/60 px-5 font-iceland text-4xl text-[var(--coral)]">
@@ -101,10 +102,10 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr]">
+          <div className="grid items-stretch gap-0 sm:grid-cols-[0.9fr_1.1fr]">
             <div
               ref={portraitFrameRef}
-              className="aspect-[4/5] overflow-hidden bg-slate-200"
+              className="aspect-[4/5] overflow-hidden bg-slate-200 sm:aspect-auto sm:h-full"
               role="img"
               aria-label="Portrait of Linus Dinesjö"
               onPointerMove={handlePortraitPointerMove}
@@ -122,7 +123,8 @@ export default function Hero() {
                   Current focus
                 </p>
                 <p className="mt-3 text-2xl font-bold leading-tight text-slate-950">
-                  Building focused tools for research, support, and daily work.
+                  Building research tools and operational systems people can
+                  trust and use.
                 </p>
               </div>
               <div className="mt-8 flex gap-2">

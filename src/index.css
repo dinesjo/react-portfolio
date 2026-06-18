@@ -86,7 +86,6 @@
   --coral: #ef4d5b;
   --amber: #b7791f;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-snap: cubic-bezier(0.2, 0.82, 0.16, 1);
   --motion-snap: 120ms;
   --motion-fast: 180ms;
   --motion-medium: 320ms;

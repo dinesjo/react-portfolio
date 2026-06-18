@@ -37,14 +37,15 @@ import vimFull from "../assets/project-optimized/vim-motions-guide-full.webp";
 export const projects = [
   {
     id: "master-thesis-kgqa",
-    title: "Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering",
+    title: "Industrial Knowledge Graph QA",
     image: masterThesisKgqaCard,
     imageFull: masterThesisKgqaFull,
     description:
-      "Master's thesis evaluating natural-language access strategies for Traton's MAZE industrial knowledge graph, comparing retrieval-based answers with direct graph queries for compatibility question answering.",
+      "Master's thesis, \"Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering,\" evaluating natural-language access to Traton's MAZE graph through retrieval-based answers and direct graph queries.",
     featuredDescription:
-      "This master's thesis studies natural-language access to Traton's MAZE industrial knowledge graph, comparing fast retrieval-based answers with direct graph queries for compatibility questions where traceability matters.",
-    technologies: ["Research", "Python", "RAG", "SPARQL", "LLMs"],
+      "This master's thesis, formally titled \"Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering,\" studies natural-language access to Traton's MAZE industrial knowledge graph where compatibility answers need to be both accurate and traceable.",
+    technologies: ["Python", "SPARQL", "AWS"],
+    methods: ["Knowledge graphs", "RAG", "LLM evaluation", "Compatibility QA"],
     category: "Research",
     context: "Academic",
     links: {},
@@ -63,6 +64,7 @@ export const projects = [
       "A decommissioned React and TypeScript tracker that organized thesis work into phase-based Kanban columns and linked directly to key deliverables.",
     statusNote: "This work has been decommissioned and is no longer publicly available.",
     technologies: ["React", "Tailwind CSS", "TypeScript"],
+    methods: ["Research planning", "Kanban workflow"],
     category: "Web",
     context: "Academic",
     links: {},
@@ -79,7 +81,8 @@ export const projects = [
       "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
     featuredDescription:
       "SnusKoll is a mobile-first product catalog and review app for snus. It combines a Blazor WebAssembly frontend, ASP.NET API, Supabase-backed data, authenticated personal ratings, wishlists, favorites, and a small social review feed.",
-    technologies: ["ASP.NET", "Blazor", "C#", "SQL", "Tailwind CSS"],
+    technologies: ["ASP.NET", "Blazor", "C#", "Supabase", "SQL", "Tailwind CSS", "Docker"],
+    methods: ["Product discovery", "Personal ratings", "Social reviews"],
     category: "Web",
     context: "Personal",
     links: {
@@ -96,7 +99,8 @@ export const projects = [
     imageFull: aiDiaryFull,
     description:
       "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
-    technologies: ["React", "Material UI", "TypeScript", "LLMs"],
+    technologies: ["React", "Material UI", "TypeScript", "Azure", "Azure Speech"],
+    methods: ["Field reporting", "Speech-to-text", "LLM summaries"],
     category: "Web",
     context: "Professional",
     links: {},
@@ -110,7 +114,8 @@ export const projects = [
     imageFull: logportalFull,
     description:
       "A secure Bravida support portal for Azure log lookup, order tracing, and remote automation toggles behind a controlled internal web UI.",
-    technologies: ["C#", "SQL", "ASP.NET", "JavaScript", "Bootstrap"],
+    technologies: ["C#", "ASP.NET", "Azure", "SQL", "KQL", "JavaScript", "Bootstrap"],
+    methods: ["Azure log lookup", "Order tracing", "Support automation"],
     category: "Web",
     context: "Professional",
     links: {},
@@ -124,7 +129,8 @@ export const projects = [
     imageFull: bachelorFull,
     description:
       "Bachelor's thesis testing whether summarized chatbot history can cut LLM cost while preserving answer quality; experiments reduced cost up to 92% without significant performance loss.",
-    technologies: ["Research", "LLMs", "Python"],
+    technologies: ["Python"],
+    methods: ["LLM evaluation", "Context summarization", "Cost analysis"],
     category: "Research",
     context: "Academic",
     links: {
@@ -141,6 +147,7 @@ export const projects = [
     description:
       "KTH team project for I-CONIC: a C++/wxWidgets measurement tool for images with hidden depth maps, turning video-derived 3D model data into distance, height, area, and volume checks.",
     technologies: ["C++", "wxWidgets"],
+    methods: ["3D measurement", "Depth maps"],
     category: "Desktop",
     context: "Academic",
     links: {
@@ -158,6 +165,7 @@ export const projects = [
     description:
       "Desktop-first Vim trainer with an interactive keyboard, command stream, mini editor, operators, text objects, and normal/shift/control command hints.",
     technologies: ["HTML", "CSS", "JavaScript"],
+    methods: ["Keyboard training", "Developer education"],
     category: "Web",
     context: "Personal",
     links: {
@@ -175,6 +183,7 @@ export const projects = [
     description:
       "React and TypeScript PWA for habit tracking with Firebase auth/storage, custom habit icons and colors, activity heatmaps, and scheduled reminder notifications.",
     technologies: ["React", "Material UI", "Firebase", "TypeScript"],
+    methods: ["Personal improvement", "Habit tracking"],
     category: "Web",
     context: "Personal",
     links: {
@@ -191,6 +200,7 @@ export const projects = [
     description:
       "React and Joy UI pathfinding playground for drawing obstacles and comparing Dijkstra and A* with animated visited nodes and shortest paths.",
     technologies: ["React", "Joy UI", "JavaScript"],
+    methods: ["Algorithm visualization", "Graph search"],
     category: "Web",
     context: "Personal",
     links: {
@@ -207,6 +217,7 @@ export const projects = [
     description:
       "KTH group fitness dashboard for workout logging, goals, exercise search APIs, Firebase auth/database, Redux state, and Recharts progress visualizations.",
     technologies: ["React", "Firebase", "Material UI", "TypeScript"],
+    methods: ["Personal improvement", "Progress visualization"],
     category: "Web",
     context: "Academic",
     links: {
@@ -223,6 +234,7 @@ export const projects = [
     description:
       "Local-first course deadline tracker with a FullCalendar month view, draggable due dates, course management, archive flow, and PWA support.",
     technologies: ["React", "Joy UI", "JavaScript"],
+    methods: ["Deadline management", "Local-first data"],
     category: "Web",
     context: "Personal",
     links: {
@@ -239,6 +251,7 @@ export const projects = [
     description:
       "Framework-free final-year project comparing A* and Dijkstra on a hand-built grid, including wall drawing, diagonal movement rules, and path animation.",
     technologies: ["JavaScript", "HTML", "CSS"],
+    methods: ["Algorithm visualization", "A* and Dijkstra"],
     category: "Web",
     context: "Academic",
     links: {
@@ -255,6 +268,7 @@ export const projects = [
     description:
       "This Vite and React portfolio, with Tailwind styling, optimized WebP project images, filterable project data, and GitHub Pages deployment scripts.",
     technologies: ["React", "Tailwind CSS", "JavaScript"],
+    methods: ["Responsive UI", "Image optimization"],
     category: "Web",
     context: "Personal",
     links: {
@@ -270,6 +284,7 @@ export const projects = [
     description:
       "KTH course bot that generated Python GIF recaps of notable chess games and published them to Twitter/X.",
     technologies: ["Python", "Twitter API"],
+    methods: ["Content automation", "GIF generation"],
     category: "Other",
     context: "Academic",
     links: {
@@ -287,6 +302,7 @@ export const projects = [
     description:
       "Unity and C# rhythm game prototype that used microphone input to recognize live instrument notes and turn music-theory practice into a Guitar Hero-style exercise.",
     technologies: ["Unity", "C#"],
+    methods: ["Music education", "Audio input"],
     category: "Other",
     context: "Academic",
     links: {},

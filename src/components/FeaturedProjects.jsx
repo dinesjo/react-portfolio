@@ -1,7 +1,7 @@
 import { featuredProjects } from "../data/projects";
+import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
-import TechBadge from "./TechBadge";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const caseStudyNotes = {
@@ -105,11 +105,7 @@ export default function FeaturedProjects() {
                       ))}
                     </ul>
 
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {project.technologies.map((tech) => (
-                        <TechBadge key={tech} name={tech} />
-                      ))}
-                    </div>
+                    <ProjectBadges project={project} className="mt-6" />
                   </div>
 
                   <div className="mt-8 flex flex-wrap gap-3">

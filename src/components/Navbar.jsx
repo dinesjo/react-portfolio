@@ -124,7 +124,7 @@ export default function Navbar() {
           className={`nav-item rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-colors duration-200 whitespace-nowrap ${
             active === item.id
               ? "text-white"
-              : "text-slate-500 hover:bg-white/70 hover:text-slate-950"
+              : "text-slate-500 hover:text-slate-950"
           }`}
         >
           {item.label}
