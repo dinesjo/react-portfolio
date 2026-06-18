@@ -86,11 +86,12 @@
   --coral: #ef4d5b;
   --amber: #b7791f;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.2, 0.82, 0.16, 1);
+  --motion-snap: 120ms;
   --motion-fast: 180ms;
   --motion-medium: 320ms;
   --motion-slow: 620ms;
   --shadow-card: 0 18px 52px rgba(23, 32, 51, 0.065);
-  --shadow-card-hover: 0 26px 64px rgba(23, 32, 51, 0.105);
   --site-backdrop-background:
     linear-gradient(rgba(23, 32, 51, 0.033) 1px, transparent 1px),
     linear-gradient(90deg, rgba(23, 32, 51, 0.033) 1px, transparent 1px),
@@ -206,15 +207,7 @@ section[id] {
   transition:
     background var(--motion-medium) ease,
     border-color var(--motion-medium) ease,
-    box-shadow var(--motion-slow) ease,
-    transform var(--motion-medium) var(--ease-out);
-}
-
-.glass-card:hover,
-.surface-card:hover {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow-card-hover);
+    box-shadow var(--motion-slow) ease;
 }
 
 .scroll-top-button {
@@ -231,45 +224,12 @@ section[id] {
   z-index: 1;
 }
 
-.motion-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(135deg, rgba(239, 77, 91, 0.13), transparent 34%),
-    linear-gradient(315deg, rgba(37, 99, 235, 0.08), transparent 42%);
-  transition: opacity var(--motion-medium) ease;
-}
-
-@media (hover: hover) {
-  .motion-card:hover,
-  .motion-card:focus-within {
-    transform: translateY(-4px);
-  }
-
-  .motion-card:hover::after,
-  .motion-card:focus-within::after {
-    opacity: 1;
-  }
-}
-
 @media (prefers-color-scheme: dark) {
   .glass-card,
   .surface-card {
     background: rgba(255, 255, 255, 0.86);
     border: 1px solid var(--line);
     box-shadow: 0 18px 48px rgba(23, 32, 51, 0.07);
-  }
-
-  .glass-card:hover,
-  .surface-card:hover {
-    background: rgba(255, 255, 255, 0.98);
-    border-color: var(--line-strong);
-    box-shadow: 0 24px 56px rgba(23, 32, 51, 0.11);
   }
 }
 
@@ -450,23 +410,6 @@ section[id] {
   font-family: var(--font-accent);
   font-size: 1.35rem;
   line-height: 1;
-  transition:
-    transform var(--motion-medium) var(--ease-out),
-    box-shadow var(--motion-medium) ease,
-    background var(--motion-medium) ease;
-}
-
-@media (hover: hover) {
-  .section-intro:hover .section-intro__index {
-    transform: rotate(0deg) translateY(-2px);
-    background: white;
-    box-shadow: 4px 5px 0 rgba(239, 77, 91, 0.16);
-  }
-
-  .section-intro--right:hover .section-intro__index {
-    transform: rotate(0deg) translateY(-2px);
-    box-shadow: -4px 5px 0 rgba(239, 77, 91, 0.16);
-  }
 }
 
 .section-intro__copy {
@@ -591,28 +534,46 @@ section[id] {
 
 .quiet-button {
   position: relative;
+  overflow: hidden;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.64);
   color: var(--ink);
+  --quiet-border-accent: rgba(239, 77, 91, 0.72);
   transition:
-    background var(--motion-fast) ease,
-    border-color var(--motion-fast) ease,
-    color var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out),
-    box-shadow var(--motion-fast) ease;
+    background var(--motion-snap) ease,
+    color var(--motion-snap) ease;
+}
+
+.quiet-button::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: var(--quiet-border-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-fast) var(--ease-out);
 }
 
 @media (hover: hover) {
   .quiet-button:hover {
-    border-color: var(--line-strong);
-    box-shadow: 0 10px 24px rgba(23, 32, 51, 0.08);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .quiet-button:hover::after {
+    transform: scaleX(1);
   }
 }
 
+.quiet-button:focus-visible::after {
+  transform: scaleX(1);
+}
+
 .quiet-button:active {
-  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 /* ───────────────────────── Interactions ───────────────────────── */
@@ -648,9 +609,7 @@ section[id] {
 .hero-stat {
   position: relative;
   border-color: rgba(37, 99, 235, 0.12);
-  transition:
-    border-color var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out);
+  transition: border-color var(--motion-fast) ease;
 }
 
 .hero-stat::after {
@@ -667,7 +626,6 @@ section[id] {
 @media (hover: hover) {
   .hero-stat:hover {
     border-color: rgba(239, 77, 91, 0.38);
-    transform: translateX(3px);
   }
 
   .hero-stat:hover::after {
@@ -746,19 +704,6 @@ section[id] {
 
 .project-card {
   animation: filter-card-in 420ms var(--ease-out) backwards;
-}
-
-.project-card .project-tag {
-  transition:
-    transform var(--motion-fast) var(--ease-out),
-    box-shadow var(--motion-fast) ease;
-}
-
-@media (hover: hover) {
-  .project-card:hover .project-tag {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(23, 32, 51, 0.12);
-  }
 }
 
 .work-image-trigger::before {
@@ -873,29 +818,6 @@ section[id] {
   }
 }
 
-.tech-badge {
-  transition:
-    transform var(--motion-fast) var(--ease-out),
-    border-color var(--motion-fast) ease,
-    background-color var(--motion-fast) ease;
-}
-
-.tech-badge svg,
-.tech-badge img {
-  transition: transform var(--motion-medium) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .tech-badge:hover {
-    transform: translateY(-2px);
-  }
-
-  .tech-badge:hover svg,
-  .tech-badge:hover img {
-    transform: rotate(-5deg) scale(1.08);
-  }
-}
-
 .course-card {
   --course-color: var(--blue);
 }
@@ -906,40 +828,8 @@ section[id] {
   inset: 0 auto 0 0;
   z-index: 0;
   width: 3px;
-  opacity: 0;
+  opacity: 0.82;
   background: var(--course-color);
-  transition: opacity var(--motion-medium) ease;
-}
-
-.course-card-code {
-  transition:
-    background-color var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .course-card:hover::before,
-  .course-card:focus-within::before {
-    opacity: 1;
-  }
-
-  .course-card:hover .course-card-code,
-  .course-card:focus-within .course-card-code {
-    transform: translateY(-2px);
-    background-color: white;
-  }
-}
-
-.course-row {
-  transition:
-    background var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out);
-}
-
-@media (hover: hover) {
-  .course-row:hover {
-    transform: translateX(3px);
-  }
 }
 
 .copy-button {

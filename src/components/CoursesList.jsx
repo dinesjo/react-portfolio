@@ -49,7 +49,7 @@ export default function CoursesList() {
                     href={`https://www.kth.se/student/kurser/program/CDATE/20212/arskurs${year}?l=en`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-md border border-slate-200/70 bg-white/60 px-3 py-2 text-xs font-bold text-slate-600 transition-colors hover:border-slate-300 hover:bg-white/90 hover:text-slate-950 lg:mt-5 lg:inline-flex"
+                    className="quiet-button inline-flex px-3 py-2 text-xs font-bold lg:mt-5"
                   >
                     View on KTH
                   </a>
@@ -61,7 +61,7 @@ export default function CoursesList() {
                     return (
                       <div
                         key={course.code}
-                        className="course-row grid grid-cols-[4.6rem_1fr] items-start gap-3 rounded-md px-2 py-2 transition-colors duration-200 hover:bg-white"
+                        className="course-row grid grid-cols-[4.6rem_1fr] items-start gap-3 rounded-md px-2 py-2"
                       >
                         <span
                           className="mt-0.5 w-fit justify-self-start rounded-md border px-2 py-0.5 font-mono text-xs font-bold"

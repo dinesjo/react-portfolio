@@ -82,7 +82,7 @@ export default function ProjectsGrid() {
                       ? "lg:h-full lg:min-h-64 lg:border-b-0"
                       : ""
                   }`}
-                  imageClassName="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
+                  imageClassName="h-full w-full object-cover transition duration-500 group-hover/image:scale-[1.035]"
                 >
                   <div className="absolute left-3 top-3 flex max-w-[calc(100%-4rem)] flex-wrap gap-1.5">
                     <span className="project-tag rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
@@ -145,7 +145,7 @@ export default function ProjectsGrid() {
                         href={project.links.live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="sharp-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-transform duration-200 hover:-translate-y-0.5"
+                        className="sharp-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold"
                       >
                         <FaExternalLinkAlt className="text-[10px]" />
                         {project.links.liveText || "Try it"}
@@ -156,7 +156,7 @@ export default function ProjectsGrid() {
                         href={project.links.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="quiet-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors duration-200 hover:bg-white"
+                        className="quiet-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold"
                       >
                         <FaGithub />
                         Code

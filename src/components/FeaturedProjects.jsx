@@ -65,7 +65,7 @@ export default function FeaturedProjects() {
                     project={project}
                     displayImageSrc={project.imageFull || project.image}
                     frameClassName="min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
-                    imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+                    imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover/image:scale-[1.025]"
                   >
                     <div className={`absolute bottom-4 left-4 flex items-center gap-3 rounded-md border px-3 py-2 ${overlayStyle.container}`}>
                       {project.icon && (
@@ -118,7 +118,7 @@ export default function FeaturedProjects() {
                         href={project.links.live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="sharp-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold transition-transform duration-200 hover:-translate-y-0.5"
+                        className="sharp-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold"
                       >
                         <FaExternalLinkAlt className="text-xs" />
                         Try it
@@ -129,7 +129,7 @@ export default function FeaturedProjects() {
                         href={project.links.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="quiet-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold transition-colors duration-200 hover:bg-white"
+                        className="quiet-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold"
                       >
                         <FaGithub />
                         GitHub

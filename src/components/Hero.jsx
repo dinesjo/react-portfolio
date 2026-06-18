@@ -51,13 +51,13 @@ export default function Hero() {
                 const el = document.getElementById("featured");
                 if (el) window.scrollTo({ top: el.offsetTop - 112, behavior: "smooth" });
               }}
-              className="sharp-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold transition-transform duration-200 hover:-translate-y-0.5"
+              className="sharp-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"
             >
               View work <FaArrowRight className="button-arrow text-xs" />
             </button>
             <a
               href="mailto:dinesjo@kth.se"
-              className="quiet-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold transition-colors duration-200 hover:bg-white"
+              className="quiet-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"
             >
               <FaEnvelope className="text-xs" /> Contact
             </a>
@@ -131,7 +131,7 @@ export default function Hero() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub profile"
-                  className="quiet-button flex h-10 w-10 items-center justify-center transition-colors hover:bg-white"
+                  className="quiet-button flex h-10 w-10 items-center justify-center"
                 >
                   <FaGithub />
                 </a>
@@ -140,7 +140,7 @@ export default function Hero() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn profile"
-                  className="quiet-button flex h-10 w-10 items-center justify-center transition-colors hover:bg-white"
+                  className="quiet-button flex h-10 w-10 items-center justify-center"
                 >
                   <FaLinkedin />
                 </a>

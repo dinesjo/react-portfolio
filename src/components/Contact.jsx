@@ -78,7 +78,7 @@ export default function Contact() {
                     ? "copy-button--copied bg-emerald-600 text-white"
                     : copyStatus === "failed"
                       ? "bg-rose-600 text-white"
-                      : "sharp-button hover:-translate-y-0.5"
+                      : "sharp-button"
                 }`}
               >
                 {copyStatus === "copied" ? (
@@ -102,7 +102,7 @@ export default function Contact() {
                 href="https://github.com/dinesjo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="quiet-button flex h-11 w-11 items-center justify-center transition-colors hover:bg-white"
+                className="quiet-button flex h-11 w-11 items-center justify-center"
                 title="GitHub"
                 aria-label="GitHub profile"
               >
@@ -112,7 +112,7 @@ export default function Contact() {
                 href="https://www.linkedin.com/in/dinesjo/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="quiet-button flex h-11 w-11 items-center justify-center transition-colors hover:bg-white"
+                className="quiet-button flex h-11 w-11 items-center justify-center"
                 title="LinkedIn"
                 aria-label="LinkedIn profile"
               >
@@ -120,7 +120,7 @@ export default function Contact() {
               </a>
               <a
                 href={`mailto:${email}`}
-                className="quiet-button flex h-11 w-11 items-center justify-center transition-colors hover:bg-white"
+                className="quiet-button flex h-11 w-11 items-center justify-center"
                 title="Email"
                 aria-label="Send email"
               >
