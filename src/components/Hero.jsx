@@ -114,6 +114,10 @@ export default function Hero() {
               <img
                 src={portraitSrc}
                 alt="Linus Dinesjö"
+                width="900"
+                height="900"
+                loading="eager"
+                decoding="async"
                 className="portrait-img h-full w-full object-cover transition-all duration-500"
               />
             </div>

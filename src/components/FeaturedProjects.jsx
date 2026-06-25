@@ -66,6 +66,7 @@ export default function FeaturedProjects() {
                     displayImageSrc={project.imageFull || project.image}
                     frameClassName="min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
                     imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover/image:scale-[1.025]"
+                    imageSizes="(min-width: 1180px) 626px, (min-width: 1024px) 52vw, calc(100vw - 48px)"
                   >
                     <div className={`absolute bottom-4 left-4 flex items-center gap-3 rounded-md border px-3 py-2 ${overlayStyle.container}`}>
                       {project.icon && (

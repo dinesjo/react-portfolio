@@ -2,6 +2,62 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaChevronLeft, FaChevronRight, FaExpand, FaTimes } from "react-icons/fa";
 
+const projectImageModules = import.meta.glob("../assets/project-optimized/*.webp", {
+  eager: true,
+  import: "default",
+});
+
+const projectImageUrls = Object.fromEntries(
+  Object.entries(projectImageModules).map(([path, url]) => [path.split("/").pop(), url])
+);
+
+const projectImageAssetIds = {
+  bachelor: "context-summarization-research",
+  drone: "drone-relief-software",
+  "pathvis-react": "react-pathfinding-visualizer",
+  pathvis: "pathfinding-visualizer",
+  this: "portfolio-site",
+  vim: "vim-motions-guide",
+};
+
+const responsiveImageVariants = {
+  card: [
+    { suffix: "card-480", width: 480 },
+    { suffix: "card-768", width: 768 },
+    { suffix: "card", width: 960 },
+  ],
+  full: [
+    { suffix: "full-960", width: 960 },
+    { suffix: "full-1200", width: 1200 },
+    { suffix: "full", width: 1800 },
+  ],
+};
+
+const getProjectImageAssetId = (project) =>
+  project.imageAssetId || projectImageAssetIds[project.id] || project.id;
+
+const getResponsiveCandidates = (project, variant, fallbackSrc) => {
+  const assetId = getProjectImageAssetId(project);
+  const seen = new Set();
+
+  return (responsiveImageVariants[variant] || [])
+    .map(({ suffix, width }) => {
+      const src = projectImageUrls[`${assetId}-${suffix}.webp`] ||
+        (suffix === variant ? fallbackSrc : undefined);
+
+      if (!src || seen.has(src)) return null;
+      seen.add(src);
+
+      return { src, width };
+    })
+    .filter(Boolean);
+};
+
+const toSrcSet = (candidates) =>
+  candidates.length > 1
+    ? candidates.map(({ src, width }) => `${src} ${width}w`).join(", ")
+    : undefined;
+
 const normalizeImages = (project) => {
   if (Array.isArray(project.images) && project.images.length > 0) {
     return project.images.map((image) => {
@@ -69,12 +125,14 @@ export default function ProjectImageFrame({
   displayImageSrc,
   frameClassName = "",
   imageClassName = "",
+  imageSizes = "(min-width: 1024px) 50vw, (min-width: 640px) 50vw, calc(100vw - 48px)",
   children,
 }) {
   const [loaded, setLoaded] = useState(false);
   const [loadedFullImages, setLoadedFullImages] = useState(() => new Set());
   const [isOpen, setIsOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+  const previewImageRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previousFocusRef = useRef(null);
 
@@ -86,6 +144,14 @@ export default function ProjectImageFrame({
   const hasPreviewImage = currentImage.previewSrc && currentImage.previewSrc !== currentImage.src;
   const isFullImageLoaded =
     !hasPreviewImage || loadedFullImages.has(currentImage.src);
+  const displaySrc = displayImageSrc || project.image;
+  const displayVariant = displaySrc === project.imageFull ? "full" : "card";
+  const displaySrcSet = toSrcSet(
+    getResponsiveCandidates(project, displayVariant, displaySrc)
+  );
+  const currentImageSrcSet = toSrcSet(
+    getResponsiveCandidates(project, "full", currentImage.src)
+  );
 
   const closeModal = useCallback(() => setIsOpen(false), []);
   const markFullImageReady = useCallback((src, imageElement) => {
@@ -140,6 +206,15 @@ export default function ProjectImageFrame({
     };
   }, [closeModal, hasMultipleImages, images.length, isOpen, showNext, showPrevious]);
 
+  useEffect(() => {
+    setLoaded(false);
+
+    const imageElement = previewImageRef.current;
+    if (imageElement?.complete && imageElement.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [displaySrc]);
+
   return (
     <>
       <div className={`relative ${frameClassName}`}>
@@ -157,9 +232,13 @@ export default function ProjectImageFrame({
           className="work-image-trigger group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--coral)] focus-visible:ring-offset-2"
         >
           <img
-            src={displayImageSrc || project.image}
+            ref={previewImageRef}
+            src={displaySrc}
+            srcSet={displaySrcSet}
+            sizes={displaySrcSet ? imageSizes : undefined}
             alt={project.title}
             loading="lazy"
+            decoding="async"
             onLoad={() => setLoaded(true)}
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
@@ -228,6 +307,8 @@ export default function ProjectImageFrame({
 
                 <img
                   src={currentImage.src}
+                  srcSet={currentImageSrcSet}
+                  sizes={currentImageSrcSet ? "(min-width: 1152px) 1152px, calc(100vw - 2rem)" : undefined}
                   alt={currentImage.alt}
                   aria-hidden={hasPreviewImage && !isFullImageLoaded ? "true" : undefined}
                   decoding="async"

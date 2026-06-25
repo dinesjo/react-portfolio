@@ -15,20 +15,20 @@ import {
   FaMicrophone,
 } from "react-icons/fa";
 
-import aspnetImg from "../assets/aspnet.png";
+import aspnetImg from "../assets/tech-optimized/aspnet.webp";
 import awsImg from "../assets/aws.svg";
 import azureImg from "../assets/azure.svg";
-import blazorImg from "../assets/blazor.png";
-import cppImg from "../assets/c++.png";
-import chatgptImg from "../assets/ChatGPT.png";
-import csharpImg from "../assets/csharp.png";
-import firebaseImg from "../assets/firebase.png";
-import muiImg from "../assets/mui.png";
-import sqlImg from "../assets/sql.png";
-import tailwindImg from "../assets/tailwind.png";
-import typescriptImg from "../assets/typescript.png";
-import wxwidgetsImg from "../assets/wxwidgets.png";
-import kqlImg from "../assets/kql.png";
+import blazorImg from "../assets/tech-optimized/blazor.webp";
+import cppImg from "../assets/tech-optimized/cpp.webp";
+import chatgptImg from "../assets/tech-optimized/chatgpt.webp";
+import csharpImg from "../assets/tech-optimized/csharp.webp";
+import firebaseImg from "../assets/tech-optimized/firebase.webp";
+import kqlImg from "../assets/tech-optimized/kql.webp";
+import muiImg from "../assets/tech-optimized/mui.webp";
+import sqlImg from "../assets/tech-optimized/sql.webp";
+import tailwindImg from "../assets/tech-optimized/tailwind.webp";
+import typescriptImg from "../assets/tech-optimized/typescript.webp";
+import wxwidgetsImg from "../assets/tech-optimized/wxwidgets.webp";
 
 const techConfig = {
   React: { icon: FaReact, color: "#0ea5e9" },
@@ -87,6 +87,10 @@ export default function TechBadge({ name }) {
         <img
           src={config.image}
           alt=""
+          loading="lazy"
+          decoding="async"
+          width="14"
+          height="14"
           className="w-3.5 h-3.5 object-contain"
           style={config.imageStyle}
         />

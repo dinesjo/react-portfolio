@@ -67,9 +67,9 @@ export default function ProjectsGrid() {
                 style={{ animationDelay: `${index * 0.045}s` }}
               >
                 {/* Image */}
-                <ProjectImageFrame
-                  project={project}
-                  frameClassName={`overflow-hidden border-b border-slate-200/50 bg-slate-200 ${
+                  <ProjectImageFrame
+                    project={project}
+                    frameClassName={`overflow-hidden border-b border-slate-200/50 bg-slate-200 ${
                     isTwoColumnTail
                       ? `h-40 sm:h-full sm:min-h-56 sm:border-b-0 sm:border-r sm:border-slate-200/50 ${
                           isThreeColumnTail
@@ -83,6 +83,7 @@ export default function ProjectsGrid() {
                       : ""
                   }`}
                   imageClassName="h-full w-full object-cover transition duration-500 group-hover/image:scale-[1.035]"
+                  imageSizes="(min-width: 1180px) 382px, (min-width: 1024px) 31vw, (min-width: 640px) 50vw, calc(100vw - 48px)"
                 >
                   <div className="absolute left-3 top-3 flex max-w-[calc(100%-4rem)] flex-wrap gap-1.5">
                     <span className="project-tag rounded-md bg-slate-950 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
