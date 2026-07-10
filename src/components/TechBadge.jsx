@@ -24,6 +24,7 @@ import chatgptImg from "../assets/tech-optimized/chatgpt.webp";
 import csharpImg from "../assets/tech-optimized/csharp.webp";
 import firebaseImg from "../assets/tech-optimized/firebase.webp";
 import kqlImg from "../assets/tech-optimized/kql.webp";
+import maplibreImg from "../assets/maplibre.svg";
 import muiImg from "../assets/tech-optimized/mui.webp";
 import sqlImg from "../assets/tech-optimized/sql.webp";
 import tailwindImg from "../assets/tech-optimized/tailwind.webp";
@@ -68,6 +69,7 @@ const techConfig = {
   TypeScript: { image: typescriptImg, color: "#2563eb" },
   wxWidgets: { image: wxwidgetsImg, color: "#16a34a" },
   KQL: { image: kqlImg, color: "#0369a1" },
+  MapLibre: { image: maplibreImg, color: "#285DAA" },
 };
 
 export default function TechBadge({ name }) {
@@ -76,12 +78,8 @@ export default function TechBadge({ name }) {
 
   return (
     <span
-      className="tech-badge inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold whitespace-nowrap"
-      style={{
-        backgroundColor: `${color}10`,
-        color: color,
-        border: `1px solid ${color}18`,
-      }}
+      className="tech-badge inline-flex items-center gap-1.5 whitespace-nowrap px-2.5 py-1 text-xs font-bold"
+      style={{ "--tech-color": color }}
     >
       {config?.image && (
         <img

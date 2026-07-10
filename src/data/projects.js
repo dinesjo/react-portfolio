@@ -2,6 +2,8 @@ import aiDiaryCard from "../assets/project-optimized/ai-diary-card.webp";
 import aiDiaryFull from "../assets/project-optimized/ai-diary-full.webp";
 import bachelorCard from "../assets/project-optimized/context-summarization-research-card.webp";
 import bachelorFull from "../assets/project-optimized/context-summarization-research-full.webp";
+import bibellandskapCard from "../assets/project-optimized/bibellandskap-card.webp";
+import bibellandskapFull from "../assets/project-optimized/bibellandskap-full.webp";
 import chessReporterCard from "../assets/project-optimized/chess-reporter-card.webp";
 import chessReporterFull from "../assets/project-optimized/chess-reporter-full.webp";
 import deadlineTrackerCard from "../assets/project-optimized/deadline-tracker-card.webp";
@@ -43,16 +45,22 @@ export const projects = [
     description:
       "Master's thesis, \"Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering,\" evaluating natural-language access to Traton's MAZE graph through retrieval-based answers and direct graph queries.",
     featuredDescription:
-      "This master's thesis, formally titled \"Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering,\" studies natural-language access to Traton's MAZE industrial knowledge graph where compatibility answers need to be both accurate and traceable.",
+      "For my master's thesis, I am comparing two ways of answering questions against Traton's MAZE knowledge graph: retrieving relevant context for an LLM and querying the graph directly.",
     technologies: ["Python", "SPARQL", "AWS"],
     methods: ["Knowledge graphs", "RAG", "LLM evaluation", "Compatibility QA"],
     category: "Research",
     context: "Academic",
     links: {},
     date: "January 2026 - Present",
-    isNew: true,
+    priority: 1,
     featured: true,
     imageOverlayTone: "light",
+    highlights: [
+      "I built and evaluated both approaches on the same benchmark questions",
+      "I compared answer correctness, traceability, response time, and cost",
+      "The retrieval approach answered 96.4% of the benchmark cases correctly",
+      "Direct graph queries were slightly more accurate, but slower and more expensive",
+    ],
   },
   {
     id: "thesis-tracker",
@@ -70,6 +78,7 @@ export const projects = [
     links: {},
     date: "February 2026 - Decommissioned",
     isDecommissioned: true,
+    priority: 3,
   },
   {
     id: "snuskoll",
@@ -80,7 +89,7 @@ export const projects = [
     description:
       "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
     featuredDescription:
-      "SnusKoll is a mobile-first product catalog and review app for snus. It combines a Blazor WebAssembly frontend, ASP.NET API, Supabase-backed data, authenticated personal ratings, wishlists, favorites, and a small social review feed.",
+      "I built SnusKoll as a mobile-first place to browse snus products, keep personal ratings, save favorites and wishlists, and read recent reviews from other users.",
     technologies: ["ASP.NET", "Blazor", "C#", "Supabase", "SQL", "Tailwind CSS", "Docker"],
     methods: ["Product discovery", "Personal ratings", "Social reviews"],
     category: "Web",
@@ -90,7 +99,31 @@ export const projects = [
       github: "https://github.com/dinesjo/SnusKoll",
     },
     date: "June 2025 - Present",
+    priority: 1,
     featured: true,
+    highlights: [
+      "I split the app into a Blazor WebAssembly frontend, an ASP.NET API, shared DTOs, and Dockerized services",
+      "Supabase handles authentication and data, with contract tests around authorization",
+      "Users can search and filter the catalog, rate products, save lists, and discover something at random",
+    ],
+  },
+  {
+    id: "bibellandskap",
+    title: "Bible Map",
+    image: bibellandskapCard,
+    imageFull: bibellandskapFull,
+    description:
+      "An English-language Bible atlas using MapLibre and OpenBible data to explore 1,309 biblical places, with search, filters, verse references, confidence bands, and modern identifications.",
+    technologies: ["JavaScript", "MapLibre", "HTML", "CSS"],
+    methods: ["Interactive maps", "Biblical geography", "Search and filtering"],
+    category: "Web",
+    context: "Personal",
+    links: {
+      live: "https://bibeln.dinesjo.se/",
+      github: "https://github.com/dinesjo/bible-map",
+    },
+    date: "March 2026 - Present",
+    priority: 2,
   },
   {
     id: "ai-diary",
@@ -99,6 +132,8 @@ export const projects = [
     imageFull: aiDiaryFull,
     description:
       "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
+    featuredDescription:
+      "I worked on AI-Diary, an internal tool that lets Bravida technicians record a short voice update and turn it into a structured daily note.",
     technologies: ["React", "Material UI", "TypeScript", "Azure", "Azure Speech"],
     methods: ["Field reporting", "Speech-to-text", "LLM summaries"],
     category: "Web",
@@ -106,6 +141,12 @@ export const projects = [
     links: {},
     date: "November 2024 - Present",
     isPrivate: true,
+    priority: 1,
+    highlights: [
+      "The tool avoids asking technicians to type long reports while they are in the field",
+      "Azure Speech creates the transcript and an LLM turns it into a draft note",
+      "The user can review the result before it is added to the diary",
+    ],
   },
   {
     id: "logportal",
@@ -121,6 +162,7 @@ export const projects = [
     links: {},
     date: "June 2023 - August 2024",
     isPrivate: true,
+    priority: 2,
   },
   {
     id: "bachelor",
@@ -129,6 +171,8 @@ export const projects = [
     imageFull: bachelorFull,
     description:
       "Bachelor's thesis testing whether summarized chatbot history can cut LLM cost while preserving answer quality; experiments reduced cost up to 92% without significant performance loss.",
+    featuredDescription:
+      "For my bachelor's thesis, I tested whether a chatbot could summarize older messages to reduce LLM cost without making its answers worse.",
     technologies: ["Python"],
     methods: ["LLM evaluation", "Context summarization", "Cost analysis"],
     category: "Research",
@@ -138,6 +182,12 @@ export const projects = [
       liveText: "Read on DiVA",
     },
     date: "January - June 2024",
+    priority: 1,
+    highlights: [
+      "I compared full conversation history with several summarized versions",
+      "The experiments measured both answer quality and API cost",
+      "The best setup reduced cost by up to 92% without a statistically significant drop in performance",
+    ],
   },
   {
     id: "drone",
@@ -156,6 +206,7 @@ export const projects = [
       github: "https://github.com/I-CONIC-Vision-AB/iconic-measure",
     },
     date: "January - June 2023",
+    priority: 2,
   },
   {
     id: "vim",
@@ -173,6 +224,7 @@ export const projects = [
       github: "https://github.com/dinesjo/vim-motions",
     },
     date: "August 2025",
+    priority: 2,
   },
   {
     id: "habitgrower",
@@ -191,6 +243,7 @@ export const projects = [
       github: "https://github.com/dinesjo/HabitGrower",
     },
     date: "April 2024 - Present",
+    priority: 2,
   },
   {
     id: "pathvis-react",
@@ -208,6 +261,7 @@ export const projects = [
       github: "https://github.com/dinesjo/react-pathfinding-vis",
     },
     date: "September 2023, January 2025",
+    priority: 3,
   },
   {
     id: "fittrackr",
@@ -225,6 +279,7 @@ export const projects = [
       github: "https://github.com/DH2642-project/FitTrackr",
     },
     date: "March - June 2024",
+    priority: 2,
   },
   {
     id: "deadline-tracker",
@@ -242,6 +297,7 @@ export const projects = [
       github: "https://github.com/dinesjo/deadline-tracker",
     },
     date: "September - October 2023",
+    priority: 3,
   },
   {
     id: "pathvis",
@@ -259,6 +315,7 @@ export const projects = [
       github: "https://github.com/dinesjo/pathfinding-vis",
     },
     date: "November 2020 - March 2021",
+    priority: 3,
   },
   {
     id: "this",
@@ -275,6 +332,7 @@ export const projects = [
       github: "https://github.com/dinesjo/react-portfolio",
     },
     date: "September 2023 - Present",
+    priority: 3,
   },
   {
     id: "chess-reporter",
@@ -293,6 +351,7 @@ export const projects = [
       github: "https://gits-15.sys.kth.se/wver/projinda-twitter-bot",
     },
     date: "May 2022",
+    priority: 3,
   },
   {
     id: "note-hero",
@@ -307,9 +366,10 @@ export const projects = [
     context: "Academic",
     links: {},
     date: "January - June 2022",
+    priority: 3,
   },
 ];
 
-export const featuredProjects = projects.filter((p) => p.featured);
+export const featuredProjects = projects.filter((p) => p.priority === 1);
 
 export const projectContexts = ["All", "Professional", "Personal", "Academic"];

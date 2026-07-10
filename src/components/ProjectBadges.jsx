@@ -2,7 +2,7 @@ import TechBadge from "./TechBadge";
 
 function MethodBadge({ name }) {
   return (
-    <span className="method-badge inline-flex items-center rounded-md border border-slate-200/80 bg-white/60 px-2.5 py-1 font-montserrat text-[0.66rem] font-bold uppercase tracking-[0.08em] text-slate-500">
+    <span className="method-badge inline-flex items-center border px-2.5 py-1 font-montserrat text-[0.66rem] font-bold uppercase tracking-[0.08em]">
       {name}
     </span>
   );
@@ -18,7 +18,7 @@ export default function ProjectBadges({ project, className = "" }) {
     <div className={`space-y-3 ${className}`}>
       {stack.length > 0 && (
         <div>
-          <p className="mb-1.5 font-montserrat text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-400">
+          <p className="mb-1.5 font-montserrat text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
             Stack
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -31,7 +31,7 @@ export default function ProjectBadges({ project, className = "" }) {
 
       {methods.length > 0 && (
         <div>
-          <p className="mb-1.5 font-montserrat text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-400">
+          <p className="mb-1.5 font-montserrat text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
             Focus
           </p>
           <div className="flex flex-wrap gap-1.5">

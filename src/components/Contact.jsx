@@ -14,8 +14,10 @@ export default function Contact() {
 
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(email);
-        didCopy = true;
+        didCopy = await Promise.race([
+          navigator.clipboard.writeText(email).then(() => true),
+          new Promise((resolve) => window.setTimeout(() => resolve(false), 800)),
+        ]);
       }
     } catch {
       didCopy = false;
@@ -46,16 +48,15 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20">
       <div className="section-shell">
-        <div className="surface-card reveal grid overflow-hidden rounded-lg lg:grid-cols-[0.85fr_1.15fr]">
+        <div className="surface-card contact-panel reveal grid overflow-hidden lg:grid-cols-[0.85fr_1.15fr]">
           <div className="border-b border-slate-200/60 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-slate-200/60">
             <SectionIntro
               eyebrow="Contact"
-              title="Let's talk."
-              index="05"
+              title="Get in touch."
               className="section-intro--in-card"
             >
-              Best for questions about the work, collaboration, or anything
-              that needs more context than a short LinkedIn message.
+              If you want to ask about a project or just say hello, email is
+              the easiest way to reach me.
             </SectionIntro>
           </div>
 
@@ -66,19 +67,19 @@ export default function Contact() {
             <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
               <a
                 href={`mailto:${email}`}
-                className="text-2xl font-montserrat font-extrabold text-slate-950 transition-colors hover:text-[var(--coral)]"
+                className="contact-email font-montserrat text-2xl font-extrabold"
               >
                 {email}
               </a>
               <button
                 onClick={handleCopy}
                 aria-live="polite"
-                className={`copy-button inline-flex w-fit items-center gap-2 rounded-md px-5 py-2.5 font-montserrat text-sm font-bold transition-all duration-300 ${
+                className={`copy-button sharp-button inline-flex w-fit items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold ${
                   copyStatus === "copied"
-                    ? "copy-button--copied bg-emerald-600 text-white"
+                    ? "copy-button--copied"
                     : copyStatus === "failed"
-                      ? "bg-rose-600 text-white"
-                      : "sharp-button"
+                      ? "copy-button--failed"
+                      : ""
                 }`}
               >
                 {copyStatus === "copied" ? (

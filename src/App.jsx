@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import FeaturedProjects from "./components/FeaturedProjects";
 import CoursesCarousel from "./components/CoursesCarousel";
 import ProjectsGrid from "./components/ProjectsGrid";
 import CoursesList from "./components/CoursesList";
@@ -35,9 +34,12 @@ export default function App() {
 
     observe();
     const timer = setTimeout(observe, 200);
+    const mutationObserver = new MutationObserver(observe);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       clearTimeout(timer);
+      mutationObserver.disconnect();
       observer.disconnect();
     };
   }, []);
@@ -54,7 +56,7 @@ export default function App() {
       {/* Skip to content */}
       <a
         href="#home"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-blue-500 focus:text-white focus:rounded-xl focus:font-semibold"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:border focus:border-white/30 focus:bg-[var(--ink)] focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
       >
         Skip to content
       </a>
@@ -65,7 +67,6 @@ export default function App() {
 
       <main>
         <Hero />
-        <FeaturedProjects />
         <ProjectsGrid />
         <CoursesCarousel />
         <CoursesList />
@@ -74,9 +75,18 @@ export default function App() {
 
       {/* Scroll to top */}
       <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "auto"
+              : "smooth",
+          })
+        }
         aria-label="Scroll to top"
-        className={`scroll-top-button fixed bottom-5 right-5 z-50 w-10 h-10 flex items-center justify-center rounded-lg surface-card text-slate-600 hover:text-slate-950 transition-all duration-300 ${showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+        aria-hidden={!showTop}
+        tabIndex={showTop ? 0 : -1}
+        className={`scroll-top-button surface-card fixed bottom-5 right-5 z-50 flex h-11 w-11 items-center justify-center text-slate-600 hover:text-slate-950 ${showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
       >
         <FaChevronUp />
       </button>

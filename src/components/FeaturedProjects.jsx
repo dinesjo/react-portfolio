@@ -40,7 +40,6 @@ export default function FeaturedProjects() {
         <SectionIntro
           eyebrow="Featured work"
           title="Current work, in detail."
-          index="01"
           className="mb-12"
         >
           A closer look at current work, from industrial knowledge graph
@@ -57,15 +56,14 @@ export default function FeaturedProjects() {
             return (
               <article
                 key={project.id}
-                className="surface-card motion-card group reveal overflow-hidden rounded-lg"
-                style={{ transitionDelay: `${i * 0.15}s` }}
+                className="surface-card group reveal overflow-hidden rounded-lg"
               >
                 <div className={`grid lg:grid-cols-[1.06fr_0.94fr] ${i % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
                   <ProjectImageFrame
                     project={project}
                     displayImageSrc={project.imageFull || project.image}
                     frameClassName="min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
-                    imageClassName="h-full min-h-72 w-full object-cover transition duration-500 group-hover/image:scale-[1.025]"
+                    imageClassName="h-full min-h-72 w-full object-cover"
                     imageSizes="(min-width: 1180px) 626px, (min-width: 1024px) 52vw, calc(100vw - 48px)"
                   >
                     <div className={`absolute bottom-4 left-4 flex items-center gap-3 rounded-md border px-3 py-2 ${overlayStyle.container}`}>

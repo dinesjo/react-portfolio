@@ -1,4 +1,4 @@
-import { courses, getCourseColor } from "../data/courses";
+import { courses } from "../data/courses";
 import SectionIntro from "./SectionIntro";
 
 const selectedCodes = ["DD2480", "DD2395", "DD2525", "DD2380", "DD2350", "DH2642"];
@@ -23,57 +23,27 @@ export default function CoursesCarousel() {
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="lg:sticky lg:top-28">
             <SectionIntro
-              eyebrow="Coursework"
-              title="Courses behind the work."
-              index="03"
+              eyebrow="KTH coursework"
+              title="Courses I&rsquo;ve found useful."
               className="mb-8"
             >
-              These courses map directly to the systems, security, web, and
-              algorithm work shown above.
+              A few courses that connect directly to the projects and topics
+              above.
             </SectionIntro>
-            <div className="surface-card reveal grid grid-cols-2 overflow-hidden rounded-lg bg-white/80">
-              {[
-                ["5", "study years"],
-                [String(courses.length), "courses"],
-              ].map(([value, label]) => (
-                <div key={label} className="border-r border-slate-200/60 p-4 last:border-r-0">
-                  <p className="font-montserrat text-2xl font-extrabold text-slate-950">
-                    {value}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            {featured.map((course, index) => {
-              const color = getCourseColor(course.code);
+            {featured.map((course) => {
               return (
                 <article
                   key={course.code}
-                  className="surface-card motion-card course-card reveal rounded-lg p-5"
-                  style={{
-                    transitionDelay: `${index * 0.07}s`,
-                    "--course-color": color,
-                  }}
+                  className="surface-card course-card reveal p-5"
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <span
-                      className="course-card-code rounded-md border px-2.5 py-1 font-mono text-sm font-bold"
-                      style={{
-                        backgroundColor: `${color}10`,
-                        borderColor: `${color}20`,
-                        color,
-                      }}
-                    >
+                    <span className="course-card-code border px-2.5 py-1 font-iceland text-base font-bold">
                       {course.code}
                     </span>
-                    <span className="font-montserrat text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
-                      Year {course.year}
-                    </span>
+                    <span className="course-card-meta">Year {course.year}</span>
                   </div>
                   <h3 className="mt-4 font-montserrat text-lg font-extrabold leading-tight text-slate-950">
                     {course.name}

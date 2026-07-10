@@ -3,7 +3,6 @@ export default function SectionIntro({
   eyebrow,
   title,
   children,
-  index,
   meta,
   className = "",
 }) {
@@ -19,11 +18,6 @@ export default function SectionIntro({
   return (
     <div className={classes}>
       <div className="section-intro__topline">
-        {index && (
-          <span className="section-intro__index" aria-hidden="true">
-            {index}
-          </span>
-        )}
         <span className="section-eyebrow">{eyebrow}</span>
       </div>
 

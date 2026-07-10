@@ -23,6 +23,7 @@ const projectImageVariants = {
 
 const projectImages = [
   "ai-diary",
+  "bibellandskap",
   "chess-reporter",
   "context-summarization-research",
   "deadline-tracker",
@@ -191,7 +192,7 @@ async function generateOpenGraphImage() {
       <text x="120" y="364" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="500" fill="#667085">Computer science portfolio</text>
       <text x="120" y="434" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="500" fill="#42526b">Web systems, research tools, and maintainable products.</text>
       <rect x="120" y="484" width="256" height="4" rx="2" fill="#ef4d5b"/>
-      <text x="120" y="522" font-family="Montserrat, Arial, sans-serif" font-size="22" font-weight="800" fill="#2563eb" letter-spacing="2">linusdinesjo.github.io</text>
+      <text x="120" y="522" font-family="Montserrat, Arial, sans-serif" font-size="22" font-weight="800" fill="#2563eb" letter-spacing="2">dinesjo.se</text>
       <defs>
         <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
           <path d="M48 0H0V48" fill="none" stroke="#172033" stroke-opacity="0.035" stroke-width="2"/>

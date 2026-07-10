@@ -10,8 +10,8 @@ const navItems = [
 const allSections = [
   "home",
   "featured",
-  "courses-carousel",
   "projects",
+  "courses-carousel",
   "courses",
   "contact",
 ];
@@ -31,7 +31,6 @@ const navOffset = 112;
 export default function Navbar() {
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
   const navRefs = useRef([]);
   const activeIndex = Math.max(0, navItems.findIndex((item) => item.id === active));
@@ -50,9 +49,6 @@ export default function Navbar() {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const nextProgress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
-      setScrollProgress(Math.min(100, Math.max(0, nextProgress)));
 
       let current = "home";
       let maxVis = 0;
@@ -68,7 +64,8 @@ export default function Navbar() {
           current = id;
         }
       }
-      const next = sectionToNav[current] || current;
+      const isAtPageEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8;
+      const next = isAtPageEnd ? "contact" : sectionToNav[current] || current;
       setActive((prev) => (prev === next ? prev : next));
     };
 
@@ -79,9 +76,15 @@ export default function Navbar() {
 
   useEffect(() => {
     const animationFrame = window.requestAnimationFrame(updateIndicator);
+    let cancelled = false;
+
+    document.fonts?.ready.then(() => {
+      if (!cancelled) updateIndicator();
+    });
     window.addEventListener("resize", updateIndicator);
 
     return () => {
+      cancelled = true;
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", updateIndicator);
     };
@@ -91,37 +94,57 @@ export default function Navbar() {
     const el = document.getElementById(id);
     if (el) {
       const offset = id === "home" ? 0 : el.offsetTop - navOffset;
-      window.scrollTo({ top: offset, behavior: "smooth" });
+      window.scrollTo({
+        top: offset,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
     }
   };
 
   return (
     <nav
-      className={`site-nav safe-top-nav fixed left-1/2 -translate-x-1/2 z-50 flex max-w-[calc(100vw-24px)] gap-1 rounded-lg border px-1.5 py-1.5 backdrop-blur-md transition-all duration-300 ${
+      aria-label="Primary navigation"
+      className={`site-nav safe-top-nav fixed left-1/2 z-50 flex -translate-x-1/2 items-center border backdrop-blur-md transition-all duration-300 ${
         scrolled
-          ? "border-slate-300/40 bg-white/95 shadow-lg shadow-slate-900/5"
-          : "border-white/75 bg-white/75 shadow-sm shadow-slate-900/5"
+          ? "site-nav--scrolled border-slate-300/50 bg-white/95"
+          : "border-white/75 bg-white/80"
       }`}
-      style={{ "--scroll-progress": `${scrollProgress}%` }}
     >
-      <span
-        aria-hidden="true"
-        className="site-nav__indicator"
-        style={{
-          opacity: indicator.ready ? 1 : 0,
-          transform: `translateX(${indicator.left}px)`,
-          width: `${indicator.width}px`,
-        }}
-      />
-      <span aria-hidden="true" className="site-nav__progress" />
-      {navItems.map((item) => (
+      <button
+        type="button"
+        className="site-nav__brand"
+        onClick={() => scrollTo("home")}
+        aria-label="Back to the top"
+      >
+        <span className="site-nav__monogram">LD</span>
+        <span className="site-nav__brand-copy">
+          <strong>Portfolio</strong>
+          <small>Linus Dinesj&ouml;</small>
+        </span>
+      </button>
+
+      <div className="site-nav__links">
+        <span
+          aria-hidden="true"
+          className="site-nav__indicator"
+          style={{
+            opacity: indicator.ready ? 1 : 0,
+            transform: `translateX(${indicator.left}px)`,
+            width: `${indicator.width}px`,
+          }}
+        />
+        {navItems.map((item) => (
         <button
           key={item.id}
+          type="button"
           ref={(node) => {
             navRefs.current[navItems.findIndex((navItem) => navItem.id === item.id)] = node;
           }}
           onClick={() => scrollTo(item.id)}
-          className={`nav-item rounded-md px-3 py-1.5 text-xs sm:px-4 sm:text-sm font-montserrat font-bold transition-colors duration-200 whitespace-nowrap ${
+          aria-current={active === item.id ? "page" : undefined}
+          className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
             active === item.id
               ? "text-white"
               : "text-slate-500 hover:text-slate-950"
@@ -129,7 +152,8 @@ export default function Navbar() {
         >
           {item.label}
         </button>
-      ))}
+        ))}
+      </div>
     </nav>
   );
 }
