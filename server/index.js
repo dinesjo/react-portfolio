@@ -9,7 +9,9 @@ import {
   OLLAMA_MODEL,
   OllamaCloudError,
   askOllama,
+  isOllamaConfigured,
 } from "./ollama.js";
+import { createRateLimiter } from "./rate-limit.js";
 import { retrieveContext } from "./retrieval.js";
 
 const PORT = Number.parseInt(process.env.PORT ?? "8080", 10);
@@ -21,8 +23,6 @@ const MAX_BODY_BYTES = 8_192;
 const MAX_QUESTION_CHARACTERS = 600;
 const MAX_HISTORY_MESSAGES = 4;
 const RETRIEVAL_TOKEN_BUDGET = 3_000;
-const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1_000;
-const RATE_LIMIT_REQUESTS = 12;
 const MAX_CONCURRENT_CHAT_REQUESTS = 1;
 
 const contentTypes = {
@@ -42,7 +42,7 @@ const contentTypes = {
   ".woff2": "font/woff2",
 };
 
-const rateLimitBuckets = new Map();
+const chatRateLimiter = createRateLimiter();
 let activeChatRequests = 0;
 
 function setSecurityHeaders(response) {
@@ -67,49 +67,18 @@ function sendJson(response, status, payload, extraHeaders = {}) {
   response.end(body);
 }
 
-function clientIp(request) {
-  const forwarded = request.headers["x-forwarded-for"];
-  if (typeof forwarded === "string" && forwarded.trim()) {
-    return forwarded.split(",", 1)[0].trim();
-  }
-  return request.socket.remoteAddress ?? "unknown";
-}
-
 function isSameOrigin(request) {
   const origin = request.headers.origin;
   if (!origin) return true;
 
-  const forwardedHost = request.headers["x-forwarded-host"];
-  const expectedHost =
-    (typeof forwardedHost === "string" && forwardedHost.split(",", 1)[0].trim()) ||
-    request.headers.host;
+  const expectedHost = request.headers.host?.trim().toLowerCase();
+  if (!expectedHost) return false;
 
   try {
-    return new URL(origin).host === expectedHost;
+    return new URL(origin).host.toLowerCase() === expectedHost;
   } catch {
     return false;
   }
-}
-
-function consumeRateLimit(request) {
-  const now = Date.now();
-  const ip = clientIp(request);
-  const current = rateLimitBuckets.get(ip);
-
-  if (!current || now - current.startedAt >= RATE_LIMIT_WINDOW_MS) {
-    rateLimitBuckets.set(ip, { startedAt: now, count: 1 });
-    return { allowed: true, retryAfter: 0 };
-  }
-
-  current.count += 1;
-  if (current.count <= RATE_LIMIT_REQUESTS) {
-    return { allowed: true, retryAfter: 0 };
-  }
-
-  return {
-    allowed: false,
-    retryAfter: Math.max(1, Math.ceil((RATE_LIMIT_WINDOW_MS - (now - current.startedAt)) / 1_000)),
-  };
 }
 
 async function readJsonBody(request) {
@@ -220,7 +189,7 @@ async function handleChat(request, response) {
     return;
   }
 
-  const rateLimit = consumeRateLimit(request);
+  const rateLimit = chatRateLimiter.consume(request);
   if (!rateLimit.allowed) {
     sendJson(
       response,
@@ -419,7 +388,7 @@ const server = http.createServer(async (request, response) => {
       }
       sendJson(response, 200, {
         status: "ok",
-        assistant: { available: Boolean(process.env.OLLAMA_API_KEY) },
+        assistant: { configured: isOllamaConfigured(process.env.OLLAMA_API_KEY) },
         model: OLLAMA_MODEL,
         retrieval: corpusStats,
       });

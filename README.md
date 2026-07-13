@@ -70,6 +70,7 @@ src/
 server/
   corpus.js              Page-owned records packed into retrieval chunks
   retrieval.js           Bounded lexical retrieval
+  rate-limit.js          Socket-address request limiting with bounded state
   ollama.js              Fixed Ollama Cloud request contract
   index.js               Static server and same-origin API
 ```
@@ -85,7 +86,8 @@ For each question, the server:
 
 1. validates and rate-limits the request;
 2. selects up to six relevant records with a 3,000-token evidence budget;
-3. sends only those records and a short conversation window to Ollama Cloud;
+3. sends only those records and up to four recent messages, packaged as one
+   explicitly untrusted visitor transcript, to Ollama Cloud;
 4. returns the answer with deterministic links to the consulted page records.
 
 The upstream host and model are fixed in server code. Direct Cloud API calls use
@@ -117,13 +119,17 @@ Tailwind CSS is processed through PostCSS as part of the Vite pipeline. No separ
 
 The Vite base path is `/` by default. Set `VITE_GITHUB_PAGES=true` when building for a GitHub Pages project path that should serve assets from `/react-portfolio/`.
 
-GitHub Pages remains a static copy, so the assistant reports itself unavailable
-there. The self-hosted container serves both the portfolio and `/api/chat` from
-the Node runtime. Supply `OLLAMA_API_KEY` only as a runtime environment variable:
+GitHub Pages remains a static copy and does not expose the assistant API. The
+self-hosted container serves both the portfolio and `/api/chat` from the Node
+runtime. Supply `OLLAMA_API_KEY` only as a runtime environment variable:
 
 ```bash
 docker compose --env-file .env.local up --build
 ```
+
+Compose builds the `runtime` target from the current checkout before starting
+it. `/api/health` is a liveness endpoint; `assistant.configured` reports only
+whether a non-placeholder API key is present, not live Ollama Cloud availability.
 
 The key is excluded from both Git and the Docker build context. Rotate any
 development credential before publishing or sharing logs.

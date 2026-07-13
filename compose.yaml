@@ -1,5 +1,8 @@
 services:
   portfolio:
+    build:
+      context: .
+      target: runtime
     image: ghcr.io/dinesjo/react-portfolio:latest
     container_name: react-portfolio
     restart: unless-stopped
