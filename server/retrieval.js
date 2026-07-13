@@ -217,7 +217,7 @@ function meaningfulQueryTerms(question) {
   return terms;
 }
 
-function normalizeType(type) {
+export function normalizeType(type) {
   const value = fold(type);
   if (/course|education|study/.test(value)) return "course";
   if (/experience|employment|job|role/.test(value)) return "experience";
@@ -406,6 +406,22 @@ function formatSourceBlock(chunk, maximumLength, citation) {
   return `${fallbackPrefix}${truncateAtWord(chunk.text, fallbackAvailable)}`;
 }
 
+function validateRankedCandidate(candidate, index) {
+  if (!candidate || typeof candidate !== "object") {
+    throw new TypeError(`ranked[${index}] must be an object`);
+  }
+  assertTrustedChunk(candidate.chunk, index);
+  if (!Number.isFinite(candidate.score) || candidate.score < 0) {
+    throw new TypeError(`ranked[${index}].score must be a non-negative number`);
+  }
+  if (
+    !Array.isArray(candidate.matchedTerms) ||
+    candidate.matchedTerms.some((term) => typeof term !== "string")
+  ) {
+    throw new TypeError(`ranked[${index}].matchedTerms must be an array of strings`);
+  }
+}
+
 /**
  * Estimate tokens conservatively enough for a lightweight context guard.
  * This is intentionally tokenizer-independent; the caller should leave a
@@ -416,36 +432,25 @@ export function estimateTokens(value) {
 }
 
 /**
- * Rank trusted, page-owned content and assemble a bounded context string.
- *
- * @param {object} input
- * @param {string} input.question
- * @param {Array<{id:string,title:string,type:string,text:string,keywords:string[],href:string}>} input.chunks
- * @param {number} [input.topK=5]
- * @param {number} [input.maxTokens=1200]
- * @param {number} [input.minScore=2]
- * @returns {{sources:Array, context:string, estimatedTokens:number}}
+ * Rank page-owned chunks using deterministic lexical signals. Context packing
+ * is intentionally separate so another retrieval signal can be fused before
+ * the final evidence budget is applied.
  */
-export function retrieveContext({
+export function rankLexicalChunks({
   question,
   chunks,
-  topK = DEFAULT_TOP_K,
-  maxTokens = DEFAULT_MAX_TOKENS,
   minScore = DEFAULT_MIN_SCORE,
 }) {
   if (typeof question !== "string") throw new TypeError("question must be a string");
   if (!Array.isArray(chunks)) throw new TypeError("chunks must be an array");
   chunks.forEach(assertTrustedChunk);
-
-  const resolvedTopK = validateLimit(topK, "topK", DEFAULT_TOP_K);
-  const resolvedMaxTokens = validateLimit(maxTokens, "maxTokens", DEFAULT_MAX_TOKENS);
   if (!Number.isFinite(minScore) || minScore < 0) {
     throw new RangeError("minScore must be a non-negative number");
   }
 
   const trimmedQuestion = question.trim();
-  if (!trimmedQuestion || resolvedTopK === 0 || resolvedMaxTokens === 0) {
-    return { sources: [], context: "", estimatedTokens: 0 };
+  if (!trimmedQuestion) {
+    return { ranked: [], broadOverview: false, requestedType: null };
   }
 
   const terms = meaningfulQueryTerms(trimmedQuestion);
@@ -453,7 +458,7 @@ export function retrieveContext({
   const requestedType = broadOverview ? null : explicitRequestedType(trimmedQuestion);
   const termsForRanking = rankingTerms(terms, requestedType, chunks);
   if (terms.length === 0 && !broadOverview) {
-    return { sources: [], context: "", estimatedTokens: 0 };
+    return { ranked: [], broadOverview, requestedType };
   }
 
   const scored = chunks
@@ -471,12 +476,31 @@ export function retrieveContext({
     : Math.max(minScore, (scored[0]?.score ?? 0) * 0.45);
   const ranked = scored.filter((item) => item.score >= relativeScoreFloor);
 
-  const ordered = broadOverview ? diversify(ranked) : ranked;
-  const candidates = ordered.slice(0, resolvedTopK);
-  if (candidates.length === 0) {
+  return {
+    ranked: broadOverview ? diversify(ranked) : ranked,
+    broadOverview,
+    requestedType,
+  };
+}
+
+/**
+ * Pack an already-ranked set of trusted chunks into citation-labelled context.
+ */
+export function buildContextFromRanked({
+  ranked,
+  topK = DEFAULT_TOP_K,
+  maxTokens = DEFAULT_MAX_TOKENS,
+}) {
+  if (!Array.isArray(ranked)) throw new TypeError("ranked must be an array");
+  ranked.forEach(validateRankedCandidate);
+
+  const resolvedTopK = validateLimit(topK, "topK", DEFAULT_TOP_K);
+  const resolvedMaxTokens = validateLimit(maxTokens, "maxTokens", DEFAULT_MAX_TOKENS);
+  if (resolvedTopK === 0 || resolvedMaxTokens === 0 || ranked.length === 0) {
     return { sources: [], context: "", estimatedTokens: 0 };
   }
 
+  const candidates = ranked.slice(0, resolvedTopK);
   const maximumCharacters = resolvedMaxTokens * 4;
   const separator = "\n\n";
   const separatorCharacters = separator.length * Math.max(0, candidates.length - 1);
@@ -499,8 +523,17 @@ export function retrieveContext({
     title: candidate.chunk.title,
     type: candidate.chunk.type,
     href: candidate.chunk.href,
-    score: Number(candidate.score.toFixed(3)),
+    score: Number(candidate.score.toFixed(6)),
     matchedTerms: candidate.matchedTerms,
+    ...(Number.isFinite(candidate.lexicalScore)
+      ? { lexicalScore: Number(candidate.lexicalScore.toFixed(3)) }
+      : {}),
+    ...(Number.isFinite(candidate.vectorScore)
+      ? { vectorScore: Number(candidate.vectorScore.toFixed(6)) }
+      : {}),
+    ...(Array.isArray(candidate.retrievalSignals)
+      ? { retrievalSignals: candidate.retrievalSignals }
+      : {}),
   }));
 
   return {
@@ -508,4 +541,32 @@ export function retrieveContext({
     context,
     estimatedTokens: estimateTokens(context),
   };
+}
+
+/**
+ * Rank trusted, page-owned content and assemble a bounded context string.
+ *
+ * @param {object} input
+ * @param {string} input.question
+ * @param {Array<{id:string,title:string,type:string,text:string,keywords:string[],href:string}>} input.chunks
+ * @param {number} [input.topK=5]
+ * @param {number} [input.maxTokens=1200]
+ * @param {number} [input.minScore=2]
+ * @returns {{sources:Array, context:string, estimatedTokens:number}}
+ */
+export function retrieveContext({
+  question,
+  chunks,
+  topK = DEFAULT_TOP_K,
+  maxTokens = DEFAULT_MAX_TOKENS,
+  minScore = DEFAULT_MIN_SCORE,
+}) {
+  const resolvedTopK = validateLimit(topK, "topK", DEFAULT_TOP_K);
+  const resolvedMaxTokens = validateLimit(maxTokens, "maxTokens", DEFAULT_MAX_TOKENS);
+  const { ranked } = rankLexicalChunks({ question, chunks, minScore });
+  return buildContextFromRanked({
+    ranked,
+    topK: resolvedTopK,
+    maxTokens: resolvedMaxTokens,
+  });
 }

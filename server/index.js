@@ -5,6 +5,7 @@ import http from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { corpusStats, portfolioChunks } from "./corpus.js";
+import { EMBEDDING_MODEL } from "./embeddings.js";
 import {
   OLLAMA_MODEL,
   OllamaCloudError,
@@ -12,7 +13,10 @@ import {
   isOllamaConfigured,
 } from "./ollama.js";
 import { createRateLimiter } from "./rate-limit.js";
-import { retrieveContext } from "./retrieval.js";
+import {
+  SemanticRetrievalError,
+  createSemanticRetriever,
+} from "./semantic-retrieval.js";
 
 const PORT = Number.parseInt(process.env.PORT ?? "8080", 10);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -24,6 +28,7 @@ const MAX_QUESTION_CHARACTERS = 600;
 const MAX_HISTORY_MESSAGES = 4;
 const RETRIEVAL_TOKEN_BUDGET = 3_000;
 const MAX_CONCURRENT_CHAT_REQUESTS = 1;
+const SEMANTIC_RETRY_INTERVAL_MS = 30_000;
 
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
@@ -43,7 +48,46 @@ const contentTypes = {
 };
 
 const chatRateLimiter = createRateLimiter();
+const semanticRetriever = createSemanticRetriever({ chunks: portfolioChunks });
 let activeChatRequests = 0;
+let lastSemanticInitializationAttempt = 0;
+
+async function initializeSemanticIndex() {
+  lastSemanticInitializationAttempt = Date.now();
+  try {
+    const result = await semanticRetriever.initialize();
+    console.info(
+      JSON.stringify({
+        event: "portfolio_vector_index_ready",
+        indexedCount: result.indexedCount,
+        upsertedCount: result.upsertedCount ?? 0,
+        deletedCount: result.deletedCount ?? 0,
+        embeddingModel: EMBEDDING_MODEL,
+      }),
+    );
+  } catch (error) {
+    console.warn(
+      JSON.stringify({
+        event: "portfolio_vector_index_unavailable",
+        code: error?.code ?? "semantic_index_initialization_failed",
+      }),
+    );
+  }
+}
+
+function scheduleSemanticRecovery() {
+  const status = semanticRetriever.status;
+  if (
+    status.ready ||
+    status.state === "initializing" ||
+    Date.now() - lastSemanticInitializationAttempt < 5_000
+  ) {
+    return;
+  }
+  void initializeSemanticIndex();
+}
+
+await initializeSemanticIndex();
 
 function setSecurityHeaders(response) {
   response.setHeader("X-Content-Type-Options", "nosniff");
@@ -211,23 +255,6 @@ async function handleChat(request, response) {
     return;
   }
 
-  const retrieval = retrieveContext({
-    question: input.question,
-    chunks: portfolioChunks,
-    topK: 6,
-    maxTokens: RETRIEVAL_TOKEN_BUDGET,
-  });
-
-  if (retrieval.sources.length === 0) {
-    sendJson(response, 200, {
-      answer:
-        "That is outside the information published in this portfolio. Try asking about Linus's projects, professional work, KTH courses, technologies, or research.",
-      sources: [],
-      retrieval: { sourceCount: 0, estimatedTokens: 0 },
-    });
-    return;
-  }
-
   if (activeChatRequests >= MAX_CONCURRENT_CHAT_REQUESTS) {
     sendJson(
       response,
@@ -247,6 +274,27 @@ async function handleChat(request, response) {
   activeChatRequests += 1;
   const startedAt = Date.now();
   try {
+    const retrieval = await semanticRetriever.retrieve({
+      question: input.question,
+      topK: 6,
+      maxTokens: RETRIEVAL_TOKEN_BUDGET,
+      signal: abortController.signal,
+    });
+
+    if (retrieval.sources.length === 0) {
+      sendJson(response, 200, {
+        answer:
+          "That is outside the information published in this portfolio. Try asking about Linus's projects, professional work, KTH courses, technologies, or research.",
+        sources: [],
+        retrieval: {
+          mode: retrieval.diagnostics.mode,
+          sourceCount: 0,
+          estimatedTokens: 0,
+        },
+      });
+      return;
+    }
+
     const result = await askOllama({
       apiKey: process.env.OLLAMA_API_KEY,
       question: input.question,
@@ -260,6 +308,7 @@ async function handleChat(request, response) {
       answer: result.answer,
       sources,
       retrieval: {
+        mode: retrieval.diagnostics.mode,
         sourceCount: sources.length,
         estimatedTokens: retrieval.estimatedTokens,
       },
@@ -271,13 +320,16 @@ async function handleChat(request, response) {
         event: "portfolio_chat_completed",
         durationMs: Date.now() - startedAt,
         sourceIds: sources.map((source) => source.id),
+        retrievalMode: retrieval.diagnostics.mode,
+        embeddingDurationMs: retrieval.diagnostics.embeddingDurationMs,
+        vectorSearchDurationMs: retrieval.diagnostics.vectorSearchDurationMs,
         promptTokens: result.metrics.promptTokens,
         responseTokens: result.metrics.responseTokens,
       }),
     );
   } catch (error) {
     const safeError =
-      error instanceof OllamaCloudError
+      error instanceof OllamaCloudError || error instanceof SemanticRetrievalError
         ? error
         : new OllamaCloudError(
             "assistant_error",
@@ -378,11 +430,29 @@ const server = http.createServer(async (request, response) => {
         });
         return;
       }
+      scheduleSemanticRecovery();
+      const semanticStatus = semanticRetriever.status;
+      const generationConfigured = isOllamaConfigured(process.env.OLLAMA_API_KEY);
       sendJson(response, 200, {
         status: "ok",
-        assistant: { configured: isOllamaConfigured(process.env.OLLAMA_API_KEY) },
+        assistant: {
+          configured: generationConfigured && semanticStatus.ready,
+          generationConfigured,
+          retrievalReady: semanticStatus.ready,
+        },
         model: OLLAMA_MODEL,
-        retrieval: corpusStats,
+        models: {
+          generation: OLLAMA_MODEL,
+          embedding: semanticStatus.embeddingModel,
+        },
+        retrieval: {
+          ...corpusStats,
+          mode: semanticStatus.mode,
+          state: semanticStatus.state,
+          vectorStore: semanticStatus.vectorStore,
+          embeddingDimensions: semanticStatus.embeddingDimensions,
+          indexedSourceCount: semanticStatus.indexedCount,
+        },
       });
       return;
     }
@@ -426,8 +496,14 @@ server.listen(PORT, HOST, () => {
   );
 });
 
+const semanticRetryTimer = setInterval(() => {
+  scheduleSemanticRecovery();
+}, SEMANTIC_RETRY_INTERVAL_MS);
+semanticRetryTimer.unref();
+
 async function shutdown(signal) {
   console.info(`Received ${signal}; shutting down.`);
+  clearInterval(semanticRetryTimer);
   server.close(async () => {
     await vite?.close();
     process.exit(0);

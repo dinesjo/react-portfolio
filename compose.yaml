@@ -1,4 +1,13 @@
 services:
+  qdrant:
+    image: qdrant/qdrant:v1.18.2-unprivileged
+    restart: unless-stopped
+    init: true
+    ports:
+      - "127.0.0.1:6333:6333"
+    volumes:
+      - portfolio-vector-data:/qdrant/storage
+
   portfolio:
     build:
       context: .
@@ -7,9 +16,15 @@ services:
     container_name: react-portfolio
     restart: unless-stopped
     init: true
+    depends_on:
+      - qdrant
     environment:
       OLLAMA_API_KEY: ${OLLAMA_API_KEY:?Set OLLAMA_API_KEY in the server environment}
+      OLLAMA_EMBEDDING_URL: ${OLLAMA_EMBEDDING_DOCKER_URL:-http://host.docker.internal:11434}
+      QDRANT_URL: http://qdrant:6333
       NODE_ENV: production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8080:8080"
     healthcheck:
@@ -22,3 +37,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+
+volumes:
+  portfolio-vector-data:
