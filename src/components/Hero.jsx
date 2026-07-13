@@ -4,11 +4,19 @@ import { profile } from "../data/profile";
 
 export default function Hero() {
   return (
-    <section id="home" className="hero-section relative px-6 pb-16 pt-32 sm:pt-40">
+    <section
+      id="home"
+      tabIndex={-1}
+      aria-labelledby="home-title"
+      className="hero-section relative px-6 pb-16 pt-32 sm:pt-40"
+    >
       <div className="section-shell hero-layout grid items-center gap-12 lg:grid-cols-[1.12fr_0.88fr]">
         <div className="hero-copy animate-fade-up">
           <span className="section-eyebrow">{profile.role}</span>
-          <h1 className="section-title hero-title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]">
+          <h1
+            id="home-title"
+            className="section-title hero-title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
+          >
             {profile.name}
           </h1>
           <p className="hero-thesis mt-6 max-w-2xl font-montserrat text-xl font-bold leading-snug text-slate-950 sm:text-2xl">

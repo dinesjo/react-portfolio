@@ -42,6 +42,9 @@ export default function CoursesList() {
               return (
                 <section
                   key={year}
+                  id={`courses-year-${year}`}
+                  tabIndex={-1}
+                  aria-labelledby={`courses-year-${year}-title`}
                   className="course-record__year grid gap-5 border-b border-slate-200/60 p-5 last:border-b-0 sm:p-6 lg:grid-cols-[11rem_1fr] lg:gap-6"
                 >
                   <div className="course-record__year-meta flex items-start justify-between gap-4 lg:block">
@@ -49,14 +52,17 @@ export default function CoursesList() {
                       <span className="block font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
                         Study year
                       </span>
-                      <span className="mt-1 block font-montserrat text-2xl font-extrabold text-slate-950">
+                      <h3
+                        id={`courses-year-${year}-title`}
+                        className="mt-1 block font-montserrat text-2xl font-extrabold text-slate-950"
+                      >
                         Year {year}
                         {year === 5 && (
                           <span className="ml-2 align-middle text-sm font-semibold text-slate-500">
                             - preliminary
                           </span>
                         )}
-                      </span>
+                      </h3>
                       <span className="mt-1 block text-sm text-slate-500">
                         {yearCourses.length} courses
                         {year === 5 && " - started August 2025"}
