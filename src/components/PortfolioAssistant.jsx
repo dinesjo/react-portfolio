@@ -5,6 +5,7 @@ const HISTORY_MESSAGE_LIMIT = 4;
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const MODEL_LABEL = "gpt-oss:20b · Ollama Cloud";
+const RETRIEVAL_LABEL = "qwen3-embedding:0.6b · Qdrant";
 
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
@@ -146,17 +147,24 @@ export default function PortfolioAssistant() {
       const data = await response.json();
       if (!mountedRef.current) return;
 
-      const sourceCount = Number.isFinite(data?.retrieval?.sourceCount)
-        ? data.retrieval.sourceCount
+      const sourceCount = Number.isFinite(data?.retrieval?.indexedSourceCount)
+        ? data.retrieval.indexedSourceCount
         : null;
 
       if (data?.assistant?.configured === true) {
         setHealth({ status: "configured", sourceCount, detail: "" });
-      } else {
+      } else if (data?.assistant?.generationConfigured !== true) {
         setHealth({
           status: "unavailable",
           sourceCount,
           detail: "The cloud model is not configured for this deployment.",
+        });
+      } else {
+        setHealth({
+          status: "unavailable",
+          sourceCount,
+          detail:
+            "The local embedding model or portfolio vector index is unavailable.",
         });
       }
     } catch (error) {
@@ -346,7 +354,7 @@ export default function PortfolioAssistant() {
   const canSubmit = question.trim().length > 0 && !actionsAreDisabled;
   const statusLabel =
     health.status === "configured"
-      ? "Evidence desk configured"
+      ? "Vector index ready"
       : health.status === "checking"
         ? "Checking evidence desk"
         : "Evidence desk unavailable";
@@ -366,18 +374,22 @@ export default function PortfolioAssistant() {
             </h2>
             <p className="assistant-description">
               Ask about projects, professional work, research, or KTH courses.
-              Answers are grounded in the records published on this portfolio,
-              with the consulted records attached below each response.
+              A hybrid vector and exact-match search grounds each answer in the
+              records published here, with the consulted evidence attached below.
             </p>
           </div>
 
           <dl className="assistant-runtime" aria-label="Assistant runtime">
             <div className="assistant-runtime-item">
-              <dt className="assistant-runtime-label">Runtime</dt>
+              <dt className="assistant-runtime-label">Answer model</dt>
               <dd className="assistant-runtime-value">{MODEL_LABEL}</dd>
             </div>
             <div className="assistant-runtime-item">
-              <dt className="assistant-runtime-label">Records indexed</dt>
+              <dt className="assistant-runtime-label">Retrieval</dt>
+              <dd className="assistant-runtime-value">{RETRIEVAL_LABEL}</dd>
+            </div>
+            <div className="assistant-runtime-item">
+              <dt className="assistant-runtime-label">Vectors indexed</dt>
               <dd className="assistant-runtime-value">
                 {health.sourceCount ?? "—"}
               </dd>
@@ -536,7 +548,7 @@ export default function PortfolioAssistant() {
                 <article className="assistant-message assistant-message-assistant assistant-message-pending">
                   <p className="assistant-message-label">Evidence note</p>
                   <p className="assistant-loading-copy">
-                    Searching the portfolio records and drafting an answer…
+                    Embedding the enquiry, searching the index, and drafting an answer…
                   </p>
                   <span className="assistant-loading-mark" aria-hidden="true" />
                 </article>

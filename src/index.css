@@ -1491,7 +1491,7 @@ section[id] {
 }
 
 .assistant-prompts::after {
-  content: "23 sources / 3000 token evidence ceiling";
+  content: "23 vectors / 3000 token evidence ceiling";
   position: absolute;
   right: -9.5rem;
   bottom: 10.5rem;
