@@ -1878,7 +1878,7 @@ section[id] {
   padding: 0.9rem 1rem;
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.55;
   box-shadow: inset 4px 0 0 rgba(233, 79, 55, 0.16);
   transition:
@@ -2139,6 +2139,7 @@ section[id] {
 
   .assistant-question-input {
     grid-row: auto;
+    min-height: 7.25rem;
   }
 
   .assistant-form-meta {
