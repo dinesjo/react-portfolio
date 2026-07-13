@@ -187,5 +187,12 @@ is configured and the local embedding/vector index is ready. The response also
 separates `generationConfigured`, `retrievalReady`, indexed record count,
 embedding model, dimensions, and vector-store state.
 
+`/api/ready` is the deployment-readiness endpoint. It returns HTTP 200 only when
+Cloud generation is configured and semantic retrieval is ready; otherwise it
+returns HTTP 503 with safe blocker codes. The container healthcheck uses this
+endpoint, so `docker compose ps` does not report the portfolio healthy while its
+assistant dependencies are unavailable. GitHub Actions runs `npm test` and
+`npm run lint` before authenticating to GHCR and publishing any image.
+
 The key is excluded from both Git and the Docker build context. Rotate any
 development credential before publishing or sharing logs.

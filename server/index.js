@@ -13,6 +13,7 @@ import {
   isOllamaConfigured,
 } from "./ollama.js";
 import { createRateLimiter } from "./rate-limit.js";
+import { evaluateReadiness } from "./readiness.js";
 import {
   SemanticRetrievalError,
   createSemanticRetriever,
@@ -454,6 +455,22 @@ const server = http.createServer(async (request, response) => {
           indexedSourceCount: semanticStatus.indexedCount,
         },
       });
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/ready") {
+      if (request.method !== "GET") {
+        sendJson(response, 405, { error: "Method not allowed.", code: "method_not_allowed" }, {
+          Allow: "GET",
+        });
+        return;
+      }
+      scheduleSemanticRecovery();
+      const readiness = evaluateReadiness({
+        generationConfigured: isOllamaConfigured(process.env.OLLAMA_API_KEY),
+        semanticStatus: semanticRetriever.status,
+      });
+      sendJson(response, readiness.statusCode, readiness.body);
       return;
     }
 
