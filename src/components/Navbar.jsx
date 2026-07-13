@@ -2,13 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const navItems = [
   { id: "home", label: "Home" },
+  { id: "assistant", label: "Ask" },
   { id: "featured", label: "Work" },
-  { id: "courses-carousel", label: "Courses" },
+  { id: "courses-carousel", label: "Study" },
   { id: "contact", label: "Contact" },
 ];
 
 const allSections = [
   "home",
+  "assistant",
   "featured",
   "projects",
   "courses-carousel",
@@ -19,6 +21,7 @@ const allSections = [
 // Map sections to their nav parent
 const sectionToNav = {
   home: "home",
+  assistant: "assistant",
   featured: "featured",
   "courses-carousel": "courses-carousel",
   projects: "featured",
@@ -143,7 +146,7 @@ export default function Navbar() {
             navRefs.current[navItems.findIndex((navItem) => navItem.id === item.id)] = node;
           }}
           onClick={() => scrollTo(item.id)}
-          aria-current={active === item.id ? "page" : undefined}
+          aria-current={active === item.id ? "location" : undefined}
           className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
             active === item.id
               ? "text-white"

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import PortfolioAssistant from "./components/PortfolioAssistant";
 import CoursesCarousel from "./components/CoursesCarousel";
 import ProjectsGrid from "./components/ProjectsGrid";
 import CoursesList from "./components/CoursesList";
@@ -67,6 +68,7 @@ export default function App() {
 
       <main>
         <Hero />
+        <PortfolioAssistant />
         <ProjectsGrid />
         <CoursesCarousel />
         <CoursesList />

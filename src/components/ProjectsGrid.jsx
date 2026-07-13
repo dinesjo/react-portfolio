@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { projects, projectContexts } from "../data/projects";
 import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
@@ -156,6 +156,9 @@ function CaseStudyCard({ project, index }) {
 
   return (
     <article
+      id={`project-${project.id}`}
+      tabIndex={-1}
+      aria-labelledby={`project-${project.id}-title`}
       className={`surface-card priority-case-card group reveal overflow-hidden rounded-lg ${
         index % 2 === 1
           ? "priority-case-card--text-left"
@@ -190,7 +193,10 @@ function CaseStudyCard({ project, index }) {
         <div className="priority-case-card__content flex flex-col justify-between p-6 sm:p-8">
           <div>
             <ProjectTags project={project} className="mb-5" />
-            <h3 className="font-montserrat text-3xl font-extrabold leading-tight text-slate-950">
+            <h3
+              id={`project-${project.id}-title`}
+              className="font-montserrat text-3xl font-extrabold leading-tight text-slate-950"
+            >
               {project.title}
             </h3>
             <p className="section-copy mt-4">
@@ -230,6 +236,9 @@ function CaseStudyCard({ project, index }) {
 function SelectedProjectCard({ project, index }) {
   return (
     <article
+      id={`project-${project.id}`}
+      tabIndex={-1}
+      aria-labelledby={`project-${project.id}-title`}
       className="surface-card project-card group flex flex-col overflow-hidden rounded-lg"
       style={{ animationDelay: `${index * 0.045}s` }}
     >
@@ -245,7 +254,10 @@ function SelectedProjectCard({ project, index }) {
       <div className="flex flex-1 flex-col p-5">
         <div className="project-card__heading mb-4 border-b pb-3">
           <div className="space-y-2">
-            <h3 className="font-montserrat text-lg font-extrabold leading-tight text-slate-950">
+            <h3
+              id={`project-${project.id}-title`}
+              className="font-montserrat text-lg font-extrabold leading-tight text-slate-950"
+            >
               {project.title}
             </h3>
             <span className="block text-left text-[0.66rem] font-semibold uppercase leading-snug tracking-[0.08em] text-slate-500">
@@ -277,7 +289,12 @@ function SelectedProjectCard({ project, index }) {
 
 function ArchiveProjectCard({ project }) {
   return (
-    <article className="archive-card group grid overflow-hidden sm:grid-cols-[11.5rem_1fr] lg:grid-cols-[13rem_1fr]">
+    <article
+      id={`project-${project.id}`}
+      tabIndex={-1}
+      aria-labelledby={`project-${project.id}-title`}
+      className="archive-card group grid overflow-hidden sm:grid-cols-[11.5rem_1fr] lg:grid-cols-[13rem_1fr]"
+    >
       <ProjectImageFrame
         project={project}
         frameClassName="h-44 overflow-hidden bg-slate-200 sm:h-full sm:min-h-44"
@@ -288,7 +305,10 @@ function ArchiveProjectCard({ project }) {
       <div className="flex min-w-0 flex-col p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-montserrat text-base font-extrabold leading-tight text-slate-950">
+            <h3
+              id={`project-${project.id}-title`}
+              className="font-montserrat text-base font-extrabold leading-tight text-slate-950"
+            >
               {project.title}
             </h3>
             <p className="archive-card__meta mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-slate-500">
@@ -318,6 +338,17 @@ function ArchiveProjectCard({ project }) {
 
 export default function ProjectsGrid() {
   const [filter, setFilter] = useState("All");
+
+  useEffect(() => {
+    const revealProject = (event) => {
+      if (event.detail?.targetId?.startsWith("project-")) {
+        setFilter("All");
+      }
+    };
+
+    window.addEventListener("portfolio:reveal-source", revealProject);
+    return () => window.removeEventListener("portfolio:reveal-source", revealProject);
+  }, []);
 
   const filtered = useMemo(
     () => (filter === "All" ? projects : projects.filter((project) => project.context === filter)),

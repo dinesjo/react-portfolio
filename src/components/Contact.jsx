@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { FaCopy, FaCheck, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 
 export default function Contact() {
-  const email = "dinesjo@kth.se";
+  const { email, github, linkedin } = profile.contact;
   const [copyStatus, setCopyStatus] = useState("idle");
   const resetTimerRef = useRef(null);
 
@@ -100,7 +101,7 @@ export default function Contact() {
 
             <div className="mt-8 flex gap-3">
               <a
-                href="https://github.com/dinesjo"
+                href={github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="quiet-button flex h-11 w-11 items-center justify-center"
@@ -110,7 +111,7 @@ export default function Contact() {
                 <FaGithub className="text-xl" />
               </a>
               <a
-                href="https://www.linkedin.com/in/dinesjo/"
+                href={linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="quiet-button flex h-11 w-11 items-center justify-center"
