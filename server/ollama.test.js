@@ -21,7 +21,7 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
 
   assert.equal(OLLAMA_CLOUD_URL, "https://ollama.com/api/chat");
   assert.equal(payload.model, OLLAMA_MODEL);
-  assert.equal(payload.model, "gpt-oss:20b");
+  assert.equal(payload.model, "gpt-oss:120b");
   assert.equal(payload.options.num_ctx, MODEL_CONTEXT_TOKENS);
   assert.equal(payload.options.num_predict, MAX_OUTPUT_TOKENS);
   assert.equal(payload.think, "low");
@@ -35,6 +35,10 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
   assert.match(payload.messages[0].content, /do not restate the question/i);
   assert.match(payload.messages[0].content, /corporate brochure/i);
   assert.match(payload.messages[0].content, /simple, everyday wording/i);
+  assert.match(payload.messages[0].content, /cite every sentence/i);
+  assert.match(payload.messages[0].content, /worked on.*must not become.*built/i);
+  assert.match(payload.messages[0].content, /listed in the portfolio/i);
+  assert.match(payload.messages[0].content, /same language as the visitor/i);
 });
 
 test("packages only four bounded history entries as one untrusted user message", () => {
@@ -91,8 +95,10 @@ test("reports API-key configuration without implying cloud availability", () => 
 
 test("normalizes common Markdown decoration into display-safe plain text", () => {
   assert.equal(
-    toPlainText("## Answer\n**SnusKoll** uses `Blazor` with *React*."),
-    "Answer\nSnusKoll uses Blazor with React.",
+    toPlainText(
+      "## Answer\n**SnusKoll** uses `Blazor` with *React*【S1】 and Supabase [ S2 ].",
+    ),
+    "Answer\nSnusKoll uses Blazor with React [S1] and Supabase [S2].",
   );
 });
 

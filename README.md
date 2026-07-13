@@ -105,7 +105,7 @@ The retrieval and generation runtimes are deliberately separate:
   collection and searches them with cosine similarity;
 - the existing lexical ranker remains in the path for exact project names,
   technologies, and course codes;
-- Ollama Cloud runs `gpt-oss:20b` only after retrieval has selected evidence.
+- Ollama Cloud runs `gpt-oss:120b` only after retrieval has selected evidence.
 
 At startup, the server compares each canonical record's content hash, embedding
 model, and index schema with Qdrant. It batch-embeds only new or changed records,
@@ -131,7 +131,7 @@ unrelated weather and recipe questions. Exact lexical evidence can still retain
 a course code or named technology when its dense score is weak.
 
 The upstream host and model are fixed in server code. Direct Cloud API calls use
-`https://ollama.com/api/chat` with `gpt-oss:20b`; the `gpt-oss:20b-cloud` name is
+`https://ollama.com/api/chat` with `gpt-oss:120b`; the `gpt-oss:120b-cloud` name is
 only used when routing through a signed-in local Ollama CLI or daemon. The model
 context is capped at 8,192 tokens and generated answers at 450 tokens.
 

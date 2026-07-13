@@ -4,7 +4,7 @@ const MAX_QUESTION_LENGTH = 600;
 const HISTORY_MESSAGE_LIMIT = 4;
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
-const MODEL_LABEL = "gpt-oss:20b · Ollama Cloud";
+const MODEL_LABEL = "gpt-oss:120b · Ollama Cloud";
 const RETRIEVAL_LABEL = "qwen3-embedding:0.6b · Qdrant";
 
 const SUGGESTED_PROMPTS = [
