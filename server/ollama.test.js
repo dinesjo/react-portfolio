@@ -31,6 +31,10 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
     payload.messages[0].content,
     /never infer course content from its title/i,
   );
+  assert.match(payload.messages[0].content, /friendly, natural conversation/i);
+  assert.match(payload.messages[0].content, /do not restate the question/i);
+  assert.match(payload.messages[0].content, /corporate brochure/i);
+  assert.match(payload.messages[0].content, /simple, everyday wording/i);
 });
 
 test("packages only four bounded history entries as one untrusted user message", () => {
