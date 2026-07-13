@@ -6,11 +6,31 @@ import {
   OLLAMA_CLOUD_URL,
   OLLAMA_MODEL,
   askOllama,
+  askOllamaStream,
   createChatPayload,
   isOllamaConfigured,
   normalizeCourseClaims,
   toPlainText,
 } from "./ollama.js";
+
+function ndjsonResponse(records, chunkSize = 13) {
+  const bytes = new TextEncoder().encode(
+    records.map((record) => JSON.stringify(record)).join("\n") + "\n",
+  );
+  const body = new ReadableStream({
+    start(controller) {
+      for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+        controller.enqueue(bytes.slice(offset, offset + chunkSize));
+      }
+      controller.close();
+    },
+  });
+
+  return new Response(body, {
+    status: 200,
+    headers: { "Content-Type": "application/x-ndjson" },
+  });
+}
 
 test("builds a fixed direct-cloud request with bounded generation", () => {
   const payload = createChatPayload({
@@ -186,4 +206,184 @@ test("sends the API key only as an authorization header and ignores thinking", a
       totalDuration: null,
     },
   });
+});
+
+test("streams bounded plain-text answer deltas while hiding thinking", async () => {
+  let capturedRequest;
+  const deltas = [];
+  const firstPart =
+    "Note Hero is a browser rhythm game with a playable keyboard and falling notes ";
+  const secondPart = "that make instrument practice feel game-like [S1].";
+  const fetchImpl = async (url, init) => {
+    capturedRequest = { url, init };
+    return ndjsonResponse([
+      {
+        message: { role: "assistant", thinking: "hidden reasoning" },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: firstPart },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: secondPart },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: "" },
+        done: true,
+        prompt_eval_count: 321,
+        eval_count: 42,
+        total_duration: 987,
+      },
+    ]);
+  };
+
+  const result = await askOllamaStream({
+    apiKey: "test-key",
+    question: "Which project feels like a rhythm game?",
+    context: "[S1]\nType: project\nContent: Note Hero\n[/S1]",
+    onDelta: (content) => deltas.push(content),
+    fetchImpl,
+  });
+
+  const requestPayload = JSON.parse(capturedRequest.init.body);
+  assert.equal(capturedRequest.url, OLLAMA_CLOUD_URL);
+  assert.equal(capturedRequest.init.headers.Accept, "application/x-ndjson");
+  assert.equal(requestPayload.stream, true);
+  assert.ok(deltas.length >= 2);
+  assert.equal(deltas.join(""), firstPart.trimEnd() + " " + secondPart);
+  assert.doesNotMatch(deltas.join(""), /hidden reasoning/);
+  assert.deepEqual(result, {
+    answer: firstPart.trimEnd() + " " + secondPart,
+    metrics: {
+      promptTokens: 321,
+      responseTokens: 42,
+      totalDuration: 987,
+    },
+  });
+});
+
+test("buffers mixed-course streams until deterministic normalization", async () => {
+  const deltas = [];
+  const fetchImpl = async () =>
+    ndjsonResponse([
+      {
+        message: {
+          role: "assistant",
+          content: [
+            "1. DD2459 Software Reliability – invented detail [S2]",
+            "2. DD2395 Computer Security – another invented detail ",
+          ].join("\n"),
+        },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: "[S2]" },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: "" },
+        done: true,
+        eval_count: 12,
+      },
+    ]);
+
+  const result = await askOllamaStream({
+    apiKey: "test-key",
+    question: "Which course is relevant?",
+    context: [
+      "[S1]",
+      "Type: project",
+      "Content: A software project",
+      "[/S1]",
+      "[S2]",
+      "Type: course",
+      "Content: DD2459: Software Reliability; DD2395: Computer Security",
+      "[/S2]",
+    ].join("\n"),
+    onDelta: (content) => deltas.push(content),
+    fetchImpl,
+  });
+
+  assert.ok(deltas.length > 1);
+  const expectedAnswer = [
+    "1. DD2459 – Software Reliability [S2]",
+    "2. DD2395 – Computer Security — Systems security and threat modeling [S2]",
+  ].join("\n");
+  assert.equal(deltas.join(""), expectedAnswer);
+  assert.equal(result.answer, expectedAnswer);
+  assert.doesNotMatch(deltas.join(""), /invented detail/);
+});
+
+test("maps mid-stream upstream errors without exposing their details", async () => {
+  const fetchImpl = async () =>
+    ndjsonResponse([
+      {
+        message: { role: "assistant", content: "A partial answer" },
+        done: false,
+      },
+      { error: "sensitive provider failure detail" },
+    ]);
+
+  await assert.rejects(
+    askOllamaStream({
+      apiKey: "test-key",
+      question: "Question",
+      context: "[S1]\nType: project\nContent: Evidence\n[/S1]",
+      fetchImpl,
+    }),
+    (error) => {
+      assert.equal(error.code, "cloud_stream_failed");
+      assert.equal(error.status, 503);
+      assert.doesNotMatch(error.message, /sensitive provider failure detail/);
+      return true;
+    },
+  );
+});
+
+test("rejects an incomplete NDJSON stream without a done record", async () => {
+  const fetchImpl = async () =>
+    ndjsonResponse([
+      {
+        message: { role: "assistant", content: "An incomplete answer" },
+        done: false,
+      },
+    ]);
+
+  await assert.rejects(
+    askOllamaStream({
+      apiKey: "test-key",
+      question: "Question",
+      context: "[S1]\nType: project\nContent: Evidence\n[/S1]",
+      fetchImpl,
+    }),
+    (error) => {
+      assert.equal(error.code, "invalid_cloud_response");
+      assert.equal(error.status, 502);
+      return true;
+    },
+  );
+});
+
+test("distinguishes caller cancellation from an Ollama Cloud timeout", async () => {
+  const controller = new AbortController();
+  controller.abort();
+
+  await assert.rejects(
+    askOllamaStream({
+      apiKey: "test-key",
+      question: "Question",
+      context: "[S1]\nType: project\nContent: Evidence\n[/S1]",
+      signal: controller.signal,
+      fetchImpl: async () => {
+        throw new DOMException("cancelled", "AbortError");
+      },
+    }),
+    (error) => {
+      assert.equal(error.code, "request_cancelled");
+      assert.equal(error.status, 499);
+      return true;
+    },
+  );
 });

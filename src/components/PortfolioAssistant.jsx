@@ -1,11 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  isNdjsonResponse,
+  readNdjsonStream,
+} from "../utils/readNdjsonStream";
 
 const MAX_QUESTION_LENGTH = 600;
 const HISTORY_MESSAGE_LIMIT = 4;
+const HISTORY_CONTENT_LENGTH = 1_200;
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
+const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
 const MODEL_LABEL = "gpt-oss:120b · Ollama Cloud";
 const RETRIEVAL_LABEL = "qwen3-embedding:0.6b · Qdrant";
+
+const STREAM_STATUS = {
+  retrieving: {
+    step: "SEARCH / 01",
+    copy: "Looking through the published portfolio records…",
+  },
+  generating: {
+    step: "WRITE / 02",
+    copy: "Reading the strongest matches and writing the evidence note…",
+  },
+};
 
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
@@ -44,6 +61,32 @@ function normalizeSources(value) {
       seen.add(source.key);
       return true;
     });
+}
+
+async function readErrorMessage(response) {
+  try {
+    const data = await response.json();
+    if (typeof data?.error === "string" && data.error.trim()) {
+      return data.error.trim();
+    }
+  } catch {
+    // The response may be plain text or an interrupted stream.
+  }
+
+  return `Chat request failed: ${response.status}`;
+}
+
+function streamStatusCopy(activeAnswer) {
+  if (activeAnswer?.phase !== "generating") {
+    return STREAM_STATUS.retrieving.copy;
+  }
+
+  if (Number.isFinite(activeAnswer.sourceCount)) {
+    const recordLabel = activeAnswer.sourceCount === 1 ? "record" : "records";
+    return `Writing from ${activeAnswer.sourceCount} matched ${recordLabel}…`;
+  }
+
+  return STREAM_STATUS.generating.copy;
 }
 
 function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
@@ -112,8 +155,9 @@ export default function PortfolioAssistant() {
   });
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeAnswer, setActiveAnswer] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [liveStatus, setLiveStatus] = useState("");
   const healthControllerRef = useRef(null);
   const requestControllerRef = useRef(null);
   const transcriptRef = useRef(null);
@@ -121,7 +165,10 @@ export default function PortfolioAssistant() {
   const inputFocusFrameRef = useRef(null);
   const sourceRevealCancelRef = useRef(null);
   const messageSequenceRef = useRef(0);
+  const streamFrameRef = useRef(null);
+  const isFollowingRef = useRef(true);
   const mountedRef = useRef(false);
+  const isLoading = activeAnswer !== null;
 
   const beginSourceReveal = useCallback((href, options) => {
     sourceRevealCancelRef.current?.();
@@ -194,6 +241,7 @@ export default function PortfolioAssistant() {
       healthControllerRef.current?.abort();
       requestControllerRef.current?.abort();
       window.cancelAnimationFrame(inputFocusFrameRef.current);
+      window.cancelAnimationFrame(streamFrameRef.current);
     };
   }, [checkHealth]);
 
@@ -215,8 +263,11 @@ export default function PortfolioAssistant() {
     if (messages.length === 0 && !isLoading) return;
 
     const animationFrame = window.requestAnimationFrame(() => {
-      transcriptRef.current?.scrollTo({
-        top: transcriptRef.current.scrollHeight,
+      const transcript = transcriptRef.current;
+      if (!transcript || !isFollowingRef.current) return;
+
+      transcript.scrollTo({
+        top: transcript.scrollHeight,
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? "auto"
           : "smooth",
@@ -224,7 +275,16 @@ export default function PortfolioAssistant() {
     });
 
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [isLoading, messages]);
+  }, [activeAnswer?.id, isLoading, messages.length]);
+
+  const handleTranscriptScroll = () => {
+    const transcript = transcriptRef.current;
+    if (!transcript) return;
+
+    const distanceFromBottom =
+      transcript.scrollHeight - transcript.scrollTop - transcript.clientHeight;
+    isFollowingRef.current = distanceFromBottom <= TRANSCRIPT_FOLLOW_THRESHOLD;
+  };
 
   const askQuestion = async (value) => {
     const candidate = value.trim().slice(0, MAX_QUESTION_LENGTH);
@@ -239,16 +299,96 @@ export default function PortfolioAssistant() {
 
     const history = messages.slice(-HISTORY_MESSAGE_LIMIT).map((message) => ({
       role: message.role,
-      content: message.content,
+      content: message.content.slice(0, HISTORY_CONTENT_LENGTH),
     }));
     const userMessageId = `message-${++messageSequenceRef.current}`;
+    const assistantMessageId = `message-${++messageSequenceRef.current}`;
     const controller = new AbortController();
     let didTimeOut = false;
+    let didComplete = false;
+    let timeoutId;
+    let deltaBuffer = "";
+    let streamedSources = [];
+
+    const armIdleTimeout = () => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        didTimeOut = true;
+        controller.abort();
+      }, REQUEST_TIMEOUT_MS);
+    };
+
+    const flushDeltaBuffer = () => {
+      streamFrameRef.current = null;
+      if (!deltaBuffer || !mountedRef.current) return;
+
+      const content = deltaBuffer;
+      deltaBuffer = "";
+      setActiveAnswer((current) =>
+        current?.id === assistantMessageId
+          ? {
+              ...current,
+              phase: "generating",
+              content: current.content + content,
+            }
+          : current,
+      );
+
+      window.requestAnimationFrame(() => {
+        const transcript = transcriptRef.current;
+        if (transcript && isFollowingRef.current) {
+          transcript.scrollTop = transcript.scrollHeight;
+        }
+      });
+    };
+
+    const queueDelta = (content) => {
+      if (!content) return;
+
+      deltaBuffer += content;
+      if (streamFrameRef.current === null) {
+        streamFrameRef.current = window.requestAnimationFrame(flushDeltaBuffer);
+      }
+    };
+
+    const completeAnswer = (data) => {
+      const answer = typeof data?.answer === "string" ? data.answer.trim() : "";
+      if (!answer) {
+        throw new Error("Chat response did not contain an answer");
+      }
+
+      didComplete = true;
+      window.cancelAnimationFrame(streamFrameRef.current);
+      streamFrameRef.current = null;
+      deltaBuffer = "";
+
+      const sources = normalizeSources(
+        Array.isArray(data?.sources) ? data.sources : streamedSources,
+      );
+      setMessages((current) => [
+        ...current,
+        {
+          id: assistantMessageId,
+          role: "assistant",
+          content: answer,
+          sources,
+        },
+      ]);
+      setActiveAnswer(null);
+      setLiveStatus(`Answer ready. ${answer}`);
+    };
 
     requestControllerRef.current = controller;
+    isFollowingRef.current = true;
     setQuestion("");
     setErrorMessage("");
-    setIsLoading(true);
+    setLiveStatus("Searching the published portfolio records.");
+    setActiveAnswer({
+      id: assistantMessageId,
+      phase: "retrieving",
+      content: "",
+      sourceCount: null,
+    });
     setMessages((current) => [
       ...current,
       { id: userMessageId, role: "user", content: candidate, sources: [] },
@@ -257,58 +397,106 @@ export default function PortfolioAssistant() {
     inputFocusFrameRef.current = window.requestAnimationFrame(() => {
       questionInputRef.current?.focus();
     });
-
-    const timeoutId = window.setTimeout(() => {
-      didTimeOut = true;
-      controller.abort();
-    }, REQUEST_TIMEOUT_MS);
+    armIdleTimeout();
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
-          Accept: "application/json",
+          Accept: "application/x-ndjson, application/json;q=0.8",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ question: candidate, history }),
         signal: controller.signal,
       });
 
-      const data = await response.json();
       if (!response.ok) {
-        throw new Error(
-          typeof data?.error === "string"
-            ? data.error
-            : `Chat request failed: ${response.status}`,
-        );
+        throw new Error(await readErrorMessage(response));
       }
-      const answer = typeof data?.answer === "string" ? data.answer.trim() : "";
 
-      if (!answer) throw new Error("Chat response did not contain an answer");
-      if (!mountedRef.current) return;
+      if (isNdjsonResponse(response)) {
+        await readNdjsonStream(response, (event) => {
+          armIdleTimeout();
 
-      setMessages((current) => [
-        ...current,
-        {
-          id: `message-${++messageSequenceRef.current}`,
-          role: "assistant",
-          content: answer,
-          sources: normalizeSources(data.sources),
-        },
-      ]);
+          if (event.type === "error") {
+            throw new Error(
+              typeof event.error === "string"
+                ? event.error
+                : "The portfolio assistant could not complete that answer.",
+            );
+          }
+
+          if (event.type === "status") {
+            if (event.phase === "retrieving" || event.phase === "retrieval") {
+              setActiveAnswer((current) =>
+                current?.id === assistantMessageId
+                  ? { ...current, phase: "retrieving" }
+                  : current,
+              );
+              setLiveStatus("Searching the published portfolio records.");
+            } else if (
+              event.phase === "generating" ||
+              event.phase === "generation"
+            ) {
+              setActiveAnswer((current) =>
+                current?.id === assistantMessageId
+                  ? { ...current, phase: "generating" }
+                  : current,
+              );
+              setLiveStatus("Writing a grounded answer from the matched records.");
+            }
+          } else if (event.type === "sources") {
+            streamedSources = normalizeSources(event.sources);
+            const sourceCount = streamedSources.length;
+            setActiveAnswer((current) =>
+              current?.id === assistantMessageId
+                ? { ...current, phase: "generating", sourceCount }
+                : current,
+            );
+            setLiveStatus(
+              `${sourceCount} matched ${sourceCount === 1 ? "record" : "records"}. Writing the answer.`,
+            );
+          } else if (
+            event.type === "delta" &&
+            typeof event.content === "string"
+          ) {
+            queueDelta(event.content);
+          } else if (event.type === "done") {
+            completeAnswer(event);
+          }
+        });
+
+        if (!didComplete) {
+          throw new Error("The assistant stream ended before the answer was complete.");
+        }
+      } else {
+        const data = await response.json();
+        if (!mountedRef.current) return;
+        completeAnswer(data);
+      }
     } catch (error) {
       if (!mountedRef.current) return;
 
+      const wasAborted = controller.signal.aborted;
+      controller.abort();
+      window.cancelAnimationFrame(streamFrameRef.current);
+      streamFrameRef.current = null;
+      deltaBuffer = "";
+      setActiveAnswer(null);
       setMessages((current) =>
-        current.filter((message) => message.id !== userMessageId),
+        current.filter(
+          (message) =>
+            message.id !== userMessageId && message.id !== assistantMessageId,
+        ),
       );
       setQuestion(candidate);
+      setLiveStatus("The answer could not be completed.");
 
       if (controller.signal.aborted && didTimeOut) {
         setErrorMessage(
-          "The evidence search took longer than 45 seconds. Your question is still in the desk below so you can try again.",
+          "The evidence desk had no new activity for 45 seconds. Your question is still below so you can try again.",
         );
-      } else if (!controller.signal.aborted) {
+      } else if (!wasAborted) {
         setErrorMessage(
           `${error instanceof Error ? error.message : "The portfolio assistant could not complete that answer."} Your question has been restored so you can try again.`,
         );
@@ -319,8 +507,6 @@ export default function PortfolioAssistant() {
       if (requestControllerRef.current === controller) {
         requestControllerRef.current = null;
       }
-
-      if (mountedRef.current) setIsLoading(false);
     }
   };
 
@@ -422,8 +608,7 @@ export default function PortfolioAssistant() {
                     type="button"
                     className="assistant-prompt-button"
                     onClick={() => askQuestion(prompt)}
-                    disabled={assistantIsUnavailable}
-                    aria-disabled={actionsAreDisabled}
+                    disabled={actionsAreDisabled}
                   >
                     <span className="assistant-prompt-number" aria-hidden="true">
                       {String(index + 1).padStart(2, "0")}
@@ -445,8 +630,9 @@ export default function PortfolioAssistant() {
               className="assistant-transcript"
               role="log"
               aria-label="Portfolio assistant conversation"
-              aria-live="polite"
-              aria-relevant="additions"
+              aria-live="off"
+              aria-busy={isLoading}
+              onScroll={handleTranscriptScroll}
             >
               {messages.length === 0 && !isLoading && (
                 <div className="assistant-empty-state">
@@ -545,15 +731,42 @@ export default function PortfolioAssistant() {
               ))}
 
               {isLoading && (
-                <article className="assistant-message assistant-message-assistant assistant-message-pending">
-                  <p className="assistant-message-label">Evidence note</p>
-                  <p className="assistant-loading-copy">
-                    Embedding the enquiry, searching the index, and drafting an answer…
+                <article
+                  className="assistant-message assistant-message-assistant assistant-message-streaming"
+                  data-phase={activeAnswer.phase}
+                  data-has-content={activeAnswer.content ? "true" : "false"}
+                >
+                  <p className="assistant-message-label">
+                    {activeAnswer.content ? "Evidence note" : "Desk activity"}
                   </p>
-                  <span className="assistant-loading-mark" aria-hidden="true" />
+                  {activeAnswer.content ? (
+                    <p className="assistant-message-content">
+                      {activeAnswer.content}
+                      <span className="assistant-stream-caret" aria-hidden="true" />
+                    </p>
+                  ) : (
+                    <div className="assistant-stream-status" aria-hidden="true">
+                      <span className="assistant-stream-step">
+                        {STREAM_STATUS[activeAnswer.phase]?.step ||
+                          STREAM_STATUS.retrieving.step}
+                      </span>
+                      <span className="assistant-stream-copy">
+                        {streamStatusCopy(activeAnswer)}
+                      </span>
+                      <span className="assistant-stream-pulse">
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    </div>
+                  )}
                 </article>
               )}
             </div>
+
+            <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+              {liveStatus}
+            </p>
 
             {errorMessage && (
               <div className="assistant-error" role="alert">
@@ -617,7 +830,11 @@ export default function PortfolioAssistant() {
                   className="assistant-submit-button"
                   disabled={!canSubmit}
                 >
-                  {isLoading ? "Reviewing records…" : "Send enquiry"}
+                  {activeAnswer?.phase === "retrieving"
+                    ? "Searching records…"
+                    : isLoading
+                      ? "Writing answer…"
+                      : "Send enquiry"}
                 </button>
               </fieldset>
             </form>

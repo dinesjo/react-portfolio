@@ -5,6 +5,11 @@ export const OLLAMA_MODEL = "gpt-oss:120b";
 export const MODEL_CONTEXT_TOKENS = 8192;
 export const MAX_OUTPUT_TOKENS = 450;
 export const UPSTREAM_TIMEOUT_MS = 45_000;
+const MAX_STREAMED_ANSWER_CHARACTERS = 32_000;
+const MAX_NDJSON_LINE_CHARACTERS = 64_000;
+const STREAM_HOLDBACK_CHARACTERS = 48;
+const NORMALIZED_STREAM_CHUNK_CHARACTERS = 64;
+const NORMALIZED_STREAM_DELAY_MS = 24;
 
 export const SYSTEM_PROMPT = `You are a warm, knowledgeable guide to Linus Dinesjö's public portfolio. Help visitors get to know Linus and his work through friendly, natural conversation. Refer to Linus by name or as "he"; never speak as if you are Linus. Friendliness must come from clear phrasing, not from added facts, praise, or assumptions.
 
@@ -93,11 +98,16 @@ export function isOllamaConfigured(apiKey) {
   return value.length > 0 && value !== "replace-with-an-ollama-cloud-api-key";
 }
 
-export function createChatPayload({ question, context, history = [] }) {
+export function createChatPayload({
+  question,
+  context,
+  history = [],
+  stream = false,
+}) {
   const transcript = untrustedTranscriptMessage(history);
   return {
     model: OLLAMA_MODEL,
-    stream: false,
+    stream,
     think: "low",
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
@@ -137,6 +147,212 @@ function mapUpstreamError(status) {
     "Ollama Cloud is temporarily unavailable. Please try again shortly.",
     503,
   );
+}
+
+function invalidCloudResponse() {
+  return new OllamaCloudError(
+    "invalid_cloud_response",
+    "The assistant returned an invalid response. Please try again.",
+    502,
+  );
+}
+
+function emptyCloudResponse() {
+  return new OllamaCloudError(
+    "empty_cloud_response",
+    "The assistant did not produce an answer. Please try rephrasing the question.",
+    502,
+  );
+}
+
+function streamedCloudError() {
+  return new OllamaCloudError(
+    "cloud_stream_failed",
+    "Ollama Cloud stopped while generating the answer. Please try again shortly.",
+    503,
+  );
+}
+
+function isCourseContext(context) {
+  return /(?:^|\n)Type: course(?:\n|$)/m.test(String(context));
+}
+
+function normalizeAnswer(value, context) {
+  const plainAnswer = toPlainText(value);
+  return isCourseContext(context)
+    ? normalizeCourseClaims(plainAnswer)
+    : plainAnswer;
+}
+
+function responseMetrics(payload) {
+  return {
+    promptTokens: Number(payload?.prompt_eval_count) || null,
+    responseTokens: Number(payload?.eval_count) || null,
+    totalDuration: Number(payload?.total_duration) || null,
+  };
+}
+
+function mappedFetchError(error, callerSignal, timeoutSignal) {
+  if (callerSignal?.aborted) {
+    return new OllamaCloudError(
+      "request_cancelled",
+      "The assistant request was cancelled.",
+      499,
+    );
+  }
+
+  if (timeoutSignal.aborted || error?.name === "TimeoutError") {
+    return new OllamaCloudError(
+      "cloud_timeout",
+      "The assistant took too long to answer. Please try a shorter question.",
+      504,
+    );
+  }
+
+  if (error?.name === "AbortError") {
+    return new OllamaCloudError(
+      "request_cancelled",
+      "The assistant request was cancelled.",
+      499,
+    );
+  }
+
+  return new OllamaCloudError(
+    "cloud_unreachable",
+    "The assistant could not reach Ollama Cloud. Please try again shortly.",
+    503,
+  );
+}
+
+async function requestOllama({
+  apiKey,
+  question,
+  context,
+  history,
+  signal,
+  stream,
+  fetchImpl,
+}) {
+  const timeoutSignal = AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
+  const upstreamSignal = signal
+    ? AbortSignal.any([signal, timeoutSignal])
+    : timeoutSignal;
+
+  try {
+    const response = await fetchImpl(OLLAMA_CLOUD_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        Accept: stream ? "application/x-ndjson" : "application/json",
+      },
+      body: JSON.stringify(
+        createChatPayload({ question, context, history, stream }),
+      ),
+      signal: upstreamSignal,
+    });
+
+    if (!response.ok) throw mapUpstreamError(response.status);
+    return { response, timeoutSignal };
+  } catch (error) {
+    if (error instanceof OllamaCloudError) throw error;
+    throw mappedFetchError(error, signal, timeoutSignal);
+  }
+}
+
+function parseNdjsonLine(line) {
+  try {
+    const payload = JSON.parse(line);
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      throw invalidCloudResponse();
+    }
+    return payload;
+  } catch (error) {
+    if (error instanceof OllamaCloudError) throw error;
+    throw invalidCloudResponse();
+  }
+}
+
+async function* parseNdjson(body) {
+  if (!body) throw invalidCloudResponse();
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  for await (const chunk of body) {
+    buffer += decoder.decode(chunk, { stream: true });
+
+    let newlineIndex = buffer.indexOf("\n");
+    while (newlineIndex >= 0) {
+      const line = buffer.slice(0, newlineIndex).trim();
+      if (line.length > MAX_NDJSON_LINE_CHARACTERS) {
+        throw invalidCloudResponse();
+      }
+      buffer = buffer.slice(newlineIndex + 1);
+      if (line) yield parseNdjsonLine(line);
+      newlineIndex = buffer.indexOf("\n");
+    }
+
+    if (buffer.length > MAX_NDJSON_LINE_CHARACTERS) {
+      throw invalidCloudResponse();
+    }
+  }
+
+  buffer += decoder.decode();
+  const finalLine = buffer.trim();
+  if (finalLine.length > MAX_NDJSON_LINE_CHARACTERS) {
+    throw invalidCloudResponse();
+  }
+  if (finalLine) yield parseNdjsonLine(finalLine);
+}
+
+function stableStreamPrefix(value) {
+  if (value.length <= STREAM_HOLDBACK_CHARACTERS) return "";
+
+  const limit = value.length - STREAM_HOLDBACK_CHARACTERS;
+  const boundary = value.lastIndexOf(" ", limit);
+  return boundary > 0 ? value.slice(0, boundary + 1) : "";
+}
+
+function normalizedStreamChunks(value) {
+  const tokens = String(value).match(/\S+\s*/g) ?? [];
+  const chunks = [];
+  let chunk = "";
+
+  for (const token of tokens) {
+    if (
+      chunk &&
+      chunk.length + token.length > NORMALIZED_STREAM_CHUNK_CHARACTERS
+    ) {
+      chunks.push(chunk);
+      chunk = "";
+    }
+    chunk += token;
+  }
+
+  if (chunk) chunks.push(chunk);
+  return chunks;
+}
+
+async function emitNormalizedStream(value, onDelta, signal) {
+  const chunks = normalizedStreamChunks(value);
+
+  for (let index = 0; index < chunks.length; index += 1) {
+    if (signal?.aborted) {
+      throw new OllamaCloudError(
+        "request_cancelled",
+        "The assistant request was cancelled.",
+        499,
+      );
+    }
+
+    await onDelta(chunks[index]);
+    if (index < chunks.length - 1) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, NORMALIZED_STREAM_DELAY_MS),
+      );
+    }
+  }
 }
 
 export function toPlainText(value) {
@@ -241,72 +457,137 @@ export async function askOllama({
     );
   }
 
-  const timeoutSignal = AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
-  const upstreamSignal = signal
-    ? AbortSignal.any([signal, timeoutSignal])
-    : timeoutSignal;
-
-  let response;
-  try {
-    response = await fetchImpl(OLLAMA_CLOUD_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(createChatPayload({ question, context, history })),
-      signal: upstreamSignal,
-    });
-  } catch (error) {
-    if (error?.name === "AbortError" || error?.name === "TimeoutError") {
-      throw new OllamaCloudError(
-        "cloud_timeout",
-        "The assistant took too long to answer. Please try a shorter question.",
-        504,
-      );
-    }
-
-    throw new OllamaCloudError(
-      "cloud_unreachable",
-      "The assistant could not reach Ollama Cloud. Please try again shortly.",
-      503,
-    );
-  }
-
-  if (!response.ok) {
-    throw mapUpstreamError(response.status);
-  }
+  const { response, timeoutSignal } = await requestOllama({
+    apiKey,
+    question,
+    context,
+    history,
+    signal,
+    stream: false,
+    fetchImpl,
+  });
 
   let payload;
   try {
     payload = await response.json();
-  } catch {
-    throw new OllamaCloudError(
-      "invalid_cloud_response",
-      "The assistant returned an invalid response. Please try again.",
-      502,
-    );
+  } catch (error) {
+    if (
+      signal?.aborted ||
+      timeoutSignal.aborted ||
+      error?.name === "AbortError" ||
+      error?.name === "TimeoutError"
+    ) {
+      throw mappedFetchError(error, signal, timeoutSignal);
+    }
+    throw invalidCloudResponse();
   }
 
-  const plainAnswer = toPlainText(payload?.message?.content);
-  const answer = /(?:^|\n)Type: course(?:\n|$)/m.test(context)
-    ? normalizeCourseClaims(plainAnswer)
-    : plainAnswer;
-  if (!answer) {
+  const answer = normalizeAnswer(payload?.message?.content, context);
+  if (!answer) throw emptyCloudResponse();
+
+  return {
+    answer,
+    metrics: responseMetrics(payload),
+  };
+}
+
+/**
+ * Consume Ollama's NDJSON stream while exposing only answer content. Thinking
+ * fields and upstream error details are deliberately never forwarded. Course
+ * and mixed-course answers stay buffered until deterministic normalization has
+ * replaced model-authored course claims with page-owned facts. The resulting
+ * canonical text is then emitted in short, paced chunks for progressive UI.
+ */
+export async function askOllamaStream({
+  apiKey,
+  question,
+  context,
+  history = [],
+  signal,
+  onDelta = async () => {},
+  fetchImpl = fetch,
+}) {
+  if (!isOllamaConfigured(apiKey)) {
     throw new OllamaCloudError(
-      "empty_cloud_response",
-      "The assistant did not produce an answer. Please try rephrasing the question.",
-      502,
+      "missing_api_key",
+      "The portfolio assistant is not configured on this server.",
+      503,
     );
+  }
+  if (typeof onDelta !== "function") {
+    throw new TypeError("onDelta must be a function");
+  }
+
+  const { response, timeoutSignal } = await requestOllama({
+    apiKey,
+    question,
+    context,
+    history,
+    signal,
+    stream: true,
+    fetchImpl,
+  });
+
+  const bufferUntilComplete = isCourseContext(context);
+  let rawAnswer = "";
+  let emittedAnswer = "";
+  let completedPayload = null;
+
+  try {
+    for await (const payload of parseNdjson(response.body)) {
+      if (typeof payload.error === "string" && payload.error) {
+        throw streamedCloudError();
+      }
+
+      const content = payload?.message?.content;
+      if (typeof content === "string" && content) {
+        rawAnswer += content;
+        if (rawAnswer.length > MAX_STREAMED_ANSWER_CHARACTERS) {
+          throw invalidCloudResponse();
+        }
+
+        if (!bufferUntilComplete) {
+          const plainSoFar = toPlainText(rawAnswer);
+          if (plainSoFar.startsWith(emittedAnswer)) {
+            const stablePrefix = stableStreamPrefix(plainSoFar);
+            const delta = stablePrefix.slice(emittedAnswer.length);
+            if (delta) {
+              await onDelta(delta);
+              emittedAnswer = stablePrefix;
+            }
+          }
+        }
+      }
+
+      if (payload.done === true) completedPayload = payload;
+    }
+  } catch (error) {
+    if (error instanceof OllamaCloudError) throw error;
+    if (
+      signal?.aborted ||
+      timeoutSignal.aborted ||
+      error?.name === "AbortError" ||
+      error?.name === "TimeoutError"
+    ) {
+      throw mappedFetchError(error, signal, timeoutSignal);
+    }
+    throw invalidCloudResponse();
+  }
+
+  if (!completedPayload) throw invalidCloudResponse();
+
+  const answer = normalizeAnswer(rawAnswer, context);
+  if (!answer) throw emptyCloudResponse();
+
+  if (bufferUntilComplete) {
+    await emitNormalizedStream(answer, onDelta, signal);
+  } else if (answer.startsWith(emittedAnswer)) {
+    const finalDelta = answer.slice(emittedAnswer.length);
+    if (finalDelta) await onDelta(finalDelta);
   }
 
   return {
     answer,
-    metrics: {
-      promptTokens: Number(payload.prompt_eval_count) || null,
-      responseTokens: Number(payload.eval_count) || null,
-      totalDuration: Number(payload.total_duration) || null,
-    },
+    metrics: responseMetrics(completedPayload),
   };
 }

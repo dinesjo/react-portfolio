@@ -1643,48 +1643,95 @@ section[id] {
   color: #a13d2e;
 }
 
-.assistant-message-content,
-.assistant-loading-copy {
+.assistant-message-content {
   color: #2f394c;
   font-size: 0.88rem;
   line-height: 1.72;
   white-space: pre-wrap;
 }
 
-.assistant-message-pending {
-  min-width: min(80%, 24rem);
+.assistant-message-streaming {
+  min-width: min(86%, 29rem);
 }
 
-.assistant-loading-copy {
-  color: #626979;
+.assistant-stream-status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2rem;
+}
+
+.assistant-stream-step {
+  color: #a13d2e;
   font-family: var(--font-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+}
+
+.assistant-stream-copy {
+  color: #596274;
+  font-family: var(--font-accent);
+  font-size: 0.86rem;
   letter-spacing: 0.025em;
+  line-height: 1.5;
 }
 
-.assistant-loading-mark {
-  display: block;
-  width: 45%;
-  height: 2px;
-  margin-top: 0.9rem;
-  overflow: hidden;
-  background: rgba(23, 32, 51, 0.11);
+.assistant-stream-pulse {
+  display: inline-flex;
+  height: 1rem;
+  align-items: flex-end;
+  gap: 0.16rem;
 }
 
-.assistant-loading-mark::after {
-  content: "";
-  display: block;
-  width: 45%;
-  height: 100%;
+.assistant-stream-pulse span {
+  width: 2px;
+  height: 0.45rem;
   background: var(--coral);
-  animation: assistant-scan 1.2s ease-in-out infinite;
+  opacity: 0.28;
+  animation: assistant-ledger-pulse 1.05s ease-in-out infinite;
 }
 
-@keyframes assistant-scan {
-  from {
-    transform: translateX(-110%);
+.assistant-stream-pulse span:nth-child(2) {
+  height: 0.75rem;
+  animation-delay: 140ms;
+}
+
+.assistant-stream-pulse span:nth-child(3) {
+  height: 1rem;
+  animation-delay: 280ms;
+}
+
+.assistant-stream-caret {
+  display: inline-block;
+  width: 0.48rem;
+  height: 1.05em;
+  margin-left: 0.16rem;
+  transform: translateY(0.14em);
+  background: var(--coral);
+  animation: assistant-caret-blink 0.85s step-end infinite;
+}
+
+@keyframes assistant-ledger-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
   }
-  to {
-    transform: translateX(250%);
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes assistant-caret-blink {
+  0%,
+  46% {
+    opacity: 1;
+  }
+  47%,
+  100% {
+    opacity: 0;
   }
 }
 
@@ -2044,6 +2091,19 @@ section[id] {
     padding: 0.95rem;
   }
 
+  .assistant-message-streaming {
+    min-width: 92%;
+  }
+
+  .assistant-stream-status {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 0.65rem;
+  }
+
+  .assistant-stream-step {
+    grid-column: 1 / -1;
+  }
+
   .assistant-source-chip {
     max-width: 100%;
   }
@@ -2206,6 +2266,12 @@ section[id] {
   .tech-badge,
   .course-row {
     transform: none !important;
+  }
+
+  .assistant-stream-pulse span,
+  .assistant-stream-caret {
+    animation: none !important;
+    opacity: 0.72;
   }
 }
 

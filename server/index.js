@@ -10,6 +10,7 @@ import {
   OLLAMA_MODEL,
   OllamaCloudError,
   askOllama,
+  askOllamaStream,
   isOllamaConfigured,
 } from "./ollama.js";
 import { createRateLimiter } from "./rate-limit.js";
@@ -110,6 +111,52 @@ function sendJson(response, status, payload, extraHeaders = {}) {
     ...extraHeaders,
   });
   response.end(body);
+}
+
+function acceptsNdjson(request) {
+  return request.headers.accept
+    ?.toLowerCase()
+    .split(",")
+    .some((type) => type.trim().split(";", 1)[0] === "application/x-ndjson");
+}
+
+function beginNdjson(response) {
+  response.writeHead(200, {
+    "Content-Type": "application/x-ndjson; charset=utf-8",
+    "Cache-Control": "no-store, no-transform",
+    "X-Accel-Buffering": "no",
+  });
+  response.flushHeaders();
+}
+
+async function writeNdjson(response, payload) {
+  if (response.writableEnded || response.destroyed) return false;
+  if (response.write(`${JSON.stringify(payload)}\n`)) return true;
+
+  return new Promise((resolve) => {
+    const cleanup = () => {
+      response.off("drain", onDrain);
+      response.off("close", onClose);
+      response.off("error", onClose);
+    };
+    const onDrain = () => {
+      cleanup();
+      resolve(true);
+    };
+    const onClose = () => {
+      cleanup();
+      resolve(false);
+    };
+
+    response.once("drain", onDrain);
+    response.once("close", onClose);
+    response.once("error", onClose);
+    if (response.writableEnded || response.destroyed) onClose();
+  });
+}
+
+function endNdjson(response) {
+  if (!response.writableEnded && !response.destroyed) response.end();
 }
 
 function isSameOrigin(request) {
@@ -272,49 +319,108 @@ async function handleChat(request, response) {
     if (!response.writableEnded) abortController.abort();
   });
 
+  const streaming = acceptsNdjson(request) === true;
+  const writeStreamEvent = async (payload) => {
+    const written = await writeNdjson(response, payload);
+    if (!written) {
+      abortController.abort();
+      throw new OllamaCloudError(
+        "request_cancelled",
+        "The assistant request was cancelled.",
+        499,
+      );
+    }
+  };
+
   activeChatRequests += 1;
   const startedAt = Date.now();
   try {
+    if (streaming) {
+      beginNdjson(response);
+      await writeStreamEvent({ type: "status", phase: "retrieving" });
+    }
+
     const retrieval = await semanticRetriever.retrieve({
       question: input.question,
       topK: 6,
       maxTokens: RETRIEVAL_TOKEN_BUDGET,
       signal: abortController.signal,
     });
+    const sources = publicSources(retrieval.sources);
+    const retrievalSummary = {
+      mode: retrieval.diagnostics.mode,
+      sourceCount: sources.length,
+      estimatedTokens: retrieval.estimatedTokens,
+    };
+
+    if (streaming) {
+      await writeStreamEvent({
+        type: "sources",
+        sources,
+        retrieval: retrievalSummary,
+      });
+      await writeStreamEvent({ type: "status", phase: "generating" });
+    }
 
     if (retrieval.sources.length === 0) {
-      sendJson(response, 200, {
-        answer:
-          "That is outside the information published in this portfolio. Try asking about Linus's projects, professional work, KTH courses, technologies, or research.",
-        sources: [],
-        retrieval: {
-          mode: retrieval.diagnostics.mode,
-          sourceCount: 0,
-          estimatedTokens: 0,
-        },
-      });
+      const answer =
+        "That is outside the information published in this portfolio. Try asking about Linus's projects, professional work, KTH courses, technologies, or research.";
+
+      if (streaming) {
+        await writeStreamEvent({ type: "delta", content: answer });
+        await writeStreamEvent({
+          type: "done",
+          answer,
+          sources,
+          retrieval: retrievalSummary,
+          metrics: null,
+        });
+        endNdjson(response);
+      } else {
+        sendJson(response, 200, {
+          answer,
+          sources,
+          retrieval: retrievalSummary,
+        });
+      }
       return;
     }
 
-    const result = await askOllama({
-      apiKey: process.env.OLLAMA_API_KEY,
-      question: input.question,
-      context: retrieval.context,
-      history: input.history,
-      signal: abortController.signal,
-    });
+    const result = streaming
+      ? await askOllamaStream({
+          apiKey: process.env.OLLAMA_API_KEY,
+          question: input.question,
+          context: retrieval.context,
+          history: input.history,
+          signal: abortController.signal,
+          onDelta: (content) =>
+            writeStreamEvent({ type: "delta", content }),
+        })
+      : await askOllama({
+          apiKey: process.env.OLLAMA_API_KEY,
+          question: input.question,
+          context: retrieval.context,
+          history: input.history,
+          signal: abortController.signal,
+        });
 
-    const sources = publicSources(retrieval.sources);
-    sendJson(response, 200, {
-      answer: result.answer,
-      sources,
-      retrieval: {
-        mode: retrieval.diagnostics.mode,
-        sourceCount: sources.length,
-        estimatedTokens: retrieval.estimatedTokens,
-      },
-      metrics: result.metrics,
-    });
+    if (streaming) {
+      await writeStreamEvent({
+        type: "done",
+        answer: result.answer,
+        sources,
+        retrieval: retrievalSummary,
+        metrics: result.metrics,
+      });
+      endNdjson(response);
+    } else {
+      sendJson(response, 200, {
+        answer: result.answer,
+        sources,
+        retrieval: retrievalSummary,
+        metrics: result.metrics,
+      });
+    }
 
     console.info(
       JSON.stringify({
@@ -337,10 +443,19 @@ async function handleChat(request, response) {
             "The portfolio assistant could not answer right now. Please try again.",
             500,
           );
-    sendJson(response, safeError.status, {
-      error: safeError.message,
-      code: safeError.code,
-    });
+    if (streaming) {
+      await writeNdjson(response, {
+        type: "error",
+        error: safeError.message,
+        code: safeError.code,
+      });
+      endNdjson(response);
+    } else {
+      sendJson(response, safeError.status, {
+        error: safeError.message,
+        code: safeError.code,
+      });
+    }
   } finally {
     activeChatRequests -= 1;
   }

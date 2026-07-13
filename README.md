@@ -122,7 +122,15 @@ For each question, the server:
    floors, and selects up to six records within a 3,000-token evidence budget;
 4. sends only those records and up to four recent messages, packaged as one
    explicitly untrusted visitor transcript, to Ollama Cloud;
-5. returns the answer with deterministic links to the consulted page records.
+5. streams typed NDJSON status, source, answer-delta, and completion events when
+   the client requests `application/x-ndjson`, while retaining JSON responses
+   for other clients.
+
+The final completion event always includes the canonical answer and deterministic
+links to the consulted page records. When retrieved context contains coursework,
+model output stays buffered until the existing course normalizer has replaced
+model-authored labels with exact page-owned course facts; that canonical text is
+then progressively emitted in short chunks.
 
 Dense retrieval has a calibrated minimum cosine score of `0.45`; candidates
 must also reach 92% of the strongest accepted vector score. The included
