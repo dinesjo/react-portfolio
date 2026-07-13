@@ -37,6 +37,7 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
   assert.match(payload.messages[0].content, /simple, everyday wording/i);
   assert.match(payload.messages[0].content, /cite every sentence/i);
   assert.match(payload.messages[0].content, /worked on.*must not become.*built/i);
+  assert.match(payload.messages[0].content, /arbetade med/i);
   assert.match(payload.messages[0].content, /listed in the portfolio/i);
   assert.match(payload.messages[0].content, /same language as the visitor/i);
 });
