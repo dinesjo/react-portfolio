@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { portfolioChunks } from "./corpus.js";
 import { estimateTokens, retrieveContext } from "./retrieval.js";
 
 const chunks = [
@@ -87,6 +88,43 @@ test("gives an exact course code a strong match", () => {
   assert.equal(result.sources.length, 1);
   assert.equal(result.sources[0].id, "course-dd2424");
   assert.ok(result.sources[0].score >= 20);
+});
+
+test("uses course and KTH as scope instead of generic ranking evidence", () => {
+  const result = retrieveContext({
+    question: "Which KTH courses relate to security and software reliability?",
+    chunks: portfolioChunks,
+    topK: 5,
+    maxTokens: 1_200,
+  });
+
+  assert.deepEqual(result.sources.map((source) => source.id), ["courses:year-4"]);
+  assert.ok(!result.sources[0].matchedTerms.includes("course"));
+  assert.ok(!result.sources[0].matchedTerms.includes("kth"));
+  assert.ok(result.sources[0].matchedTerms.includes("security"));
+  assert.ok(result.sources[0].matchedTerms.includes("reliability"));
+  assert.match(result.context, /DD2395: Computer Security/);
+  assert.match(result.context, /DD2459: Software Reliability/);
+});
+
+test("still returns the full course record for a broad course listing", () => {
+  const result = retrieveContext({
+    question: "What courses have you taken?",
+    chunks: portfolioChunks,
+    topK: 5,
+    maxTokens: 1_500,
+  });
+
+  assert.deepEqual(
+    result.sources.map((source) => source.id),
+    [
+      "courses:year-1",
+      "courses:year-2",
+      "courses:year-3",
+      "courses:year-4",
+      "courses:year-5",
+    ],
+  );
 });
 
 test("matches meaningful segments inside hyphenated titles and identifiers", () => {

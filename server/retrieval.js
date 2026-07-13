@@ -130,6 +130,23 @@ const BROAD_OVERVIEW_PATTERN =
 const BROAD_ACTIVITY_PATTERN =
   /\bwhat\s+(?:has|have|did|does)\b.{0,40}\b(?:achieved|built|done|made|studied|worked)\b/i;
 
+const EXPLICIT_TYPE_TERMS = {
+  course: new Set(["class", "course", "coursework"]),
+  profile: new Set(["bio", "biography", "contact", "location", "profile"]),
+  project: new Set(["app", "application", "project"]),
+};
+
+const QUERY_SCAFFOLD_TERMS = new Set([
+  "appli",
+  "connect",
+  "help",
+  "relat",
+  "strengthen",
+  "use",
+  "used",
+  "work",
+]);
+
 function explicitRequestedType(question) {
   const requested = new Set();
   if (/\b(app|apps|application|applications|project|projects)\b/i.test(question)) {
@@ -248,6 +265,53 @@ function phraseBonus(terms, foldedField, weight) {
     if (foldedField.includes(pair)) bonus += weight;
   }
   return bonus;
+}
+
+function hasLexicalEvidence(chunk, terms) {
+  if (terms.length === 0) return false;
+
+  const tokens = searchableTokens([
+    chunk.id,
+    chunk.title,
+    chunk.keywords.join(" "),
+    chunk.text,
+  ].join(" "));
+  return terms.some((term) => tokens.has(term));
+}
+
+function rankingTerms(terms, requestedType, chunks) {
+  const typeTerms = EXPLICIT_TYPE_TERMS[requestedType];
+  if (!typeTerms) return terms;
+
+  const semanticTerms = terms.filter((term) => !typeTerms.has(term));
+  const subjectTerms = semanticTerms.filter((term) => !QUERY_SCAFFOLD_TERMS.has(term));
+  const matchingTypeChunks = chunks.filter(
+    (chunk) => normalizeType(chunk.type) === requestedType,
+  );
+  const discriminativeTerms = matchingTypeChunks.length > 1
+    ? subjectTerms.filter((term) => {
+        const matchingChunkCount = matchingTypeChunks.filter((chunk) =>
+          hasLexicalEvidence(chunk, [term]),
+        ).length;
+        return matchingChunkCount > 0 && matchingChunkCount < matchingTypeChunks.length;
+      })
+    : subjectTerms;
+  const evidenceTerms = discriminativeTerms.length > 0
+    ? discriminativeTerms
+    : subjectTerms.length > 0
+      ? subjectTerms
+      : semanticTerms;
+  const hasSemanticEvidence = matchingTypeChunks.some((chunk) =>
+    hasLexicalEvidence(chunk, evidenceTerms),
+  );
+
+  // A type word is useful as a filter, but not as relevance evidence when the
+  // question also contains corpus-backed subject terms. For a type-only/listing
+  // question ("What courses have you taken?"), retain it so every matching
+  // chunk can still be returned. Terms shared by every chunk of the requested
+  // type (for example "KTH" in every course-year chunk) are scope rather than
+  // discriminative ranking evidence when more specific terms are available.
+  return hasSemanticEvidence ? evidenceTerms : terms;
 }
 
 function scoreChunk(chunk, terms, broadOverview) {
@@ -387,6 +451,7 @@ export function retrieveContext({
   const terms = meaningfulQueryTerms(trimmedQuestion);
   const broadOverview = isBroadOverview(trimmedQuestion);
   const requestedType = broadOverview ? null : explicitRequestedType(trimmedQuestion);
+  const termsForRanking = rankingTerms(terms, requestedType, chunks);
   if (terms.length === 0 && !broadOverview) {
     return { sources: [], context: "", estimatedTokens: 0 };
   }
@@ -395,7 +460,7 @@ export function retrieveContext({
     .map((chunk, index) => ({
       chunk,
       index,
-      ...scoreChunk(chunk, terms, broadOverview),
+      ...scoreChunk(chunk, termsForRanking, broadOverview),
     }))
     .filter((item) => !requestedType || normalizeType(item.chunk.type) === requestedType)
     .filter((item) => (broadOverview ? item.score > 0 : item.score >= minScore))
