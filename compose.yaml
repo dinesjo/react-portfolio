@@ -3,5 +3,19 @@ services:
     image: ghcr.io/dinesjo/react-portfolio:latest
     container_name: react-portfolio
     restart: unless-stopped
+    init: true
+    environment:
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY:?Set OLLAMA_API_KEY in the server environment}
+      NODE_ENV: production
     ports:
-      - "8080:80"
+      - "8080:8080"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:8080/api/health').then((response)=>{if(!response.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -15,7 +15,16 @@ Install dependencies:
 npm install
 ```
 
-Start the Vite development server:
+Create a local server environment file and add an Ollama Cloud API key:
+
+```bash
+cp .env.example .env.local
+```
+
+`OLLAMA_API_KEY` is server-only. Do not rename it with a `VITE_` prefix or put it
+in client code.
+
+Start the portfolio and its local API server:
 
 ```bash
 npm run dev
@@ -37,10 +46,12 @@ npm run preview
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Start the local Vite dev server with hot module replacement. |
+| `npm run dev` | Start the portfolio and same-origin API server, loading `.env.local` when present. |
+| `npm run dev:static` | Start Vite without the assistant API. |
 | `npm run build` | Optimize project images, then build the production bundle into `dist/`. |
 | `npm run preview` | Preview the production build locally. |
-| `npm run start` | Alias for `vite preview`. |
+| `npm run start` | Serve the production build and API from the Node runtime. |
+| `npm test` | Run the corpus, retrieval, and Ollama request tests. |
 | `npm run lint` | Run ESLint over JavaScript and JSX files. |
 | `npm run optimize-images` | Regenerate optimized WebP project images from `src/assets/project-originals/`. |
 | `npm run deploy` | Build the site and publish `dist/` with `gh-pages`. |
@@ -56,7 +67,31 @@ src/
   data/                  Project and course data
   App.jsx                Page composition
   main.jsx               React entry point
+server/
+  corpus.js              Page-owned records packed into retrieval chunks
+  retrieval.js           Bounded lexical retrieval
+  ollama.js              Fixed Ollama Cloud request contract
+  index.js               Static server and same-origin API
 ```
+
+## Portfolio Assistant
+
+The assistant is a small retrieval-augmented generation experiment over the
+facts already published on this page. It does not crawl linked sites or inspect
+screenshots. The server builds 23 trusted sources: one profile record, 17
+project records, and five course-year records.
+
+For each question, the server:
+
+1. validates and rate-limits the request;
+2. selects up to six relevant records with a 3,000-token evidence budget;
+3. sends only those records and a short conversation window to Ollama Cloud;
+4. returns the answer with deterministic links to the consulted page records.
+
+The upstream host and model are fixed in server code. Direct Cloud API calls use
+`https://ollama.com/api/chat` with `gpt-oss:20b`; the `gpt-oss:20b-cloud` name is
+only used when routing through a signed-in local Ollama CLI or daemon. The model
+context is capped at 8,192 tokens and generated answers at 450 tokens.
 
 ## Images
 
@@ -81,3 +116,14 @@ Tailwind CSS is processed through PostCSS as part of the Vite pipeline. No separ
 `npm run deploy` runs the production build and publishes `dist/` using `gh-pages`.
 
 The Vite base path is `/` by default. Set `VITE_GITHUB_PAGES=true` when building for a GitHub Pages project path that should serve assets from `/react-portfolio/`.
+
+GitHub Pages remains a static copy, so the assistant reports itself unavailable
+there. The self-hosted container serves both the portfolio and `/api/chat` from
+the Node runtime. Supply `OLLAMA_API_KEY` only as a runtime environment variable:
+
+```bash
+docker compose --env-file .env.local up --build
+```
+
+The key is excluded from both Git and the Docker build context. Rotate any
+development credential before publishing or sharing logs.

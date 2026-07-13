@@ -7,11 +7,13 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d dist",
-    "dev": "vite",
+    "dev": "node --env-file-if-exists=.env.local server/index.js",
+    "dev:static": "vite",
     "prebuild": "npm run optimize-images",
     "build": "vite build",
     "optimize-images": "node scripts/optimize-images.mjs",
-    "start": "vite preview",
+    "start": "node --env-file-if-exists=.env.local server/index.js --production",
+    "test": "node --test server/*.test.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
