@@ -18,20 +18,57 @@ export const courses = [
   { code: "DD1360", name: "Programming Paradigms", year: 2 },
   { code: "SF1935", name: "Probability Theory and Statistics with Application to Machine Learning", year: 2 },
   { code: "SF1688", name: "Discrete Mathematics", year: 3 },
-  { code: "DD2350", name: "Algorithms, Data Structures and Complexity", year: 3 },
+  {
+    code: "DD2350",
+    name: "Algorithms, Data Structures and Complexity",
+    year: 3,
+    featuredOrder: 5,
+    featuredNote: "Algorithms and complexity fundamentals",
+  },
   { code: "ID1200", name: "Operating Systems", year: 3 },
   { code: "AL1504", name: "Sustainable Development for Computer Science and Engineering", year: 3 },
   { code: "DA150X", name: "Degree Project in Computer Science and Engineering, First Cycle", year: 3 },
   { code: "DD1388", name: "Program System Construction Using C++", year: 3, optional: true },
-  { code: "DH2642", name: "Interaction Programming and the Dynamic Web", year: 3, optional: true },
+  {
+    code: "DH2642",
+    name: "Interaction Programming and the Dynamic Web",
+    year: 3,
+    optional: true,
+    featuredOrder: 6,
+    featuredNote: "Modern web interaction patterns",
+  },
   { code: "DA2210", name: "Research Methodology for Computer Scientists", year: 4 },
   { code: "IK2218", name: "Protocols and Principles of the Internet", year: 4 },
   { code: "DD2440", name: "Advanced Algorithms", year: 4 },
-  { code: "DD2395", name: "Computer Security", year: 4 },
-  { code: "DD2380", name: "Artificial Intelligence", year: 4 },
+  {
+    code: "DD2395",
+    name: "Computer Security",
+    year: 4,
+    featuredOrder: 2,
+    featuredNote: "Systems security and threat modeling",
+  },
+  {
+    code: "DD2380",
+    name: "Artificial Intelligence",
+    year: 4,
+    featuredOrder: 4,
+    featuredNote: "Search, planning, and evaluation methods",
+  },
   { code: "ID2216", name: "Developing Mobile Applications", year: 4 },
-  { code: "DD2525", name: "Language-Based Security", year: 4 },
-  { code: "DD2480", name: "Software Engineering Fundamentals", year: 4 },
+  {
+    code: "DD2525",
+    name: "Language-Based Security",
+    year: 4,
+    featuredOrder: 3,
+    featuredNote: "Language security and program analysis",
+  },
+  {
+    code: "DD2480",
+    name: "Software Engineering Fundamentals",
+    year: 4,
+    featuredOrder: 1,
+    featuredNote: "Engineering process, testing, delivery",
+  },
   { code: "DD2459", name: "Software Reliability", year: 4 },
   { code: "DD2528", name: "Dependable Autonomous Systems", year: 5 },
   { code: "DD2497", name: "Project course in System Security", year: 5 },
@@ -39,6 +76,10 @@ export const courses = [
   { code: "ID2221", name: "Data-Intensive Computing", year: 5 },
   { code: "DA231X", name: "Degree Project in Computer Science and Engineering (30 credits)", year: 5 },
 ];
+
+export const featuredCourses = courses
+  .filter((course) => course.featuredNote)
+  .sort((a, b) => a.featuredOrder - b.featuredOrder);
 
 const colorMap = {
   DD: "#4f46e5",
