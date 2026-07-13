@@ -359,14 +359,6 @@ async function serveProductionAsset(request, response, pathname) {
 }
 
 let vite;
-if (!IS_PRODUCTION) {
-  const { createServer: createViteServer } = await import("vite");
-  vite = await createViteServer({
-    appType: "spa",
-    server: { hmr: false, middlewareMode: true, ws: false },
-  });
-}
-
 const server = http.createServer(async (request, response) => {
   setSecurityHeaders(response);
 
@@ -419,6 +411,14 @@ const server = http.createServer(async (request, response) => {
     });
   }
 });
+
+if (!IS_PRODUCTION) {
+  const { createServer: createViteServer } = await import("vite");
+  vite = await createViteServer({
+    appType: "spa",
+    server: { hmr: { server }, middlewareMode: true },
+  });
+}
 
 server.listen(PORT, HOST, () => {
   console.info(

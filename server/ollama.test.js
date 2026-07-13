@@ -8,6 +8,7 @@ import {
   askOllama,
   createChatPayload,
   isOllamaConfigured,
+  normalizeCourseClaims,
   toPlainText,
 } from "./ollama.js";
 
@@ -26,6 +27,10 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
   assert.equal(payload.think, "low");
   assert.equal(payload.stream, false);
   assert.match(payload.messages.at(-1).content, /\[S1\]/);
+  assert.match(
+    payload.messages[0].content,
+    /never infer course content from its title/i,
+  );
 });
 
 test("packages only four bounded history entries as one untrusted user message", () => {
@@ -82,9 +87,60 @@ test("reports API-key configuration without implying cloud availability", () => 
 
 test("normalizes common Markdown decoration into display-safe plain text", () => {
   assert.equal(
-    toPlainText("## Answer\n**SnusKoll** uses `Blazor`."),
-    "Answer\nSnusKoll uses Blazor.",
+    toPlainText("## Answer\n**SnusKoll** uses `Blazor` with *React*."),
+    "Answer\nSnusKoll uses Blazor with React.",
   );
+});
+
+test("normalizes course labels and permits only published course notes", () => {
+  const answer = normalizeCourseClaims(
+    [
+      "Relevant courses:",
+      "1. DD2440 – Computer Security (network defense) [S1]",
+      "   *Portfolio note: network defense*",
+      "2. DD2459 – Software Reliability – addresses reliable systems",
+      "   *Portfolio note: invented reliability detail* [S1]",
+      "3. DD9999 – Space Magic [S1]",
+    ].join("\n"),
+  );
+
+  assert.equal(
+    answer,
+    [
+      "Relevant courses:",
+      "",
+      "1. DD2395 – Computer Security — Systems security and threat modeling [S1]",
+      "2. DD2459 – Software Reliability [S1]",
+    ].join("\n"),
+  );
+});
+
+test("applies deterministic course grounding only to course context", async () => {
+  const fetchImpl = async () =>
+    new Response(
+      JSON.stringify({
+        message: {
+          content: "1. DD2459 Software Reliability – invented detail [S1]",
+        },
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+
+  const courseResult = await askOllama({
+    apiKey: "test-key",
+    question: "Which course?",
+    context: "[S1]\nType: course\nContent: DD2459: Software Reliability\n[/S1]",
+    fetchImpl,
+  });
+  const projectResult = await askOllama({
+    apiKey: "test-key",
+    question: "Which project?",
+    context: "[S1]\nType: project\nContent: A project\n[/S1]",
+    fetchImpl,
+  });
+
+  assert.equal(courseResult.answer, "1. DD2459 – Software Reliability [S1]");
+  assert.match(projectResult.answer, /invented detail/);
 });
 
 test("sends the API key only as an authorization header and ignores thinking", async () => {
