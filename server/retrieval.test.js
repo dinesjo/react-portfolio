@@ -65,6 +65,7 @@ test("ranks a project by the technologies in the question", () => {
   assert.equal(result.sources[0].id, "project-cloud-diary");
   assert.ok(result.sources[0].matchedTerms.includes("azure"));
   assert.ok(result.sources[0].matchedTerms.includes("react"));
+  assert.ok(result.sources.every((source) => source.type === "project"));
   assert.equal(result.sources[0].citation, "S1");
   assert.match(result.context, /\[S1\]/);
   assert.match(result.context, /Cloud Diary/);
@@ -86,6 +87,28 @@ test("gives an exact course code a strong match", () => {
   assert.equal(result.sources.length, 1);
   assert.equal(result.sources[0].id, "course-dd2424");
   assert.ok(result.sources[0].score >= 20);
+});
+
+test("matches meaningful segments inside hyphenated titles and identifiers", () => {
+  const result = retrieveContext({
+    question: "Which project uses AI?",
+    chunks: [
+      {
+        id: "project-ai-diary",
+        title: "AI-Diary",
+        type: "project",
+        text: "A speech-first reporting tool.",
+        keywords: ["speech-to-text"],
+        href: "/projects/ai-diary",
+      },
+      chunks[1],
+    ],
+    topK: 2,
+    maxTokens: 200,
+  });
+
+  assert.deepEqual(result.sources.map((source) => source.id), ["project-ai-diary"]);
+  assert.ok(result.sources[0].matchedTerms.includes("ai"));
 });
 
 test("uses diverse source types for a broad overview", () => {

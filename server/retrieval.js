@@ -130,6 +130,20 @@ const BROAD_OVERVIEW_PATTERN =
 const BROAD_ACTIVITY_PATTERN =
   /\bwhat\s+(?:has|have|did|does)\b.{0,40}\b(?:achieved|built|done|made|studied|worked)\b/i;
 
+function explicitRequestedType(question) {
+  const requested = new Set();
+  if (/\b(app|apps|application|applications|project|projects)\b/i.test(question)) {
+    requested.add("project");
+  }
+  if (/\b(class|classes|course|courses|coursework)\b/i.test(question)) {
+    requested.add("course");
+  }
+  if (/\b(bio|biography|contact|location|profile)\b/i.test(question)) {
+    requested.add("profile");
+  }
+  return requested.size === 1 ? [...requested][0] : null;
+}
+
 function fold(value) {
   return String(value ?? "")
     .normalize("NFKD")
@@ -161,8 +175,11 @@ function stem(token) {
 function searchableTokens(value) {
   const result = new Set();
   for (const token of tokenize(value)) {
-    result.add(token);
-    result.add(stem(token));
+    const variants = [token, ...token.split(/[.-]+/g)].filter(Boolean);
+    for (const variant of variants) {
+      result.add(variant);
+      result.add(stem(variant));
+    }
   }
   return result;
 }
@@ -240,6 +257,7 @@ function scoreChunk(chunk, terms, broadOverview) {
   const idTokens = searchableTokens(chunk.id);
   const textTokens = searchableTokens(chunk.text);
   const normalizedType = normalizeType(chunk.type);
+  idTokens.delete(normalizedType);
   const matchedTerms = [];
   let score = broadOverview ? 1 : 0;
 
@@ -368,6 +386,7 @@ export function retrieveContext({
 
   const terms = meaningfulQueryTerms(trimmedQuestion);
   const broadOverview = isBroadOverview(trimmedQuestion);
+  const requestedType = broadOverview ? null : explicitRequestedType(trimmedQuestion);
   if (terms.length === 0 && !broadOverview) {
     return { sources: [], context: "", estimatedTokens: 0 };
   }
@@ -378,12 +397,13 @@ export function retrieveContext({
       index,
       ...scoreChunk(chunk, terms, broadOverview),
     }))
+    .filter((item) => !requestedType || normalizeType(item.chunk.type) === requestedType)
     .filter((item) => (broadOverview ? item.score > 0 : item.score >= minScore))
     .sort((left, right) => right.score - left.score || left.index - right.index);
 
   const relativeScoreFloor = broadOverview
     ? 0
-    : Math.max(minScore, (scored[0]?.score ?? 0) * 0.35);
+    : Math.max(minScore, (scored[0]?.score ?? 0) * 0.45);
   const ranked = scored.filter((item) => item.score >= relativeScoreFloor);
 
   const ordered = broadOverview ? diversify(ranked) : ranked;
