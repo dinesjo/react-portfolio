@@ -4,6 +4,11 @@ import { stat } from "node:fs/promises";
 import http from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { pipeline } from "node:stream/promises";
+import {
+  MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+  MAX_ASSISTANT_HISTORY_MESSAGES,
+  MAX_ASSISTANT_QUESTION_CHARACTERS,
+} from "../src/data/assistantLimits.js";
 import { corpusStats } from "./corpus.js";
 import {
   buildFullPortfolioContext,
@@ -23,9 +28,7 @@ const HOST = process.env.HOST ?? "0.0.0.0";
 const IS_PRODUCTION =
   process.env.NODE_ENV === "production" || process.argv.includes("--production");
 const DIST_DIRECTORY = resolve(process.cwd(), "dist");
-const MAX_BODY_BYTES = 8_192;
-const MAX_QUESTION_CHARACTERS = 600;
-const MAX_HISTORY_MESSAGES = 4;
+const MAX_BODY_BYTES = 65_536;
 const MAX_CONCURRENT_CHAT_REQUESTS = 1;
 
 const contentTypes = {
@@ -189,17 +192,24 @@ function validateChatInput(payload) {
       code: "empty_question",
     });
   }
-  if (question.length > MAX_QUESTION_CHARACTERS) {
+  if (question.length > MAX_ASSISTANT_QUESTION_CHARACTERS) {
     throw Object.assign(
-      new Error(`Questions are limited to ${MAX_QUESTION_CHARACTERS} characters.`),
+      new Error(
+        `Questions are limited to ${MAX_ASSISTANT_QUESTION_CHARACTERS} characters.`,
+      ),
       { status: 400, code: "question_too_long" },
     );
   }
 
   const history = payload.history ?? [];
-  if (!Array.isArray(history) || history.length > MAX_HISTORY_MESSAGES) {
+  if (
+    !Array.isArray(history) ||
+    history.length > MAX_ASSISTANT_HISTORY_MESSAGES
+  ) {
     throw Object.assign(
-      new Error(`History is limited to ${MAX_HISTORY_MESSAGES} recent messages.`),
+      new Error(
+        `History is limited to ${MAX_ASSISTANT_HISTORY_MESSAGES} recent messages.`,
+      ),
       { status: 400, code: "invalid_history" },
     );
   }
@@ -210,7 +220,7 @@ function validateChatInput(payload) {
       (message.role === "user" || message.role === "assistant") &&
       typeof message.content === "string" &&
       message.content.trim().length > 0 &&
-      message.content.length <= 1_200,
+      message.content.length <= MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
   );
   if (!validHistory) {
     throw Object.assign(new Error("History contains an invalid message."), {

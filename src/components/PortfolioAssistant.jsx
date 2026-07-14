@@ -3,10 +3,12 @@ import {
   isNdjsonResponse,
   readNdjsonStream,
 } from "../utils/readNdjsonStream";
+import {
+  MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+  MAX_ASSISTANT_HISTORY_MESSAGES,
+  MAX_ASSISTANT_QUESTION_CHARACTERS,
+} from "../data/assistantLimits";
 
-const MAX_QUESTION_LENGTH = 600;
-const HISTORY_MESSAGE_LIMIT = 4;
-const HISTORY_CONTENT_LENGTH = 1_200;
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
@@ -52,17 +54,88 @@ function normalizeSources(value) {
     });
 }
 
-async function readErrorMessage(response) {
+class ChatRequestError extends Error {
+  constructor(message, code = "chat_failed") {
+    super(message);
+    this.name = "ChatRequestError";
+    this.code = code;
+  }
+}
+
+async function readChatError(response) {
   try {
     const data = await response.json();
     if (typeof data?.error === "string" && data.error.trim()) {
-      return data.error.trim();
+      return new ChatRequestError(
+        data.error.trim(),
+        typeof data.code === "string" ? data.code : "chat_failed",
+      );
     }
   } catch {
     // The response may be plain text or an interrupted stream.
   }
 
-  return `Chat request failed: ${response.status}`;
+  return new ChatRequestError(
+    `Chat request failed: ${response.status}`,
+    response.status === 429 ? "rate_limited" : "chat_failed",
+  );
+}
+
+function presentChatError(error, didTimeOut) {
+  if (didTimeOut) {
+    return {
+      code: "request_timeout",
+      title: "The answer took too long.",
+      message:
+        "The chat had no new activity for 45 seconds. Your question has been kept below so you can try again.",
+      action: null,
+    };
+  }
+
+  const code = error instanceof ChatRequestError ? error.code : "chat_failed";
+  const message =
+    error instanceof Error
+      ? error.message
+      : "The portfolio assistant could not complete that answer.";
+
+  if (
+    code === "context_limit_exceeded" ||
+    code === "body_too_large" ||
+    code === "invalid_history"
+  ) {
+    return {
+      code,
+      title: "This conversation is too long.",
+      message:
+        "Start a new chat to clear the older messages. Your question has been kept below.",
+      action: "start_fresh",
+    };
+  }
+
+  if (code === "cloud_rate_limited" || code === "rate_limited") {
+    return {
+      code,
+      title: "Chat limit reached.",
+      message: `${message} Your question has been kept below.`,
+      action: null,
+    };
+  }
+
+  if (code === "assistant_busy") {
+    return {
+      code,
+      title: "The chat is busy.",
+      message: `${message} Your question has been kept below.`,
+      action: null,
+    };
+  }
+
+  return {
+    code,
+    title: "The question stayed open.",
+    message: `${message} Your question has been kept below so you can try again.`,
+    action: null,
+  };
 }
 
 function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
@@ -131,7 +204,7 @@ export default function PortfolioAssistant() {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [activeAnswer, setActiveAnswer] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [chatError, setChatError] = useState(null);
   const [liveStatus, setLiveStatus] = useState("");
   const healthControllerRef = useRef(null);
   const requestControllerRef = useRef(null);
@@ -249,7 +322,9 @@ export default function PortfolioAssistant() {
   };
 
   const askQuestion = async (value) => {
-    const candidate = value.trim().slice(0, MAX_QUESTION_LENGTH);
+    const candidate = value
+      .trim()
+      .slice(0, MAX_ASSISTANT_QUESTION_CHARACTERS);
 
     if (
       !candidate ||
@@ -259,10 +334,15 @@ export default function PortfolioAssistant() {
       return;
     }
 
-    const history = messages.slice(-HISTORY_MESSAGE_LIMIT).map((message) => ({
-      role: message.role,
-      content: message.content.slice(0, HISTORY_CONTENT_LENGTH),
-    }));
+    const history = messages
+      .slice(-MAX_ASSISTANT_HISTORY_MESSAGES)
+      .map((message) => ({
+        role: message.role,
+        content: message.content.slice(
+          0,
+          MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+        ),
+      }));
     const userMessageId = `message-${++messageSequenceRef.current}`;
     const assistantMessageId = `message-${++messageSequenceRef.current}`;
     const controller = new AbortController();
@@ -343,7 +423,7 @@ export default function PortfolioAssistant() {
     requestControllerRef.current = controller;
     isFollowingRef.current = true;
     setQuestion("");
-    setErrorMessage("");
+    setChatError(null);
     setLiveStatus("Writing an answer from the portfolio.");
     setActiveAnswer({
       id: assistantMessageId,
@@ -372,7 +452,7 @@ export default function PortfolioAssistant() {
       });
 
       if (!response.ok) {
-        throw new Error(await readErrorMessage(response));
+        throw await readChatError(response);
       }
 
       if (isNdjsonResponse(response)) {
@@ -380,10 +460,11 @@ export default function PortfolioAssistant() {
           armIdleTimeout();
 
           if (event.type === "error") {
-            throw new Error(
+            throw new ChatRequestError(
               typeof event.error === "string"
                 ? event.error
                 : "The portfolio assistant could not complete that answer.",
+              typeof event.code === "string" ? event.code : "chat_failed",
             );
           }
 
@@ -439,14 +520,8 @@ export default function PortfolioAssistant() {
       setQuestion(candidate);
       setLiveStatus("The answer could not be completed.");
 
-      if (controller.signal.aborted && didTimeOut) {
-        setErrorMessage(
-          "The chat had no new activity for 45 seconds. Your question is still below so you can try again.",
-        );
-      } else if (!wasAborted) {
-        setErrorMessage(
-          `${error instanceof Error ? error.message : "The portfolio assistant could not complete that answer."} Your question has been restored so you can try again.`,
-        );
+      if ((controller.signal.aborted && didTimeOut) || !wasAborted) {
+        setChatError(presentChatError(error, didTimeOut));
       }
     } finally {
       window.clearTimeout(timeoutId);
@@ -460,6 +535,17 @@ export default function PortfolioAssistant() {
   const handleSubmit = (event) => {
     event.preventDefault();
     askQuestion(question);
+  };
+
+  const handleStartFresh = () => {
+    setMessages([]);
+    setChatError(null);
+    setLiveStatus("Started a new portfolio chat.");
+    isFollowingRef.current = true;
+    window.cancelAnimationFrame(inputFocusFrameRef.current);
+    inputFocusFrameRef.current = window.requestAnimationFrame(() => {
+      questionInputRef.current?.focus();
+    });
   };
 
   const handleSourceClick = (event, href) => {
@@ -686,10 +772,21 @@ export default function PortfolioAssistant() {
             {liveStatus}
           </p>
 
-          {errorMessage && (
+          {chatError && (
             <div className="assistant-error" role="alert">
-              <p className="assistant-error-title">The question stayed open.</p>
-              <p className="assistant-error-copy">{errorMessage}</p>
+              <div className="assistant-error-content">
+                <p className="assistant-error-title">{chatError.title}</p>
+                <p className="assistant-error-copy">{chatError.message}</p>
+              </div>
+              {chatError.action === "start_fresh" && (
+                <button
+                  type="button"
+                  className="assistant-retry-button"
+                  onClick={handleStartFresh}
+                >
+                  Start fresh
+                </button>
+              )}
             </div>
           )}
 
@@ -731,7 +828,7 @@ export default function PortfolioAssistant() {
                 value={question}
                 onChange={(event) => setQuestion(event.target.value)}
                 onKeyDown={handleQuestionKeyDown}
-                maxLength={MAX_QUESTION_LENGTH}
+                maxLength={MAX_ASSISTANT_QUESTION_CHARACTERS}
                 readOnly={isLoading}
                 rows={3}
                 placeholder="Ask about a project, course, method, or role…"
@@ -742,7 +839,7 @@ export default function PortfolioAssistant() {
                   Enter to send · Shift + Enter for a new line
                 </p>
                 <p id="assistant-question-count" className="assistant-question-count">
-                  {question.length}/{MAX_QUESTION_LENGTH}
+                  {question.length}/{MAX_ASSISTANT_QUESTION_CHARACTERS}
                 </p>
               </div>
               <button

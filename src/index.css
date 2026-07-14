@@ -1720,7 +1720,15 @@ section[id] {
 }
 
 .assistant-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 0.8rem 1rem;
+}
+
+.assistant-error-content {
+  min-width: 0;
 }
 
 .assistant-error-title,
@@ -1974,6 +1982,7 @@ section[id] {
     margin-left: 1rem;
   }
 
+  .assistant-error,
   .assistant-unavailable {
     align-items: flex-start;
     flex-direction: column;

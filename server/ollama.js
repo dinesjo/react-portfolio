@@ -1,8 +1,14 @@
 /* eslint-env node */
 import { courses } from "../src/data/courses.js";
+import {
+  MAX_ASSISTANT_HISTORY_ESTIMATED_TOKENS,
+  MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+  MAX_ASSISTANT_HISTORY_MESSAGES,
+} from "../src/data/assistantLimits.js";
 
 export const OLLAMA_CLOUD_URL = "https://ollama.com/api/chat";
 export const DEFAULT_OLLAMA_MODEL = "gemma4:31b";
+export const MAX_MODEL_CONTEXT_TOKENS = 131_072;
 
 function boundedIntegerFromEnvironment(name, fallback, minimum, maximum) {
   const rawValue = process.env[name]?.trim();
@@ -18,9 +24,9 @@ export const OLLAMA_MODEL =
   process.env.OLLAMA_MODEL?.trim() || DEFAULT_OLLAMA_MODEL;
 export const MODEL_CONTEXT_TOKENS = boundedIntegerFromEnvironment(
   "OLLAMA_CONTEXT_TOKENS",
-  16_384,
+  MAX_MODEL_CONTEXT_TOKENS,
   8_192,
-  262_144,
+  MAX_MODEL_CONTEXT_TOKENS,
 );
 export const MAX_OUTPUT_TOKENS = boundedIntegerFromEnvironment(
   "OLLAMA_MAX_OUTPUT_TOKENS",
@@ -34,6 +40,8 @@ const MAX_NDJSON_LINE_CHARACTERS = 64_000;
 const STREAM_HOLDBACK_CHARACTERS = 48;
 const NORMALIZED_STREAM_CHUNK_CHARACTERS = 64;
 const NORMALIZED_STREAM_DELAY_MS = 24;
+const OUTPUT_LIMIT_NOTICE =
+  "The answer reached its length limit. Try asking a narrower follow-up.";
 
 export const SYSTEM_PROMPT = `You are a warm, knowledgeable guide to Linus Dinesjö's public portfolio. Help visitors get to know Linus and his work through friendly, natural conversation. Refer to Linus by name or as "he"; never speak as if you are Linus. Friendliness must come from clear phrasing, not from added facts, praise, or assumptions.
 
@@ -82,8 +90,8 @@ export class OllamaCloudError extends Error {
 function normalizeHistory(history) {
   if (!Array.isArray(history)) return [];
 
-  return history
-    .slice(-4)
+  const normalized = history
+    .slice(-MAX_ASSISTANT_HISTORY_MESSAGES)
     .filter(
       (message) =>
         message &&
@@ -92,9 +100,30 @@ function normalizeHistory(history) {
     )
     .map((message) => ({
       role: message.role,
-      content: message.content.trim().slice(0, 1_200),
+      content: message.content
+        .trim()
+        .slice(0, MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS),
     }))
     .filter((message) => message.content.length > 0);
+
+  const selected = [];
+  let estimatedTokens = 0;
+
+  for (let index = normalized.length - 1; index >= 0; index -= 1) {
+    const message = normalized[index];
+    const messageTokens = Math.ceil(message.content.length / 4);
+    if (
+      estimatedTokens + messageTokens >
+      MAX_ASSISTANT_HISTORY_ESTIMATED_TOKENS
+    ) {
+      break;
+    }
+
+    selected.unshift(message);
+    estimatedTokens += messageTokens;
+  }
+
+  return selected;
 }
 
 function untrustedTranscriptMessage(history) {
@@ -150,7 +179,35 @@ export function createChatPayload({
   };
 }
 
-function mapUpstreamError(status) {
+function mapUpstreamError(status, upstreamDetail = "") {
+  const detail = String(upstreamDetail).slice(0, 2_000);
+
+  if (
+    status === 413 ||
+    /(?:context(?: length| window)?.{0,40}(?:exceed|limit|too (?:large|long))|too many (?:input )?tokens|prompt.{0,30}too long|input.{0,30}too long)/i.test(
+      detail,
+    )
+  ) {
+    return new OllamaCloudError(
+      "context_limit_exceeded",
+      "This conversation has grown too long for the assistant. Start a new chat and try the question again.",
+      413,
+    );
+  }
+
+  if (
+    status === 429 ||
+    /(?:usage limit|quota exceeded|rate limit|too many requests|resource exhausted)/i.test(
+      detail,
+    )
+  ) {
+    return new OllamaCloudError(
+      "cloud_rate_limited",
+      "The assistant has reached its current cloud usage limit. Please try again later.",
+      429,
+    );
+  }
+
   if (status === 401 || status === 403) {
     return new OllamaCloudError(
       "cloud_auth_failed",
@@ -159,19 +216,23 @@ function mapUpstreamError(status) {
     );
   }
 
-  if (status === 429) {
-    return new OllamaCloudError(
-      "cloud_rate_limited",
-      "The assistant has reached its current cloud usage limit. Please try again later.",
-      429,
-    );
-  }
-
   return new OllamaCloudError(
     "cloud_unavailable",
     "Ollama Cloud is temporarily unavailable. Please try again shortly.",
     503,
   );
+}
+
+function reachedOutputLimit(payload) {
+  return /^(?:length|max_tokens|token_limit)$/i.test(
+    String(payload?.done_reason ?? ""),
+  );
+}
+
+function withOutputLimitNotice(answer, payload) {
+  return reachedOutputLimit(payload)
+    ? `${answer}\n\n${OUTPUT_LIMIT_NOTICE}`
+    : answer;
 }
 
 function invalidCloudResponse() {
@@ -289,7 +350,15 @@ async function requestOllama({
       signal: upstreamSignal,
     });
 
-    if (!response.ok) throw mapUpstreamError(response.status);
+    if (!response.ok) {
+      let upstreamDetail = "";
+      try {
+        upstreamDetail = await response.text();
+      } catch {
+        // Error details are used only for safe classification.
+      }
+      throw mapUpstreamError(response.status, upstreamDetail);
+    }
     return { response, timeoutSignal };
   } catch (error) {
     if (error instanceof OllamaCloudError) throw error;
@@ -521,11 +590,12 @@ export async function askOllama({
     throw invalidCloudResponse();
   }
 
-  const answer = normalizeAnswer(
+  const normalizedAnswer = normalizeAnswer(
     payload?.message?.content,
     shouldNormalizeCourseAnswer(question, history),
   );
-  if (!answer) throw emptyCloudResponse();
+  if (!normalizedAnswer) throw emptyCloudResponse();
+  const answer = withOutputLimitNotice(normalizedAnswer, payload);
 
   return {
     answer,
@@ -620,8 +690,9 @@ export async function askOllamaStream({
 
   if (!completedPayload) throw invalidCloudResponse();
 
-  const answer = normalizeAnswer(rawAnswer, bufferUntilComplete);
-  if (!answer) throw emptyCloudResponse();
+  const normalizedAnswer = normalizeAnswer(rawAnswer, bufferUntilComplete);
+  if (!normalizedAnswer) throw emptyCloudResponse();
+  const answer = withOutputLimitNotice(normalizedAnswer, completedPayload);
 
   if (bufferUntilComplete) {
     await emitNormalizedStream(answer, onDelta, signal);

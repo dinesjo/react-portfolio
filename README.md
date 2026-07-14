@@ -87,8 +87,9 @@ Safeguards remain explicit:
 - the Cloud request has a configurable context window, 1,200-token default output
   cap, 45-second upstream timeout, request size limit, per-address rate limit,
   and single-request concurrency limit;
-- up to four recent messages are packaged as one explicitly untrusted visitor
-  transcript, never as authoritative assistant messages;
+- recent conversation history is capped at 40 messages and approximately 6,000
+  tokens, then packaged as one explicitly untrusted visitor transcript rather
+  than authoritative assistant messages;
 - the system prompt requires source-level attribution, neutral wording for
   private work, exact course facts, same-language replies, and an explicit
   response when the portfolio does not contain an answer;
@@ -100,14 +101,15 @@ Ollama Cloud generation is configurable with server environment variables:
 
 ```dotenv
 OLLAMA_MODEL=gemma4:31b
-OLLAMA_CONTEXT_TOKENS=16384
+OLLAMA_CONTEXT_TOKENS=131072
 OLLAMA_MAX_OUTPUT_TOKENS=1200
 ```
 
-The defaults leave ample room for the complete corpus, system instructions,
-question, short conversation history, and generated answer. `think` is disabled
-for predictable visitor latency. No model or internal runtime metadata is sent
-to the frontend.
+The request context is hard-capped at 128K tokens, even if a larger environment
+override is supplied. The largest normal prompt envelope allowed by the corpus,
+history, question, and output safeguards is estimated below 22K tokens, leaving
+substantial headroom. `think` is disabled for predictable visitor latency. No
+model or internal runtime metadata is sent to the frontend.
 
 ## Images and Styling
 

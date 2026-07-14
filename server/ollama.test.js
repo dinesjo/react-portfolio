@@ -1,11 +1,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  MAX_ASSISTANT_HISTORY_ESTIMATED_TOKENS,
+  MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+  MAX_ASSISTANT_QUESTION_CHARACTERS,
+} from "../src/data/assistantLimits.js";
+import { FULL_CONTEXT_TOKEN_BUDGET } from "./full-context.js";
+import {
   DEFAULT_OLLAMA_MODEL,
   MAX_OUTPUT_TOKENS,
+  MAX_MODEL_CONTEXT_TOKENS,
   MODEL_CONTEXT_TOKENS,
   OLLAMA_CLOUD_URL,
   OLLAMA_MODEL,
+  SYSTEM_PROMPT,
   askOllama,
   askOllamaStream,
   createChatPayload,
@@ -44,6 +52,7 @@ test("builds a configurable direct-cloud request with bounded generation", () =>
   assert.equal(OLLAMA_CLOUD_URL, "https://ollama.com/api/chat");
   assert.equal(payload.model, OLLAMA_MODEL);
   assert.equal(DEFAULT_OLLAMA_MODEL, "gemma4:31b");
+  assert.equal(MAX_MODEL_CONTEXT_TOKENS, 131_072);
   assert.equal(payload.options.num_ctx, MODEL_CONTEXT_TOKENS);
   assert.equal(payload.options.num_predict, MAX_OUTPUT_TOKENS);
   assert.equal(payload.think, false);
@@ -76,8 +85,8 @@ test("allows a caller to evaluate another Cloud model without changing context",
   assert.equal(payload.think, false);
 });
 
-test("packages only four bounded history entries as one untrusted user message", () => {
-  const history = Array.from({ length: 7 }, (_, index) => ({
+test("packages the newest token-budgeted history as one untrusted user message", () => {
+  const history = Array.from({ length: 45 }, (_, index) => ({
     role: index % 2 ? "assistant" : "user",
     content: `message-${index}-${"x".repeat(2_000)}`,
   }));
@@ -92,11 +101,39 @@ test("packages only four bounded history entries as one untrusted user message",
   assert.equal(retainedHistory.length, 1);
   assert.equal(retainedHistory[0].role, "user");
   assert.match(retainedHistory[0].content, /^<untrusted_visitor_transcript>/);
-  assert.doesNotMatch(retainedHistory[0].content, /message-2-/);
-  assert.match(retainedHistory[0].content, /message-3-/);
-  assert.match(retainedHistory[0].content, /message-6-/);
-  assert.ok(retainedHistory[0].content.length < 5_200);
+  const serializedHistory = JSON.parse(
+    retainedHistory[0].content.split("\n")[2],
+  );
+  assert.equal(serializedHistory.length, 20);
+  assert.match(serializedHistory[0].content, /^message-25-/);
+  assert.match(serializedHistory.at(-1).content, /^message-44-/);
+  assert.ok(
+    serializedHistory.every(
+      (message) =>
+        message.content.length <= MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
+    ),
+  );
+  assert.ok(
+    serializedHistory.reduce(
+      (total, message) => total + Math.ceil(message.content.length / 4),
+      0,
+    ) <= MAX_ASSISTANT_HISTORY_ESTIMATED_TOKENS,
+  );
   assert.ok(payload.messages.every((message) => message.role !== "assistant"));
+});
+
+test("keeps the largest normal prompt envelope well below the 128K cap", () => {
+  const wrapperAllowance = 512;
+  const maximumEstimatedTokens =
+    FULL_CONTEXT_TOKEN_BUDGET +
+    Math.ceil(SYSTEM_PROMPT.length / 4) +
+    MAX_ASSISTANT_HISTORY_ESTIMATED_TOKENS +
+    Math.ceil(MAX_ASSISTANT_QUESTION_CHARACTERS / 4) +
+    MAX_OUTPUT_TOKENS +
+    wrapperAllowance;
+
+  assert.ok(maximumEstimatedTokens < 22_000);
+  assert.ok(maximumEstimatedTokens < MAX_MODEL_CONTEXT_TOKENS / 4);
 });
 
 test("never promotes client-supplied assistant history to an assistant message", () => {
@@ -236,6 +273,83 @@ test("sends the API key only as an authorization header and ignores thinking", a
       totalDuration: null,
     },
   });
+});
+
+test("classifies Cloud usage and context limits without exposing provider details", async (t) => {
+  await t.test("usage limit", async () => {
+    await assert.rejects(
+      askOllama({
+        apiKey: "test-key",
+        question: "Question",
+        context: "[S1] Evidence",
+        fetchImpl: async () =>
+          new Response(
+            JSON.stringify({ error: "account quota exceeded: private detail" }),
+            { status: 403 },
+          ),
+      }),
+      (error) => {
+        assert.equal(error.code, "cloud_rate_limited");
+        assert.equal(error.status, 429);
+        assert.doesNotMatch(error.message, /private detail/);
+        return true;
+      },
+    );
+  });
+
+  await t.test("context limit", async () => {
+    await assert.rejects(
+      askOllama({
+        apiKey: "test-key",
+        question: "Question",
+        context: "[S1] Evidence",
+        fetchImpl: async () =>
+          new Response(
+            JSON.stringify({ error: "context length exceeded: private detail" }),
+            { status: 400 },
+          ),
+      }),
+      (error) => {
+        assert.equal(error.code, "context_limit_exceeded");
+        assert.equal(error.status, 413);
+        assert.doesNotMatch(error.message, /private detail/);
+        return true;
+      },
+    );
+  });
+});
+
+test("finishes a streamed answer with guidance when output tokens are exhausted", async () => {
+  const deltas = [];
+  const fetchImpl = async () =>
+    ndjsonResponse([
+      {
+        message: { role: "assistant", content: "A partial grounded answer [S1]." },
+        done: false,
+      },
+      {
+        message: { role: "assistant", content: "" },
+        done: true,
+        done_reason: "length",
+        eval_count: 1_200,
+      },
+    ]);
+
+  const result = await askOllamaStream({
+    apiKey: "test-key",
+    question: "Tell me everything.",
+    context: "[S1]\nType: project\nContent: Evidence\n[/S1]",
+    onDelta: (content) => deltas.push(content),
+    fetchImpl,
+  });
+
+  const expected = [
+    "A partial grounded answer [S1].",
+    "",
+    "The answer reached its length limit. Try asking a narrower follow-up.",
+  ].join("\n");
+  assert.equal(result.answer, expected);
+  assert.equal(deltas.join(""), expected);
 });
 
 test("streams bounded plain-text answer deltas while hiding thinking", async () => {
