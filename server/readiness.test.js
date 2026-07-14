@@ -3,11 +3,12 @@ import test from "node:test";
 
 import { evaluateReadiness } from "./readiness.js";
 
-test("reports ready only when generation and semantic retrieval are ready", () => {
+test("reports ready only when generation and full portfolio context are ready", () => {
   assert.deepEqual(
     evaluateReadiness({
       generationConfigured: true,
-      semanticStatus: { ready: true, state: "ready", indexedCount: 23 },
+      contextReady: true,
+      sourceCount: 23,
     }),
     {
       statusCode: 200,
@@ -16,13 +17,10 @@ test("reports ready only when generation and semantic retrieval are ready", () =
         ready: true,
         checks: {
           generationConfigured: true,
-          retrievalReady: true,
+          contextReady: true,
         },
         blockers: [],
-        retrieval: {
-          state: "ready",
-          indexedSourceCount: 23,
-        },
+        context: { sourceCount: 23 },
       },
     },
   );
@@ -31,7 +29,8 @@ test("reports ready only when generation and semantic retrieval are ready", () =
 test("blocks readiness when Cloud generation is not configured", () => {
   const result = evaluateReadiness({
     generationConfigured: false,
-    semanticStatus: { ready: true, state: "ready", indexedCount: 23 },
+    contextReady: true,
+    sourceCount: 23,
   });
 
   assert.equal(result.statusCode, 503);
@@ -39,42 +38,34 @@ test("blocks readiness when Cloud generation is not configured", () => {
   assert.deepEqual(result.body.blockers, ["generation_not_configured"]);
 });
 
-test("blocks readiness while semantic retrieval is unavailable", () => {
+test("blocks readiness while full portfolio context is unavailable", () => {
   const result = evaluateReadiness({
     generationConfigured: true,
-    semanticStatus: {
-      ready: false,
-      state: "unavailable",
-      indexedCount: 0,
-    },
+    contextReady: false,
+    sourceCount: 0,
   });
 
   assert.equal(result.statusCode, 503);
   assert.equal(result.body.ready, false);
-  assert.deepEqual(result.body.blockers, ["semantic_retrieval_not_ready"]);
-  assert.deepEqual(result.body.retrieval, {
-    state: "unavailable",
-    indexedSourceCount: 0,
-  });
+  assert.deepEqual(result.body.blockers, ["portfolio_context_not_ready"]);
+  assert.deepEqual(result.body.context, { sourceCount: 0 });
 });
 
 test("fails closed when readiness inputs are absent or non-boolean", () => {
   const result = evaluateReadiness({
     generationConfigured: "true",
-    semanticStatus: { ready: 1 },
+    contextReady: 1,
+    sourceCount: -1,
   });
 
   assert.equal(result.statusCode, 503);
   assert.deepEqual(result.body.checks, {
     generationConfigured: false,
-    retrievalReady: false,
+    contextReady: false,
   });
   assert.deepEqual(result.body.blockers, [
     "generation_not_configured",
-    "semantic_retrieval_not_ready",
+    "portfolio_context_not_ready",
   ]);
-  assert.deepEqual(result.body.retrieval, {
-    state: "unknown",
-    indexedSourceCount: 0,
-  });
+  assert.deepEqual(result.body.context, { sourceCount: 0 });
 });

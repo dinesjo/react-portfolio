@@ -4,10 +4,12 @@ import { stat } from "node:fs/promises";
 import http from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { pipeline } from "node:stream/promises";
-import { corpusStats, portfolioChunks } from "./corpus.js";
-import { EMBEDDING_MODEL } from "./embeddings.js";
+import { corpusStats } from "./corpus.js";
 import {
-  OLLAMA_MODEL,
+  buildFullPortfolioContext,
+  sourcesCitedInAnswer,
+} from "./full-context.js";
+import {
   OllamaCloudError,
   askOllama,
   askOllamaStream,
@@ -15,10 +17,6 @@ import {
 } from "./ollama.js";
 import { createRateLimiter } from "./rate-limit.js";
 import { evaluateReadiness } from "./readiness.js";
-import {
-  SemanticRetrievalError,
-  createSemanticRetriever,
-} from "./semantic-retrieval.js";
 
 const PORT = Number.parseInt(process.env.PORT ?? "8080", 10);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -28,9 +26,7 @@ const DIST_DIRECTORY = resolve(process.cwd(), "dist");
 const MAX_BODY_BYTES = 8_192;
 const MAX_QUESTION_CHARACTERS = 600;
 const MAX_HISTORY_MESSAGES = 4;
-const RETRIEVAL_TOKEN_BUDGET = 3_000;
 const MAX_CONCURRENT_CHAT_REQUESTS = 1;
-const SEMANTIC_RETRY_INTERVAL_MS = 30_000;
 
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
@@ -50,46 +46,19 @@ const contentTypes = {
 };
 
 const chatRateLimiter = createRateLimiter();
-const semanticRetriever = createSemanticRetriever({ chunks: portfolioChunks });
+const portfolioContext = buildFullPortfolioContext();
+const contextReady =
+  portfolioContext.sources.length === corpusStats.sourceCount &&
+  portfolioContext.context.length > 0;
 let activeChatRequests = 0;
-let lastSemanticInitializationAttempt = 0;
 
-async function initializeSemanticIndex() {
-  lastSemanticInitializationAttempt = Date.now();
-  try {
-    const result = await semanticRetriever.initialize();
-    console.info(
-      JSON.stringify({
-        event: "portfolio_vector_index_ready",
-        indexedCount: result.indexedCount,
-        upsertedCount: result.upsertedCount ?? 0,
-        deletedCount: result.deletedCount ?? 0,
-        embeddingModel: EMBEDDING_MODEL,
-      }),
-    );
-  } catch (error) {
-    console.warn(
-      JSON.stringify({
-        event: "portfolio_vector_index_unavailable",
-        code: error?.code ?? "semantic_index_initialization_failed",
-      }),
-    );
-  }
-}
-
-function scheduleSemanticRecovery() {
-  const status = semanticRetriever.status;
-  if (
-    status.ready ||
-    status.state === "initializing" ||
-    Date.now() - lastSemanticInitializationAttempt < 5_000
-  ) {
-    return;
-  }
-  void initializeSemanticIndex();
-}
-
-await initializeSemanticIndex();
+console.info(
+  JSON.stringify({
+    event: "portfolio_context_ready",
+    sourceCount: portfolioContext.sources.length,
+    estimatedTokens: portfolioContext.estimatedTokens,
+  }),
+);
 
 function setSecurityHeaders(response) {
   response.setHeader("X-Content-Type-Options", "nosniff");
@@ -337,60 +306,20 @@ async function handleChat(request, response) {
   try {
     if (streaming) {
       beginNdjson(response);
-      await writeStreamEvent({ type: "status", phase: "retrieving" });
-    }
-
-    const retrieval = await semanticRetriever.retrieve({
-      question: input.question,
-      topK: 6,
-      maxTokens: RETRIEVAL_TOKEN_BUDGET,
-      signal: abortController.signal,
-    });
-    const sources = publicSources(retrieval.sources);
-    const retrievalSummary = {
-      mode: retrieval.diagnostics.mode,
-      sourceCount: sources.length,
-      estimatedTokens: retrieval.estimatedTokens,
-    };
-
-    if (streaming) {
-      await writeStreamEvent({
-        type: "sources",
-        sources,
-        retrieval: retrievalSummary,
-      });
       await writeStreamEvent({ type: "status", phase: "generating" });
     }
 
-    if (retrieval.sources.length === 0) {
-      const answer =
-        "That is outside the information published in this portfolio. Try asking about Linus's projects, professional work, KTH courses, technologies, or research.";
-
-      if (streaming) {
-        await writeStreamEvent({ type: "delta", content: answer });
-        await writeStreamEvent({
-          type: "done",
-          answer,
-          sources,
-          retrieval: retrievalSummary,
-          metrics: null,
-        });
-        endNdjson(response);
-      } else {
-        sendJson(response, 200, {
-          answer,
-          sources,
-          retrieval: retrievalSummary,
-        });
-      }
-      return;
-    }
+    const contextSummary = {
+      mode: "full-context",
+      sourceCount: portfolioContext.sources.length,
+      estimatedTokens: portfolioContext.estimatedTokens,
+    };
 
     const result = streaming
       ? await askOllamaStream({
           apiKey: process.env.OLLAMA_API_KEY,
           question: input.question,
-          context: retrieval.context,
+          context: portfolioContext.context,
           history: input.history,
           signal: abortController.signal,
           onDelta: (content) =>
@@ -399,26 +328,25 @@ async function handleChat(request, response) {
       : await askOllama({
           apiKey: process.env.OLLAMA_API_KEY,
           question: input.question,
-          context: retrieval.context,
+          context: portfolioContext.context,
           history: input.history,
           signal: abortController.signal,
         });
+    const sources = publicSources(
+      sourcesCitedInAnswer(result.answer, portfolioContext.sources),
+    );
 
     if (streaming) {
       await writeStreamEvent({
         type: "done",
         answer: result.answer,
         sources,
-        retrieval: retrievalSummary,
-        metrics: result.metrics,
       });
       endNdjson(response);
     } else {
       sendJson(response, 200, {
         answer: result.answer,
         sources,
-        retrieval: retrievalSummary,
-        metrics: result.metrics,
       });
     }
 
@@ -426,17 +354,16 @@ async function handleChat(request, response) {
       JSON.stringify({
         event: "portfolio_chat_completed",
         durationMs: Date.now() - startedAt,
-        sourceIds: sources.map((source) => source.id),
-        retrievalMode: retrieval.diagnostics.mode,
-        embeddingDurationMs: retrieval.diagnostics.embeddingDurationMs,
-        vectorSearchDurationMs: retrieval.diagnostics.vectorSearchDurationMs,
+        contextMode: contextSummary.mode,
+        contextSourceCount: contextSummary.sourceCount,
+        citedSourceIds: sources.map((source) => source.id),
         promptTokens: result.metrics.promptTokens,
         responseTokens: result.metrics.responseTokens,
       }),
     );
   } catch (error) {
     const safeError =
-      error instanceof OllamaCloudError || error instanceof SemanticRetrievalError
+      error instanceof OllamaCloudError
         ? error
         : new OllamaCloudError(
             "assistant_error",
@@ -546,29 +473,13 @@ const server = http.createServer(async (request, response) => {
         });
         return;
       }
-      scheduleSemanticRecovery();
-      const semanticStatus = semanticRetriever.status;
       const generationConfigured = isOllamaConfigured(process.env.OLLAMA_API_KEY);
       sendJson(response, 200, {
         status: "ok",
         assistant: {
-          configured: generationConfigured && semanticStatus.ready,
-          generationConfigured,
-          retrievalReady: semanticStatus.ready,
+          configured: generationConfigured && contextReady,
         },
-        model: OLLAMA_MODEL,
-        models: {
-          generation: OLLAMA_MODEL,
-          embedding: semanticStatus.embeddingModel,
-        },
-        retrieval: {
-          ...corpusStats,
-          mode: semanticStatus.mode,
-          state: semanticStatus.state,
-          vectorStore: semanticStatus.vectorStore,
-          embeddingDimensions: semanticStatus.embeddingDimensions,
-          indexedSourceCount: semanticStatus.indexedCount,
-        },
+        context: { ready: contextReady, sourceCount: corpusStats.sourceCount },
       });
       return;
     }
@@ -580,10 +491,10 @@ const server = http.createServer(async (request, response) => {
         });
         return;
       }
-      scheduleSemanticRecovery();
       const readiness = evaluateReadiness({
         generationConfigured: isOllamaConfigured(process.env.OLLAMA_API_KEY),
-        semanticStatus: semanticRetriever.status,
+        contextReady,
+        sourceCount: portfolioContext.sources.length,
       });
       sendJson(response, readiness.statusCode, readiness.body);
       return;
@@ -628,14 +539,8 @@ server.listen(PORT, HOST, () => {
   );
 });
 
-const semanticRetryTimer = setInterval(() => {
-  scheduleSemanticRecovery();
-}, SEMANTIC_RETRY_INTERVAL_MS);
-semanticRetryTimer.unref();
-
 async function shutdown(signal) {
   console.info(`Received ${signal}; shutting down.`);
-  clearInterval(semanticRetryTimer);
   server.close(async () => {
     await vite?.close();
     process.exit(0);

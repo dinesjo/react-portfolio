@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  DEFAULT_OLLAMA_MODEL,
   MAX_OUTPUT_TOKENS,
   MODEL_CONTEXT_TOKENS,
   OLLAMA_CLOUD_URL,
@@ -10,6 +11,7 @@ import {
   createChatPayload,
   isOllamaConfigured,
   normalizeCourseClaims,
+  shouldNormalizeCourseAnswer,
   toPlainText,
 } from "./ollama.js";
 
@@ -32,7 +34,7 @@ function ndjsonResponse(records, chunkSize = 13) {
   });
 }
 
-test("builds a fixed direct-cloud request with bounded generation", () => {
+test("builds a configurable direct-cloud request with bounded generation", () => {
   const payload = createChatPayload({
     question: "Which security courses are listed?",
     context: "[S1] DD2395 Computer Security",
@@ -41,10 +43,10 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
 
   assert.equal(OLLAMA_CLOUD_URL, "https://ollama.com/api/chat");
   assert.equal(payload.model, OLLAMA_MODEL);
-  assert.equal(payload.model, "gpt-oss:120b");
+  assert.equal(DEFAULT_OLLAMA_MODEL, "gemma4:31b");
   assert.equal(payload.options.num_ctx, MODEL_CONTEXT_TOKENS);
   assert.equal(payload.options.num_predict, MAX_OUTPUT_TOKENS);
-  assert.equal(payload.think, "low");
+  assert.equal(payload.think, false);
   assert.equal(payload.stream, false);
   assert.match(payload.messages.at(-1).content, /\[S1\]/);
   assert.match(
@@ -60,6 +62,18 @@ test("builds a fixed direct-cloud request with bounded generation", () => {
   assert.match(payload.messages[0].content, /arbetade med/i);
   assert.match(payload.messages[0].content, /listed in the portfolio/i);
   assert.match(payload.messages[0].content, /same language as the visitor/i);
+});
+
+test("allows a caller to evaluate another Cloud model without changing context", () => {
+  const payload = createChatPayload({
+    question: "Which projects use React?",
+    context: "[S1] React project",
+    model: "qwen3.5:397b",
+  });
+
+  assert.equal(payload.model, "qwen3.5:397b");
+  assert.equal(payload.options.num_ctx, MODEL_CONTEXT_TOKENS);
+  assert.equal(payload.think, false);
 });
 
 test("packages only four bounded history entries as one untrusted user message", () => {
@@ -146,7 +160,7 @@ test("normalizes course labels and permits only published course notes", () => {
   );
 });
 
-test("applies deterministic course grounding only to course context", async () => {
+test("applies deterministic course grounding only to course questions", async () => {
   const fetchImpl = async () =>
     new Response(
       JSON.stringify({
@@ -166,12 +180,28 @@ test("applies deterministic course grounding only to course context", async () =
   const projectResult = await askOllama({
     apiKey: "test-key",
     question: "Which project?",
-    context: "[S1]\nType: project\nContent: A project\n[/S1]",
+    context: [
+      "[S1]\nType: project\nContent: A project\n[/S1]",
+      "[S2]\nType: course\nContent: DD2459: Software Reliability\n[/S2]",
+    ].join("\n\n"),
     fetchImpl,
   });
 
   assert.equal(courseResult.answer, "1. DD2459 – Software Reliability [S1]");
   assert.match(projectResult.answer, /invented detail/);
+});
+
+test("recognizes explicit course intent and course follow-ups", () => {
+  assert.equal(shouldNormalizeCourseAnswer("Which projects use React?"), false);
+  assert.equal(shouldNormalizeCourseAnswer("Which KTH courses cover security?"), true);
+  assert.equal(shouldNormalizeCourseAnswer("Vilka kurser handlar om säkerhet?"), true);
+  assert.equal(
+    shouldNormalizeCourseAnswer("Which ones?", [
+      { role: "user", content: "Tell me about Linus's courses." },
+      { role: "assistant", content: "Several are listed." },
+    ]),
+    true,
+  );
 });
 
 test("sends the API key only as an authorization header and ignores thinking", async () => {
@@ -242,7 +272,10 @@ test("streams bounded plain-text answer deltas while hiding thinking", async () 
   const result = await askOllamaStream({
     apiKey: "test-key",
     question: "Which project feels like a rhythm game?",
-    context: "[S1]\nType: project\nContent: Note Hero\n[/S1]",
+    context: [
+      "[S1]\nType: project\nContent: Note Hero\n[/S1]",
+      "[S2]\nType: course\nContent: DD2459: Software Reliability\n[/S2]",
+    ].join("\n\n"),
     onDelta: (content) => deltas.push(content),
     fetchImpl,
   });

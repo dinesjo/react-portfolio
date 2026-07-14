@@ -11,10 +11,7 @@ const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
 
-const STREAM_STATUS = {
-  retrieving: "Looking through the portfolio…",
-  generating: "Writing an answer from the relevant records…",
-};
+const STREAM_STATUS = "Writing an answer from the portfolio…";
 
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
@@ -66,19 +63,6 @@ async function readErrorMessage(response) {
   }
 
   return `Chat request failed: ${response.status}`;
-}
-
-function streamStatusCopy(activeAnswer) {
-  if (activeAnswer?.phase !== "generating") {
-    return STREAM_STATUS.retrieving;
-  }
-
-  if (Number.isFinite(activeAnswer.sourceCount)) {
-    const recordLabel = activeAnswer.sourceCount === 1 ? "record" : "records";
-    return `Writing from ${activeAnswer.sourceCount} relevant ${recordLabel}…`;
-  }
-
-  return STREAM_STATUS.generating;
 }
 
 function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
@@ -360,12 +344,11 @@ export default function PortfolioAssistant() {
     isFollowingRef.current = true;
     setQuestion("");
     setErrorMessage("");
-    setLiveStatus("Searching the published portfolio records.");
+    setLiveStatus("Writing an answer from the portfolio.");
     setActiveAnswer({
       id: assistantMessageId,
-      phase: "retrieving",
+      phase: "generating",
       content: "",
-      sourceCount: null,
     });
     setMessages((current) => [
       ...current,
@@ -405,14 +388,9 @@ export default function PortfolioAssistant() {
           }
 
           if (event.type === "status") {
-            if (event.phase === "retrieving" || event.phase === "retrieval") {
-              setActiveAnswer((current) =>
-                current?.id === assistantMessageId
-                  ? { ...current, phase: "retrieving" }
-                  : current,
-              );
-              setLiveStatus("Searching the published portfolio records.");
-            } else if (
+            if (
+              event.phase === "retrieving" ||
+              event.phase === "retrieval" ||
               event.phase === "generating" ||
               event.phase === "generation"
             ) {
@@ -421,19 +399,10 @@ export default function PortfolioAssistant() {
                   ? { ...current, phase: "generating" }
                   : current,
               );
-              setLiveStatus("Writing a grounded answer from the matched records.");
+              setLiveStatus("Writing an answer from the portfolio.");
             }
           } else if (event.type === "sources") {
             streamedSources = normalizeSources(event.sources);
-            const sourceCount = streamedSources.length;
-            setActiveAnswer((current) =>
-              current?.id === assistantMessageId
-                ? { ...current, phase: "generating", sourceCount }
-                : current,
-            );
-            setLiveStatus(
-              `${sourceCount} matched ${sourceCount === 1 ? "record" : "records"}. Writing the answer.`,
-            );
           } else if (
             event.type === "delta" &&
             typeof event.content === "string"
@@ -669,7 +638,7 @@ export default function PortfolioAssistant() {
                       <span />
                     </span>
                     <span className="assistant-stream-copy">
-                      {streamStatusCopy(activeAnswer)}
+                      {STREAM_STATUS}
                     </span>
                   </div>
                 )}
@@ -781,11 +750,7 @@ export default function PortfolioAssistant() {
                 className="assistant-submit-button"
                 disabled={!canSubmit}
               >
-                {activeAnswer?.phase === "retrieving"
-                  ? "Searching…"
-                  : isLoading
-                    ? "Writing…"
-                    : "Send"}
+                {isLoading ? "Writing…" : "Send"}
               </button>
             </fieldset>
           </form>

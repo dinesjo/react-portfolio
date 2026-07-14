@@ -1,9 +1,33 @@
+/* eslint-env node */
 import { courses } from "../src/data/courses.js";
 
 export const OLLAMA_CLOUD_URL = "https://ollama.com/api/chat";
-export const OLLAMA_MODEL = "gpt-oss:120b";
-export const MODEL_CONTEXT_TOKENS = 8192;
-export const MAX_OUTPUT_TOKENS = 450;
+export const DEFAULT_OLLAMA_MODEL = "gemma4:31b";
+
+function boundedIntegerFromEnvironment(name, fallback, minimum, maximum) {
+  const rawValue = process.env[name]?.trim();
+  if (!rawValue) return fallback;
+
+  const value = Number.parseInt(rawValue, 10);
+  return Number.isSafeInteger(value) && value >= minimum && value <= maximum
+    ? value
+    : fallback;
+}
+
+export const OLLAMA_MODEL =
+  process.env.OLLAMA_MODEL?.trim() || DEFAULT_OLLAMA_MODEL;
+export const MODEL_CONTEXT_TOKENS = boundedIntegerFromEnvironment(
+  "OLLAMA_CONTEXT_TOKENS",
+  16_384,
+  8_192,
+  262_144,
+);
+export const MAX_OUTPUT_TOKENS = boundedIntegerFromEnvironment(
+  "OLLAMA_MAX_OUTPUT_TOKENS",
+  1_200,
+  128,
+  4_096,
+);
 export const UPSTREAM_TIMEOUT_MS = 45_000;
 const MAX_STREAMED_ANSWER_CHARACTERS = 32_000;
 const MAX_NDJSON_LINE_CHARACTERS = 64_000;
@@ -103,12 +127,13 @@ export function createChatPayload({
   context,
   history = [],
   stream = false,
+  model = OLLAMA_MODEL,
 }) {
   const transcript = untrustedTranscriptMessage(history);
   return {
-    model: OLLAMA_MODEL,
+    model,
     stream,
-    think: "low",
+    think: false,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       ...(transcript ? [transcript] : []),
@@ -173,13 +198,24 @@ function streamedCloudError() {
   );
 }
 
-function isCourseContext(context) {
-  return /(?:^|\n)Type: course(?:\n|$)/m.test(String(context));
+const COURSE_INTENT_PATTERN =
+  /\b(?:class(?:es)?|course(?:s|work)?|education|kth|studied|studies|study|university|kurs(?:er)?|studiear|studieår|utbildning)\b|\b[A-Z]{2}\d{4}\b/i;
+const COURSE_FOLLOW_UP_PATTERN =
+  /^(?:and\b|how about\b|tell me more\b|what\b|which\b|those\b|them\b|they\b|och\b|hur\b|vilka\b|de\b|dem\b|dessa\b)/i;
+
+export function shouldNormalizeCourseAnswer(question, history = []) {
+  const currentQuestion = String(question ?? "").trim();
+  if (COURSE_INTENT_PATTERN.test(currentQuestion)) return true;
+  if (!COURSE_FOLLOW_UP_PATTERN.test(currentQuestion)) return false;
+
+  return normalizeHistory(history)
+    .slice(-2)
+    .some((message) => COURSE_INTENT_PATTERN.test(message.content));
 }
 
-function normalizeAnswer(value, context) {
+function normalizeAnswer(value, normalizeCourses) {
   const plainAnswer = toPlainText(value);
-  return isCourseContext(context)
+  return normalizeCourses
     ? normalizeCourseClaims(plainAnswer)
     : plainAnswer;
 }
@@ -229,6 +265,7 @@ async function requestOllama({
   question,
   context,
   history,
+  model,
   signal,
   stream,
   fetchImpl,
@@ -247,7 +284,7 @@ async function requestOllama({
         Accept: stream ? "application/x-ndjson" : "application/json",
       },
       body: JSON.stringify(
-        createChatPayload({ question, context, history, stream }),
+        createChatPayload({ question, context, history, stream, model }),
       ),
       signal: upstreamSignal,
     });
@@ -394,7 +431,7 @@ function coursesNamedInLine(line) {
 
 /**
  * Replace model-authored course labels and descriptions with page-owned facts.
- * This is applied only when the retrieved context is course material.
+ * This is applied only when the visitor is asking about coursework.
  */
 export function normalizeCourseClaims(value) {
   const courseByCode = new Map(
@@ -446,6 +483,7 @@ export async function askOllama({
   question,
   context,
   history = [],
+  model = OLLAMA_MODEL,
   signal,
   fetchImpl = fetch,
 }) {
@@ -462,6 +500,7 @@ export async function askOllama({
     question,
     context,
     history,
+    model,
     signal,
     stream: false,
     fetchImpl,
@@ -482,7 +521,10 @@ export async function askOllama({
     throw invalidCloudResponse();
   }
 
-  const answer = normalizeAnswer(payload?.message?.content, context);
+  const answer = normalizeAnswer(
+    payload?.message?.content,
+    shouldNormalizeCourseAnswer(question, history),
+  );
   if (!answer) throw emptyCloudResponse();
 
   return {
@@ -503,6 +545,7 @@ export async function askOllamaStream({
   question,
   context,
   history = [],
+  model = OLLAMA_MODEL,
   signal,
   onDelta = async () => {},
   fetchImpl = fetch,
@@ -523,12 +566,13 @@ export async function askOllamaStream({
     question,
     context,
     history,
+    model,
     signal,
     stream: true,
     fetchImpl,
   });
 
-  const bufferUntilComplete = isCourseContext(context);
+  const bufferUntilComplete = shouldNormalizeCourseAnswer(question, history);
   let rawAnswer = "";
   let emittedAnswer = "";
   let completedPayload = null;
@@ -576,7 +620,7 @@ export async function askOllamaStream({
 
   if (!completedPayload) throw invalidCloudResponse();
 
-  const answer = normalizeAnswer(rawAnswer, context);
+  const answer = normalizeAnswer(rawAnswer, bufferUntilComplete);
   if (!answer) throw emptyCloudResponse();
 
   if (bufferUntilComplete) {
