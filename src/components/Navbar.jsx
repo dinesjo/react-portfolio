@@ -4,23 +4,24 @@ const navItems = [
   { id: "home", label: "Home" },
   { id: "featured", label: "Work" },
   { id: "courses-carousel", label: "Study" },
+  { id: "assistant", label: "Ask" },
   { id: "contact", label: "Contact" },
 ];
 
 const allSections = [
   "home",
-  "assistant",
   "featured",
   "projects",
   "courses-carousel",
   "courses",
+  "assistant",
   "contact",
 ];
 
 // Map sections to their nav parent
 const sectionToNav = {
   home: "home",
-  assistant: "courses-carousel",
+  assistant: "assistant",
   featured: "featured",
   "courses-carousel": "courses-carousel",
   projects: "featured",
