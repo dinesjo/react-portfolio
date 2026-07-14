@@ -10,18 +10,10 @@ const HISTORY_CONTENT_LENGTH = 1_200;
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
-const MODEL_LABEL = "gpt-oss:120b · Ollama Cloud";
-const RETRIEVAL_LABEL = "qwen3-embedding:0.6b · Qdrant";
 
 const STREAM_STATUS = {
-  retrieving: {
-    step: "SEARCH / 01",
-    copy: "Looking through the published portfolio records…",
-  },
-  generating: {
-    step: "WRITE / 02",
-    copy: "Reading the strongest matches and writing the evidence note…",
-  },
+  retrieving: "Looking through the portfolio…",
+  generating: "Writing an answer from the relevant records…",
 };
 
 const SUGGESTED_PROMPTS = [
@@ -78,15 +70,15 @@ async function readErrorMessage(response) {
 
 function streamStatusCopy(activeAnswer) {
   if (activeAnswer?.phase !== "generating") {
-    return STREAM_STATUS.retrieving.copy;
+    return STREAM_STATUS.retrieving;
   }
 
   if (Number.isFinite(activeAnswer.sourceCount)) {
     const recordLabel = activeAnswer.sourceCount === 1 ? "record" : "records";
-    return `Writing from ${activeAnswer.sourceCount} matched ${recordLabel}…`;
+    return `Writing from ${activeAnswer.sourceCount} relevant ${recordLabel}…`;
   }
 
-  return STREAM_STATUS.generating.copy;
+  return STREAM_STATUS.generating;
 }
 
 function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
@@ -150,7 +142,6 @@ function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
 export default function PortfolioAssistant() {
   const [health, setHealth] = useState({
     status: "checking",
-    sourceCount: null,
     detail: "",
   });
   const [question, setQuestion] = useState("");
@@ -180,7 +171,7 @@ export default function PortfolioAssistant() {
 
     const controller = new AbortController();
     healthControllerRef.current = controller;
-    setHealth({ status: "checking", sourceCount: null, detail: "" });
+    setHealth({ status: "checking", detail: "" });
 
     try {
       const response = await fetch("/api/health", {
@@ -194,24 +185,12 @@ export default function PortfolioAssistant() {
       const data = await response.json();
       if (!mountedRef.current) return;
 
-      const sourceCount = Number.isFinite(data?.retrieval?.indexedSourceCount)
-        ? data.retrieval.indexedSourceCount
-        : null;
-
       if (data?.assistant?.configured === true) {
-        setHealth({ status: "configured", sourceCount, detail: "" });
-      } else if (data?.assistant?.generationConfigured !== true) {
-        setHealth({
-          status: "unavailable",
-          sourceCount,
-          detail: "The cloud model is not configured for this deployment.",
-        });
+        setHealth({ status: "configured", detail: "" });
       } else {
         setHealth({
           status: "unavailable",
-          sourceCount,
-          detail:
-            "The local embedding model or portfolio vector index is unavailable.",
+          detail: "Please try again in a moment.",
         });
       }
     } catch (error) {
@@ -219,11 +198,10 @@ export default function PortfolioAssistant() {
 
       setHealth({
         status: "unavailable",
-        sourceCount: null,
         detail:
           error instanceof TypeError
-            ? "The portfolio assistant service could not be reached."
-            : "The portfolio assistant did not pass its availability check.",
+            ? "The portfolio chat could not be reached."
+            : "Please try again in a moment.",
       });
     } finally {
       if (healthControllerRef.current === controller) {
@@ -494,7 +472,7 @@ export default function PortfolioAssistant() {
 
       if (controller.signal.aborted && didTimeOut) {
         setErrorMessage(
-          "The evidence desk had no new activity for 45 seconds. Your question is still below so you can try again.",
+          "The chat had no new activity for 45 seconds. Your question is still below so you can try again.",
         );
       } else if (!wasAborted) {
         setErrorMessage(
@@ -538,12 +516,7 @@ export default function PortfolioAssistant() {
   const assistantIsUnavailable = health.status !== "configured";
   const actionsAreDisabled = isLoading || assistantIsUnavailable;
   const canSubmit = question.trim().length > 0 && !actionsAreDisabled;
-  const statusLabel =
-    health.status === "configured"
-      ? "Vector index ready"
-      : health.status === "checking"
-        ? "Checking evidence desk"
-        : "Evidence desk unavailable";
+  const showSuggestions = messages.length === 0 && !isLoading;
 
   return (
     <section
@@ -554,291 +527,268 @@ export default function PortfolioAssistant() {
       <div className="assistant-shell">
         <header className="assistant-intro">
           <div className="assistant-intro-copy">
-            <p className="assistant-eyebrow">Portfolio evidence desk</p>
+            <p className="assistant-eyebrow">Portfolio chat</p>
             <h2 id="assistant-title" className="assistant-title">
-              Ask the work, not the r&eacute;sum&eacute;.
+              Ask about the work.
             </h2>
-            <p className="assistant-description">
-              Ask about projects, professional work, research, or KTH courses.
-              A hybrid vector and exact-match search grounds each answer in the
-              records published here, with the consulted evidence attached below.
-            </p>
           </div>
-
-          <dl className="assistant-runtime" aria-label="Assistant runtime">
-            <div className="assistant-runtime-item">
-              <dt className="assistant-runtime-label">Answer model</dt>
-              <dd className="assistant-runtime-value">{MODEL_LABEL}</dd>
-            </div>
-            <div className="assistant-runtime-item">
-              <dt className="assistant-runtime-label">Retrieval</dt>
-              <dd className="assistant-runtime-value">{RETRIEVAL_LABEL}</dd>
-            </div>
-            <div className="assistant-runtime-item">
-              <dt className="assistant-runtime-label">Vectors indexed</dt>
-              <dd className="assistant-runtime-value">
-                {health.sourceCount ?? "—"}
-              </dd>
-            </div>
-          </dl>
-
-          <div
-            className="assistant-availability"
-            data-state={health.status}
-            role="status"
-            aria-live="polite"
-          >
-            <span className="assistant-availability-mark" aria-hidden="true" />
-            <span className="assistant-availability-label">{statusLabel}</span>
-          </div>
+          <p className="assistant-description">
+            Ask about projects, professional work, research, or KTH courses.
+            Answers stay within this portfolio and link back to the relevant
+            records.
+          </p>
         </header>
 
-        <div className="assistant-desk">
-          <aside
-            className="assistant-prompts"
-            aria-labelledby="assistant-prompts-title"
+        <div className="assistant-workspace">
+          <div
+            ref={transcriptRef}
+            className="assistant-transcript"
+            role="log"
+            aria-label="Portfolio assistant conversation"
+            aria-live="off"
+            aria-busy={isLoading}
+            data-empty={showSuggestions ? "true" : "false"}
+            onScroll={handleTranscriptScroll}
           >
-            <p id="assistant-prompts-title" className="assistant-prompts-title">
-              Suggested enquiries
-            </p>
-            <ol className="assistant-prompt-list">
-              {SUGGESTED_PROMPTS.map((prompt, index) => (
-                <li key={prompt} className="assistant-prompt-item">
-                  <button
-                    type="button"
-                    className="assistant-prompt-button"
-                    onClick={() => askQuestion(prompt)}
-                    disabled={actionsAreDisabled}
-                  >
-                    <span className="assistant-prompt-number" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="assistant-prompt-copy">{prompt}</span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-            <p className="assistant-scope-note">
-              This assistant only answers from published portfolio evidence. It
-              may say when the records do not support an answer.
-            </p>
-          </aside>
-
-          <div className="assistant-workspace">
-            <div
-              ref={transcriptRef}
-              className="assistant-transcript"
-              role="log"
-              aria-label="Portfolio assistant conversation"
-              aria-live="off"
-              aria-busy={isLoading}
-              onScroll={handleTranscriptScroll}
-            >
-              {messages.length === 0 && !isLoading && (
-                <div className="assistant-empty-state">
-                  <p className="assistant-empty-kicker">No enquiry open</p>
-                  <p className="assistant-empty-copy">
-                    Start with a suggested enquiry or write your own question
-                    below. Plain-language answers and their evidence will appear
-                    here.
-                  </p>
-                </div>
-              )}
-
-              {messages.map((message) => (
-                <article
-                  key={message.id}
-                  className={`assistant-message assistant-message-${message.role}`}
-                >
-                  <p className="assistant-message-label">
-                    {message.role === "user" ? "Your enquiry" : "Evidence note"}
-                  </p>
-                  <p className="assistant-message-content">{message.content}</p>
-
-                  {message.role === "assistant" &&
-                    message.sources.length > 0 && (
-                      <div className="assistant-source-block">
-                        <p className="assistant-source-heading">
-                          Records consulted
-                        </p>
-                        <ul
-                          className="assistant-source-list"
-                          aria-label="Records consulted for this answer"
-                        >
-                          {message.sources.map((source, index) => {
-                            const citation = source.citation || `S${index + 1}`;
-                            const accessibleSourceLabel = [
-                              citation,
-                              source.type ? `${source.type} source` : "source",
-                              source.title,
-                            ].join(", ");
-                            const sourceContent = (
-                              <>
-                                <span
-                                  className="assistant-source-number"
-                                >
-                                  {citation}
-                                </span>
-                                {source.type && (
-                                  <span className="assistant-source-type">
-                                    {source.type}
-                                  </span>
-                                )}
-                                <span className="assistant-source-title">
-                                  {source.title}
-                                </span>
-                              </>
-                            );
-
-                            return (
-                              <li
-                                key={source.key}
-                                className="assistant-source-item"
-                              >
-                                {source.href ? (
-                                  <a
-                                    className="assistant-source-chip"
-                                    href={source.href}
-                                    aria-label={accessibleSourceLabel}
-                                    onClick={(event) =>
-                                      handleSourceClick(event, source.href)
-                                    }
-                                    target={
-                                      /^https?:\/\//i.test(source.href)
-                                        ? "_blank"
-                                        : undefined
-                                    }
-                                    rel={
-                                      /^https?:\/\//i.test(source.href)
-                                        ? "noopener noreferrer"
-                                        : undefined
-                                    }
-                                  >
-                                    {sourceContent}
-                                  </a>
-                                ) : (
-                                  <span className="assistant-source-chip">
-                                    {sourceContent}
-                                  </span>
-                                )}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    )}
-                </article>
-              ))}
-
-              {isLoading && (
-                <article
-                  className="assistant-message assistant-message-assistant assistant-message-streaming"
-                  data-phase={activeAnswer.phase}
-                  data-has-content={activeAnswer.content ? "true" : "false"}
-                >
-                  <p className="assistant-message-label">
-                    {activeAnswer.content ? "Evidence note" : "Desk activity"}
-                  </p>
-                  {activeAnswer.content ? (
-                    <p className="assistant-message-content">
-                      {activeAnswer.content}
-                      <span className="assistant-stream-caret" aria-hidden="true" />
+            {showSuggestions && (
+              <div className="assistant-empty-state">
+                <div className="assistant-welcome">
+                  <span className="assistant-avatar" aria-hidden="true">
+                    LD
+                  </span>
+                  <div className="assistant-welcome-bubble">
+                    <p className="assistant-message-label">
+                      Portfolio assistant
                     </p>
-                  ) : (
-                    <div className="assistant-stream-status" aria-hidden="true">
-                      <span className="assistant-stream-step">
-                        {STREAM_STATUS[activeAnswer.phase]?.step ||
-                          STREAM_STATUS.retrieving.step}
-                      </span>
-                      <span className="assistant-stream-copy">
-                        {streamStatusCopy(activeAnswer)}
-                      </span>
-                      <span className="assistant-stream-pulse">
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                    </div>
-                  )}
-                </article>
-              )}
-            </div>
-
-            <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-              {liveStatus}
-            </p>
-
-            {errorMessage && (
-              <div className="assistant-error" role="alert">
-                <p className="assistant-error-title">The enquiry stayed open.</p>
-                <p className="assistant-error-copy">{errorMessage}</p>
-              </div>
-            )}
-
-            {health.status === "unavailable" && (
-              <div className="assistant-unavailable" role="status">
-                <div className="assistant-unavailable-copy">
-                  <p className="assistant-unavailable-title">
-                    The evidence desk is offline.
-                  </p>
-                  <p className="assistant-unavailable-detail">
-                    {health.detail ||
-                      "The cloud assistant is not available at the moment."}
-                  </p>
+                    <p className="assistant-empty-copy">
+                      Hi — what would you like to know about Linus&apos;s work or
+                      studies?
+                    </p>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="assistant-retry-button"
-                  onClick={checkHealth}
-                >
-                  Check again
-                </button>
               </div>
             )}
 
-            <form className="assistant-form" onSubmit={handleSubmit}>
-              <fieldset
-                className="assistant-fieldset"
-                disabled={assistantIsUnavailable}
+            {messages.map((message) => (
+              <article
+                key={message.id}
+                className={`assistant-message assistant-message-${message.role}`}
               >
-                <label className="assistant-question-label" htmlFor="assistant-question">
-                  Your question
-                </label>
-                <textarea
-                  id="assistant-question"
-                  ref={questionInputRef}
-                  className="assistant-question-input"
-                  value={question}
-                  onChange={(event) => setQuestion(event.target.value)}
-                  onKeyDown={handleQuestionKeyDown}
-                  maxLength={MAX_QUESTION_LENGTH}
-                  readOnly={isLoading}
-                  rows={3}
-                  placeholder="Ask about a project, course, method, or technology…"
-                  aria-describedby="assistant-question-help assistant-question-count"
-                />
-                <div className="assistant-form-meta">
-                  <p id="assistant-question-help" className="assistant-question-help">
-                    Enter to send · Shift + Enter for a new line
+                <p className="assistant-message-label">
+                  {message.role === "user" ? "You" : "Portfolio assistant"}
+                </p>
+                <p className="assistant-message-content">{message.content}</p>
+
+                {message.role === "assistant" && message.sources.length > 0 && (
+                  <div className="assistant-source-block">
+                    <p className="assistant-source-heading">Sources</p>
+                    <ul
+                      className="assistant-source-list"
+                      aria-label="Sources for this answer"
+                    >
+                      {message.sources.map((source, index) => {
+                        const citation = source.citation || `S${index + 1}`;
+                        const accessibleSourceLabel = [
+                          citation,
+                          source.type ? `${source.type} source` : "source",
+                          source.title,
+                        ].join(", ");
+                        const sourceContent = (
+                          <>
+                            <span className="assistant-source-number">
+                              {citation}
+                            </span>
+                            {source.type && (
+                              <span className="assistant-source-type">
+                                {source.type}
+                              </span>
+                            )}
+                            <span className="assistant-source-title">
+                              {source.title}
+                            </span>
+                          </>
+                        );
+
+                        return (
+                          <li
+                            key={source.key}
+                            className="assistant-source-item"
+                          >
+                            {source.href ? (
+                              <a
+                                className="assistant-source-chip"
+                                href={source.href}
+                                aria-label={accessibleSourceLabel}
+                                onClick={(event) =>
+                                  handleSourceClick(event, source.href)
+                                }
+                                target={
+                                  /^https?:\/\//i.test(source.href)
+                                    ? "_blank"
+                                    : undefined
+                                }
+                                rel={
+                                  /^https?:\/\//i.test(source.href)
+                                    ? "noopener noreferrer"
+                                    : undefined
+                                }
+                              >
+                                {sourceContent}
+                              </a>
+                            ) : (
+                              <span className="assistant-source-chip">
+                                {sourceContent}
+                              </span>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </article>
+            ))}
+
+            {isLoading && (
+              <article
+                className="assistant-message assistant-message-assistant assistant-message-streaming"
+                data-phase={activeAnswer.phase}
+                data-has-content={activeAnswer.content ? "true" : "false"}
+              >
+                <p className="assistant-message-label">Portfolio assistant</p>
+                {activeAnswer.content ? (
+                  <p className="assistant-message-content">
+                    {activeAnswer.content}
+                    <span className="assistant-stream-caret" aria-hidden="true" />
                   </p>
-                  <p id="assistant-question-count" className="assistant-question-count">
-                    {question.length}/{MAX_QUESTION_LENGTH}
-                  </p>
-                </div>
-                <button
-                  type="submit"
-                  className="assistant-submit-button"
-                  disabled={!canSubmit}
-                >
-                  {activeAnswer?.phase === "retrieving"
-                    ? "Searching records…"
-                    : isLoading
-                      ? "Writing answer…"
-                      : "Send enquiry"}
-                </button>
-              </fieldset>
-            </form>
+                ) : (
+                  <div className="assistant-stream-status" aria-hidden="true">
+                    <span className="assistant-stream-pulse">
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                    <span className="assistant-stream-copy">
+                      {streamStatusCopy(activeAnswer)}
+                    </span>
+                  </div>
+                )}
+              </article>
+            )}
           </div>
+
+          {showSuggestions && (
+            <div
+              className="assistant-prompts"
+              aria-labelledby="assistant-prompts-title"
+            >
+              <p
+                id="assistant-prompts-title"
+                className="assistant-prompts-title"
+              >
+                Try asking
+              </p>
+              <ol className="assistant-prompt-list">
+                {SUGGESTED_PROMPTS.map((prompt) => (
+                  <li key={prompt} className="assistant-prompt-item">
+                    <button
+                      type="button"
+                      className="assistant-prompt-button"
+                      onClick={() => askQuestion(prompt)}
+                      disabled={actionsAreDisabled}
+                    >
+                      <span className="assistant-prompt-copy">{prompt}</span>
+                      <span className="assistant-prompt-arrow" aria-hidden="true">
+                        →
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          <p
+            className="sr-only"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {liveStatus}
+          </p>
+
+          {errorMessage && (
+            <div className="assistant-error" role="alert">
+              <p className="assistant-error-title">The question stayed open.</p>
+              <p className="assistant-error-copy">{errorMessage}</p>
+            </div>
+          )}
+
+          {health.status === "unavailable" && (
+            <div className="assistant-unavailable" role="status">
+              <div className="assistant-unavailable-copy">
+                <p className="assistant-unavailable-title">
+                  Chat is temporarily unavailable.
+                </p>
+                <p className="assistant-unavailable-detail">
+                  {health.detail || "Please try again in a moment."}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="assistant-retry-button"
+                onClick={checkHealth}
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          <form className="assistant-form" onSubmit={handleSubmit}>
+            <fieldset
+              className="assistant-fieldset"
+              disabled={assistantIsUnavailable}
+            >
+              <label
+                className="assistant-question-label"
+                htmlFor="assistant-question"
+              >
+                Ask a question
+              </label>
+              <textarea
+                id="assistant-question"
+                ref={questionInputRef}
+                className="assistant-question-input"
+                value={question}
+                onChange={(event) => setQuestion(event.target.value)}
+                onKeyDown={handleQuestionKeyDown}
+                maxLength={MAX_QUESTION_LENGTH}
+                readOnly={isLoading}
+                rows={3}
+                placeholder="Ask about a project, course, method, or role…"
+                aria-describedby="assistant-question-help assistant-question-count"
+              />
+              <div className="assistant-form-meta">
+                <p id="assistant-question-help" className="assistant-question-help">
+                  Enter to send · Shift + Enter for a new line
+                </p>
+                <p id="assistant-question-count" className="assistant-question-count">
+                  {question.length}/{MAX_QUESTION_LENGTH}
+                </p>
+              </div>
+              <button
+                type="submit"
+                className="assistant-submit-button"
+                disabled={!canSubmit}
+              >
+                {activeAnswer?.phase === "retrieving"
+                  ? "Searching…"
+                  : isLoading
+                    ? "Writing…"
+                    : "Send"}
+              </button>
+            </fieldset>
+          </form>
         </div>
       </div>
     </section>
