@@ -1,19 +1,32 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   isNdjsonResponse,
   readNdjsonStream,
 } from "../utils/readNdjsonStream";
 import {
+  assistantAnswerForAnnouncement,
+  nextAssistantStreamStep,
+} from "../utils/assistantPresentation";
+import {
   MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
   MAX_ASSISTANT_HISTORY_MESSAGES,
   MAX_ASSISTANT_QUESTION_CHARACTERS,
 } from "../data/assistantLimits";
+import SectionIntro from "./SectionIntro";
 
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
 
 const STREAM_STATUS = "Writing an answer from the portfolio…";
+const AssistantMarkdown = lazy(() => import("./AssistantMarkdown"));
 
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
@@ -52,6 +65,84 @@ function normalizeSources(value) {
       seen.add(source.key);
       return true;
     });
+}
+
+function sourceLinkProps(source, onSourceClick) {
+  const isExternal = /^https?:\/\//i.test(source.href);
+
+  return {
+    href: source.href,
+    onClick: (event) => onSourceClick(event, source.href),
+    target: isExternal ? "_blank" : undefined,
+    rel: isExternal ? "noopener noreferrer" : undefined,
+  };
+}
+
+function AssistantAnswer({ content }) {
+  return (
+    <Suspense
+      fallback={
+        <p className="assistant-message-content assistant-markdown-fallback">
+          {assistantAnswerForAnnouncement(content)}
+        </p>
+      }
+    >
+      <AssistantMarkdown content={content} />
+    </Suspense>
+  );
+}
+
+function AssistantSources({ sources, onSourceClick }) {
+  return (
+    <details className="assistant-source-block">
+      <summary className="assistant-source-summary">
+        <span className="assistant-source-heading">From this portfolio</span>
+        <span className="assistant-source-disclosure-icon" aria-hidden="true">
+          ↓
+        </span>
+      </summary>
+      <ul
+        className="assistant-source-list"
+        aria-label="Portfolio entries related to this answer"
+      >
+        {sources.map((source) => {
+          const isExternal = /^https?:\/\//i.test(source.href);
+          const accessibleSourceLabel = `Open ${source.title} from the portfolio`;
+          const sourceContent = (
+            <>
+              <span className="assistant-source-copy">
+                <span className="assistant-source-title">{source.title}</span>
+                {source.type && (
+                  <span className="assistant-source-type">{source.type}</span>
+                )}
+              </span>
+              {source.href && (
+                <span className="assistant-source-arrow" aria-hidden="true">
+                  {isExternal ? "↗" : "→"}
+                </span>
+              )}
+            </>
+          );
+
+          return (
+            <li key={source.key} className="assistant-source-item">
+              {source.href ? (
+                <a
+                  className="assistant-source-card"
+                  {...sourceLinkProps(source, onSourceClick)}
+                  aria-label={accessibleSourceLabel}
+                >
+                  {sourceContent}
+                </a>
+              ) : (
+                <span className="assistant-source-card">{sourceContent}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </details>
+  );
 }
 
 class ChatRequestError extends Error {
@@ -213,7 +304,7 @@ export default function PortfolioAssistant() {
   const inputFocusFrameRef = useRef(null);
   const sourceRevealCancelRef = useRef(null);
   const messageSequenceRef = useRef(0);
-  const streamFrameRef = useRef(null);
+  const streamTimerRef = useRef(null);
   const isFollowingRef = useRef(true);
   const mountedRef = useRef(false);
   const isLoading = activeAnswer !== null;
@@ -276,7 +367,7 @@ export default function PortfolioAssistant() {
       healthControllerRef.current?.abort();
       requestControllerRef.current?.abort();
       window.cancelAnimationFrame(inputFocusFrameRef.current);
-      window.cancelAnimationFrame(streamFrameRef.current);
+      window.clearTimeout(streamTimerRef.current);
     };
   }, [checkHealth]);
 
@@ -303,9 +394,7 @@ export default function PortfolioAssistant() {
 
       transcript.scrollTo({
         top: transcript.scrollHeight,
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
+        behavior: "auto",
       });
     });
 
@@ -351,6 +440,7 @@ export default function PortfolioAssistant() {
     let timeoutId;
     let deltaBuffer = "";
     let streamedSources = [];
+    let pendingCompletion = null;
 
     const armIdleTimeout = () => {
       window.clearTimeout(timeoutId);
@@ -360,53 +450,10 @@ export default function PortfolioAssistant() {
       }, REQUEST_TIMEOUT_MS);
     };
 
-    const flushDeltaBuffer = () => {
-      streamFrameRef.current = null;
-      if (!deltaBuffer || !mountedRef.current) return;
+    const finalizeAnswer = ({ answer, sources }) => {
+      if (!mountedRef.current) return;
 
-      const content = deltaBuffer;
-      deltaBuffer = "";
-      setActiveAnswer((current) =>
-        current?.id === assistantMessageId
-          ? {
-              ...current,
-              phase: "generating",
-              content: current.content + content,
-            }
-          : current,
-      );
-
-      window.requestAnimationFrame(() => {
-        const transcript = transcriptRef.current;
-        if (transcript && isFollowingRef.current) {
-          transcript.scrollTop = transcript.scrollHeight;
-        }
-      });
-    };
-
-    const queueDelta = (content) => {
-      if (!content) return;
-
-      deltaBuffer += content;
-      if (streamFrameRef.current === null) {
-        streamFrameRef.current = window.requestAnimationFrame(flushDeltaBuffer);
-      }
-    };
-
-    const completeAnswer = (data) => {
-      const answer = typeof data?.answer === "string" ? data.answer.trim() : "";
-      if (!answer) {
-        throw new Error("Chat response did not contain an answer");
-      }
-
-      didComplete = true;
-      window.cancelAnimationFrame(streamFrameRef.current);
-      streamFrameRef.current = null;
-      deltaBuffer = "";
-
-      const sources = normalizeSources(
-        Array.isArray(data?.sources) ? data.sources : streamedSources,
-      );
+      pendingCompletion = null;
       setMessages((current) => [
         ...current,
         {
@@ -417,7 +464,90 @@ export default function PortfolioAssistant() {
         },
       ]);
       setActiveAnswer(null);
-      setLiveStatus(`Answer ready. ${answer}`);
+      setLiveStatus(
+        `Answer ready. ${assistantAnswerForAnnouncement(answer)}`,
+      );
+    };
+
+    const scheduleStreamStep = (delayMs = 0) => {
+      if (streamTimerRef.current !== null) return;
+      streamTimerRef.current = window.setTimeout(flushDeltaBuffer, delayMs);
+    };
+
+    const flushDeltaBuffer = () => {
+      streamTimerRef.current = null;
+      if (!mountedRef.current) return;
+
+      if (!deltaBuffer) {
+        if (pendingCompletion) {
+          const completion = pendingCompletion;
+          streamTimerRef.current = window.setTimeout(() => {
+            streamTimerRef.current = null;
+            finalizeAnswer(completion);
+          }, 20);
+        }
+        return;
+      }
+
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const step = reducedMotion
+        ? { text: deltaBuffer, delayMs: 0 }
+        : nextAssistantStreamStep(deltaBuffer);
+      deltaBuffer = deltaBuffer.slice(step.text.length);
+      setActiveAnswer((current) =>
+        current?.id === assistantMessageId
+          ? {
+              ...current,
+              phase: "generating",
+              content: current.content + step.text,
+            }
+          : current,
+      );
+
+      window.requestAnimationFrame(() => {
+        const transcript = transcriptRef.current;
+        if (transcript && isFollowingRef.current) {
+          transcript.scrollTo({ top: transcript.scrollHeight, behavior: "auto" });
+        }
+      });
+
+      if (deltaBuffer) {
+        scheduleStreamStep(step.delayMs);
+      } else if (pendingCompletion) {
+        scheduleStreamStep(reducedMotion ? 0 : step.delayMs);
+      }
+    };
+
+    const queueDelta = (content) => {
+      if (!content) return;
+
+      deltaBuffer += content;
+      scheduleStreamStep();
+    };
+
+    const completeAnswer = (data, { smooth = false } = {}) => {
+      const answer = typeof data?.answer === "string" ? data.answer.trim() : "";
+      if (!answer) {
+        throw new Error("Chat response did not contain an answer");
+      }
+
+      didComplete = true;
+      const sources = normalizeSources(
+        Array.isArray(data?.sources) ? data.sources : streamedSources,
+      );
+      const completion = { answer, sources };
+
+      if (smooth) {
+        pendingCompletion = completion;
+        scheduleStreamStep();
+      } else {
+        window.clearTimeout(streamTimerRef.current);
+        streamTimerRef.current = null;
+        deltaBuffer = "";
+        finalizeAnswer(completion);
+      }
     };
 
     requestControllerRef.current = controller;
@@ -490,7 +620,7 @@ export default function PortfolioAssistant() {
           ) {
             queueDelta(event.content);
           } else if (event.type === "done") {
-            completeAnswer(event);
+            completeAnswer(event, { smooth: true });
           }
         });
 
@@ -507,9 +637,10 @@ export default function PortfolioAssistant() {
 
       const wasAborted = controller.signal.aborted;
       controller.abort();
-      window.cancelAnimationFrame(streamFrameRef.current);
-      streamFrameRef.current = null;
+      window.clearTimeout(streamTimerRef.current);
+      streamTimerRef.current = null;
       deltaBuffer = "";
+      pendingCompletion = null;
       setActiveAnswer(null);
       setMessages((current) =>
         current.filter(
@@ -572,6 +703,7 @@ export default function PortfolioAssistant() {
   const actionsAreDisabled = isLoading || assistantIsUnavailable;
   const canSubmit = question.trim().length > 0 && !actionsAreDisabled;
   const showSuggestions = messages.length === 0 && !isLoading;
+  const hasConversation = messages.length > 0 || isLoading;
 
   return (
     <section
@@ -579,158 +711,86 @@ export default function PortfolioAssistant() {
       className="assistant-section"
       aria-labelledby="assistant-title"
     >
-      <div className="assistant-shell">
-        <header className="assistant-intro">
-          <div className="assistant-intro-copy">
-            <p className="assistant-eyebrow">Portfolio chat</p>
-            <h2 id="assistant-title" className="assistant-title">
-              Ask about the work.
-            </h2>
-          </div>
-          <p className="assistant-description">
-            Ask about projects, professional work, research, or KTH courses.
-            Answers stay within this portfolio and link back to the relevant
-            records.
-          </p>
-        </header>
+      <div className="section-shell">
+        <SectionIntro
+          eyebrow="Portfolio Q&A"
+          title="Ask about the work."
+          titleId="assistant-title"
+          className="assistant-section-intro mb-8"
+        >
+          The project cards are the short version. Ask about projects,
+          technologies, results, research, or KTH courses, and the answer will
+          link back to the relevant parts of this page.
+        </SectionIntro>
 
+        <div
+          id="assistant-panel"
+          className="assistant-shell surface-card reveal"
+          data-conversation={hasConversation ? "true" : "false"}
+        >
         <div className="assistant-workspace">
-          <div
-            ref={transcriptRef}
-            className="assistant-transcript"
-            role="log"
-            aria-label="Portfolio assistant conversation"
-            aria-live="off"
-            aria-busy={isLoading}
-            data-empty={showSuggestions ? "true" : "false"}
-            onScroll={handleTranscriptScroll}
-          >
-            {showSuggestions && (
-              <div className="assistant-empty-state">
-                <div className="assistant-welcome">
-                  <span className="assistant-avatar" aria-hidden="true">
-                    LD
-                  </span>
-                  <div className="assistant-welcome-bubble">
-                    <p className="assistant-message-label">
-                      Portfolio assistant
-                    </p>
-                    <p className="assistant-empty-copy">
-                      Hi — what would you like to know about Linus&apos;s work or
-                      studies?
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {messages.map((message) => (
-              <article
-                key={message.id}
-                className={`assistant-message assistant-message-${message.role}`}
-              >
-                <p className="assistant-message-label">
-                  {message.role === "user" ? "You" : "Portfolio assistant"}
-                </p>
-                <p className="assistant-message-content">{message.content}</p>
-
-                {message.role === "assistant" && message.sources.length > 0 && (
-                  <div className="assistant-source-block">
-                    <p className="assistant-source-heading">Sources</p>
-                    <ul
-                      className="assistant-source-list"
-                      aria-label="Sources for this answer"
-                    >
-                      {message.sources.map((source, index) => {
-                        const citation = source.citation || `S${index + 1}`;
-                        const accessibleSourceLabel = [
-                          citation,
-                          source.type ? `${source.type} source` : "source",
-                          source.title,
-                        ].join(", ");
-                        const sourceContent = (
-                          <>
-                            <span className="assistant-source-number">
-                              {citation}
-                            </span>
-                            {source.type && (
-                              <span className="assistant-source-type">
-                                {source.type}
-                              </span>
-                            )}
-                            <span className="assistant-source-title">
-                              {source.title}
-                            </span>
-                          </>
-                        );
-
-                        return (
-                          <li
-                            key={source.key}
-                            className="assistant-source-item"
-                          >
-                            {source.href ? (
-                              <a
-                                className="assistant-source-chip"
-                                href={source.href}
-                                aria-label={accessibleSourceLabel}
-                                onClick={(event) =>
-                                  handleSourceClick(event, source.href)
-                                }
-                                target={
-                                  /^https?:\/\//i.test(source.href)
-                                    ? "_blank"
-                                    : undefined
-                                }
-                                rel={
-                                  /^https?:\/\//i.test(source.href)
-                                    ? "noopener noreferrer"
-                                    : undefined
-                                }
-                              >
-                                {sourceContent}
-                              </a>
-                            ) : (
-                              <span className="assistant-source-chip">
-                                {sourceContent}
-                              </span>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                )}
-              </article>
-            ))}
-
-            {isLoading && (
-              <article
-                className="assistant-message assistant-message-assistant assistant-message-streaming"
-                data-phase={activeAnswer.phase}
-                data-has-content={activeAnswer.content ? "true" : "false"}
-              >
-                <p className="assistant-message-label">Portfolio assistant</p>
-                {activeAnswer.content ? (
-                  <p className="assistant-message-content">
-                    {activeAnswer.content}
-                    <span className="assistant-stream-caret" aria-hidden="true" />
+          {hasConversation && (
+            <div
+              ref={transcriptRef}
+              className="assistant-transcript"
+              role="log"
+              aria-label="Portfolio assistant conversation"
+              aria-live="off"
+              aria-busy={isLoading}
+              onScroll={handleTranscriptScroll}
+            >
+              {messages.map((message) => (
+                <article
+                  key={message.id}
+                  className={`assistant-message assistant-message-${message.role}`}
+                >
+                  <p className="assistant-message-label">
+                    {message.role === "user" ? "You" : "Portfolio assistant"}
                   </p>
-                ) : (
-                  <div className="assistant-stream-status" aria-hidden="true">
-                    <span className="assistant-stream-pulse">
-                      <span />
-                      <span />
-                      <span />
-                    </span>
-                    <span className="assistant-stream-copy">
-                      {STREAM_STATUS}
-                    </span>
-                  </div>
-                )}
-              </article>
-            )}
-          </div>
+                  {message.role === "assistant" ? (
+                    <AssistantAnswer
+                      content={message.content}
+                    />
+                  ) : (
+                    <p className="assistant-message-content">{message.content}</p>
+                  )}
+
+                  {message.role === "assistant" && message.sources.length > 0 && (
+                    <AssistantSources
+                      sources={message.sources}
+                      onSourceClick={handleSourceClick}
+                    />
+                  )}
+                </article>
+              ))}
+
+              {isLoading && (
+                <article
+                  className="assistant-message assistant-message-assistant assistant-message-streaming"
+                  data-phase={activeAnswer.phase}
+                  data-has-content={activeAnswer.content ? "true" : "false"}
+                >
+                  <p className="assistant-message-label">Portfolio assistant</p>
+                  {activeAnswer.content ? (
+                    <AssistantAnswer
+                      content={activeAnswer.content}
+                    />
+                  ) : (
+                    <div className="assistant-stream-status" aria-hidden="true">
+                      <span className="assistant-stream-pulse">
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                      <span className="assistant-stream-copy">
+                        {STREAM_STATUS}
+                      </span>
+                    </div>
+                  )}
+                </article>
+              )}
+            </div>
+          )}
 
           {showSuggestions && (
             <div
@@ -830,8 +890,8 @@ export default function PortfolioAssistant() {
                 onKeyDown={handleQuestionKeyDown}
                 maxLength={MAX_ASSISTANT_QUESTION_CHARACTERS}
                 readOnly={isLoading}
-                rows={3}
-                placeholder="Ask about a project, course, method, or role…"
+                rows={2}
+                placeholder="Ask about a project, technology, result, or course…"
                 aria-describedby="assistant-question-help assistant-question-count"
               />
               <div className="assistant-form-meta">
@@ -851,6 +911,7 @@ export default function PortfolioAssistant() {
               </button>
             </fieldset>
           </form>
+        </div>
         </div>
       </div>
     </section>

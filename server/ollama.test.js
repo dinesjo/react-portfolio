@@ -18,9 +18,9 @@ import {
   askOllamaStream,
   createChatPayload,
   isOllamaConfigured,
+  normalizeAssistantMarkdown,
   normalizeCourseClaims,
   shouldNormalizeCourseAnswer,
-  toPlainText,
 } from "./ollama.js";
 
 function ndjsonResponse(records, chunkSize = 13) {
@@ -71,6 +71,18 @@ test("builds a configurable direct-cloud request with bounded generation", () =>
   assert.match(payload.messages[0].content, /arbetade med/i);
   assert.match(payload.messages[0].content, /listed in the portfolio/i);
   assert.match(payload.messages[0].content, /same language as the visitor/i);
+  assert.match(payload.messages[0].content, /restrained Markdown/i);
+  assert.match(payload.messages[0].content, /three or more comparable items/i);
+  assert.match(payload.messages[0].content, /citations outside bold text/i);
+  assert.match(
+    payload.messages[0].content,
+    /reasoning is not documented here/i,
+  );
+  assert.match(payload.messages[0].content, /do not speculate/i);
+  assert.match(
+    payload.messages[0].content,
+    /missing detail.*normal conversational boundary/i,
+  );
 });
 
 test("allows a caller to evaluate another Cloud model without changing context", () => {
@@ -165,12 +177,12 @@ test("reports API-key configuration without implying cloud availability", () => 
   assert.equal(isOllamaConfigured("configured-test-credential"), true);
 });
 
-test("normalizes common Markdown decoration into display-safe plain text", () => {
+test("preserves supported Markdown while removing unsupported decoration", () => {
   assert.equal(
-    toPlainText(
+    normalizeAssistantMarkdown(
       "## Answer\n**SnusKoll** uses `Blazor` with *React*【S1】 and Supabase [ S2 ].",
     ),
-    "Answer\nSnusKoll uses Blazor with React [S1] and Supabase [S2].",
+    "Answer\n**SnusKoll** uses Blazor with *React* [S1] and Supabase [S2].",
   );
 });
 
@@ -411,7 +423,7 @@ test("streams bounded plain-text answer deltas while hiding thinking", async () 
   });
 });
 
-test("buffers mixed-course streams until deterministic normalization", async () => {
+test("buffers and normalizes mixed-course answers before client smoothing", async () => {
   const deltas = [];
   const fetchImpl = async () =>
     ndjsonResponse([
@@ -453,11 +465,11 @@ test("buffers mixed-course streams until deterministic normalization", async () 
     fetchImpl,
   });
 
-  assert.ok(deltas.length > 1);
   const expectedAnswer = [
     "1. DD2459 – Software Reliability [S2]",
     "2. DD2395 – Computer Security — Systems security and threat modeling [S2]",
   ].join("\n");
+  assert.deepEqual(deltas, [expectedAnswer]);
   assert.equal(deltas.join(""), expectedAnswer);
   assert.equal(result.answer, expectedAnswer);
   assert.doesNotMatch(deltas.join(""), /invented detail/);

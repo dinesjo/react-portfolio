@@ -93,9 +93,16 @@ Safeguards remain explicit:
 - the system prompt requires source-level attribution, neutral wording for
   private work, exact course facts, same-language replies, and an explicit
   response when the portfolio does not contain an answer;
-- only records actually cited in the final answer become source links in the UI;
+- only records actually cited in the final answer appear as quiet, linked
+  portfolio entries inside a default-closed disclosure below it; citation
+  labels remain internal so the prose stays natural and uncluttered;
 - course questions are buffered for deterministic course-name normalization,
-  while project and general answers stream immediately.
+  while project and general answers stream immediately;
+- the browser buffers transport deltas and reveals complete words at an adaptive
+  cadence, so provider chunk sizes do not produce abrupt blocks of text;
+- assistant answers support constrained Markdown for emphasis and semantic
+  lists. Raw HTML is ignored, unsupported markup is unwrapped to text, and the
+  renderer is loaded only after a visitor starts a conversation.
 
 Ollama Cloud generation is configurable with server environment variables:
 

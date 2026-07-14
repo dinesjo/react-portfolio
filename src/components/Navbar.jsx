@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const navItems = [
   { id: "home", label: "Home" },
-  { id: "assistant", label: "Ask" },
   { id: "featured", label: "Work" },
   { id: "courses-carousel", label: "Study" },
   { id: "contact", label: "Contact" },
@@ -21,7 +20,7 @@ const allSections = [
 // Map sections to their nav parent
 const sectionToNav = {
   home: "home",
-  assistant: "assistant",
+  assistant: "courses-carousel",
   featured: "featured",
   "courses-carousel": "courses-carousel",
   projects: "featured",

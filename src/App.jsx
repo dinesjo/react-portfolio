@@ -68,10 +68,10 @@ export default function App() {
 
       <main>
         <Hero />
-        <PortfolioAssistant />
         <ProjectsGrid />
         <CoursesCarousel />
         <CoursesList />
+        <PortfolioAssistant />
         <Contact />
       </main>
 
