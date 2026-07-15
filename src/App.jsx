@@ -3,9 +3,8 @@ import { FaChevronUp } from "react-icons/fa";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import PortfolioAssistant from "./components/PortfolioAssistant";
-import CoursesCarousel from "./components/CoursesCarousel";
+import Coursework from "./components/Coursework";
 import ProjectsGrid from "./components/ProjectsGrid";
-import CoursesList from "./components/CoursesList";
 import Contact from "./components/Contact";
 
 export default function App() {
@@ -69,8 +68,7 @@ export default function App() {
       <main>
         <Hero />
         <ProjectsGrid />
-        <CoursesCarousel />
-        <CoursesList />
+        <Coursework />
         <PortfolioAssistant />
         <Contact />
       </main>

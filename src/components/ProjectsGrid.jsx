@@ -13,23 +13,20 @@ import {
 
 const priorityGroups = {
   1: {
-    eyebrow: "In detail",
     title: "Case studies",
     filteredTitle: "case studies",
     copy:
       "Projects with more detail about the problem, what I built, and the result.",
   },
   2: {
-    eyebrow: "Selected",
     title: "Selected projects",
     filteredTitle: "selected projects",
     copy:
       "Other projects from work, university, and my own time.",
   },
   3: {
-    eyebrow: "Older projects",
-    title: "Older projects",
-    filteredTitle: "older projects",
+    title: "Project archive",
+    filteredTitle: "project archive",
     copy:
       "Course projects, experiments, and apps I no longer maintain.",
   },
@@ -131,22 +128,27 @@ function PriorityGroupHeader({ filter, priority, count }) {
   const group = priorityGroups[priority];
 
   return (
-    <div className="work-group-header reveal">
+    <header className="collection-group-header reveal">
+      <span className="collection-group-index" aria-hidden="true">
+        {String(priority).padStart(2, "0")}
+      </span>
       <div>
-        <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--coral)]">
-          {group.eyebrow}
-        </p>
-        <h3 className="mt-2 font-montserrat text-2xl font-extrabold leading-tight text-slate-950 sm:text-3xl">
-          {getFilteredTitle(filter, priority)}
-        </h3>
-        <p className="section-copy mt-3 max-w-3xl text-sm sm:text-base">
+        <div className="collection-group-title-row">
+          <h3
+            id={`project-group-${priority}-title`}
+            className="collection-group-title"
+          >
+            {getFilteredTitle(filter, priority)}
+          </h3>
+          <span className="collection-group-count">
+            {count} {count === 1 ? "project" : "projects"}
+          </span>
+        </div>
+        <p className="collection-group-copy">
           {group.copy}
         </p>
       </div>
-      <span className="work-group-count">
-        {count} {count === 1 ? "project" : "projects"}
-      </span>
-    </div>
+    </header>
   );
 }
 
@@ -193,12 +195,12 @@ function CaseStudyCard({ project, index }) {
         <div className="priority-case-card__content flex flex-col justify-between p-6 sm:p-8">
           <div>
             <ProjectTags project={project} className="mb-5" />
-            <h3
+            <h4
               id={`project-${project.id}-title`}
               className="font-montserrat text-3xl font-extrabold leading-tight text-slate-950"
             >
               {project.title}
-            </h3>
+            </h4>
             <p className="section-copy mt-4">
               {project.featuredDescription || project.description}
             </p>
@@ -254,12 +256,12 @@ function SelectedProjectCard({ project, index }) {
       <div className="flex flex-1 flex-col p-5">
         <div className="project-card__heading mb-4 border-b pb-3">
           <div className="space-y-2">
-            <h3
+            <h4
               id={`project-${project.id}-title`}
               className="font-montserrat text-lg font-extrabold leading-tight text-slate-950"
             >
               {project.title}
-            </h3>
+            </h4>
             <span className="block text-left text-[0.66rem] font-semibold uppercase leading-snug tracking-[0.08em] text-slate-500">
               {project.date}
             </span>
@@ -305,12 +307,12 @@ function ArchiveProjectCard({ project }) {
       <div className="flex min-w-0 flex-col p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3
+            <h4
               id={`project-${project.id}-title`}
               className="font-montserrat text-base font-extrabold leading-tight text-slate-950"
             >
               {project.title}
-            </h3>
+            </h4>
             <p className="archive-card__meta mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-slate-500">
               {project.context} · {project.category} · {project.date}
             </p>
@@ -376,7 +378,7 @@ export default function ProjectsGrid() {
           made in my own time. Use the filters to narrow the list.
         </SectionIntro>
 
-        <div className="mb-10 reveal">
+        <div className="mb-8 reveal">
           <div className="flex flex-wrap gap-2">
             {projectContexts.map((context) => (
               <button
@@ -394,55 +396,106 @@ export default function ProjectsGrid() {
               </button>
             ))}
           </div>
-
         </div>
 
-        {grouped[1].length > 0 && (
-          <div className="work-priority-group">
-            <PriorityGroupHeader filter={filter} priority={1} count={grouped[1].length} />
-            <div className="space-y-8">
-              {grouped[1].map((project, index) => (
-                <CaseStudyCard key={`${filter}-${project.id}`} project={project} index={index} />
-              ))}
+        <div id="projects" className="content-collection work-collection">
+          <div className="collection-overview reveal" aria-live="polite">
+            <div>
+              <p className="collection-overview__label">Project collection</p>
+              <p className="collection-overview__context">
+                {filter === "All"
+                  ? "Showing university, professional, and personal work"
+                  : `Showing ${filter.toLowerCase()} work`}
+              </p>
+            </div>
+            <div className="collection-overview__stats" aria-label="Project summary">
+              <span>{grouped[1].length} detailed</span>
+              <span>{grouped[2].length} selected</span>
+              <span>{grouped[3].length} archived</span>
             </div>
           </div>
-        )}
 
-        {grouped[2].length > 0 && (
-          <div id="projects" className="work-priority-group">
-            <PriorityGroupHeader filter={filter} priority={2} count={grouped[2].length} />
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {grouped[2].map((project, index) => (
-                <SelectedProjectCard key={`${filter}-${project.id}`} project={project} index={index} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {grouped[3].length > 0 && (
-          <div className="work-priority-group">
-            <PriorityGroupHeader filter={filter} priority={3} count={grouped[3].length} />
-            <details className="archive-disclosure">
-              <summary className="archive-disclosure__summary">
-                <span className="archive-disclosure__lead">
-                  <span className="archive-disclosure__lead-title">Project archive</span>
-                  <span className="archive-disclosure__lead-count">
-                    {grouped[3].length} older {grouped[3].length === 1 ? "project" : "projects"}
-                  </span>
-                </span>
-                <span className="archive-disclosure__action">
-                  <span className="disclosure-action__closed">Show older projects</span>
-                  <span className="disclosure-action__open">Hide older projects</span>
-                </span>
-              </summary>
-              <div className="archive-disclosure__list">
-                {grouped[3].map((project) => (
-                  <ArchiveProjectCard key={`${filter}-${project.id}`} project={project} />
+          {grouped[1].length > 0 && (
+            <section
+              className="collection-group"
+              aria-labelledby="project-group-1-title"
+            >
+              <PriorityGroupHeader
+                filter={filter}
+                priority={1}
+                count={grouped[1].length}
+              />
+              <div className="space-y-8">
+                {grouped[1].map((project, index) => (
+                  <CaseStudyCard
+                    key={`${filter}-${project.id}`}
+                    project={project}
+                    index={index}
+                  />
                 ))}
               </div>
-            </details>
-          </div>
-        )}
+            </section>
+          )}
+
+          {grouped[2].length > 0 && (
+            <section
+              className="collection-group"
+              aria-labelledby="project-group-2-title"
+            >
+              <PriorityGroupHeader
+                filter={filter}
+                priority={2}
+                count={grouped[2].length}
+              />
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {grouped[2].map((project, index) => (
+                  <SelectedProjectCard
+                    key={`${filter}-${project.id}`}
+                    project={project}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {grouped[3].length > 0 && (
+            <section
+              className="collection-group"
+              aria-labelledby="project-group-3-title"
+            >
+              <PriorityGroupHeader
+                filter={filter}
+                priority={3}
+                count={grouped[3].length}
+              />
+              <details className="archive-disclosure reveal">
+                <summary className="archive-disclosure__summary">
+                  <span className="archive-disclosure__lead">
+                    <span className="archive-disclosure__lead-title">
+                      Browse {grouped[3].length} earlier {grouped[3].length === 1 ? "project" : "projects"}
+                    </span>
+                    <span className="archive-disclosure__lead-count">
+                      Kept here for reference
+                    </span>
+                  </span>
+                  <span className="archive-disclosure__action">
+                    <span className="disclosure-action__closed">Open archive</span>
+                    <span className="disclosure-action__open">Close archive</span>
+                  </span>
+                </summary>
+                <div className="archive-disclosure__list">
+                  {grouped[3].map((project) => (
+                    <ArchiveProjectCard
+                      key={`${filter}-${project.id}`}
+                      project={project}
+                    />
+                  ))}
+                </div>
+              </details>
+            </section>
+          )}
+        </div>
       </div>
     </section>
   );
