@@ -155,7 +155,7 @@ export const projectRecords = [
     id: "vim",
     title: "Interactive Vim Motions Guide",
     description:
-      "Desktop-first Vim trainer with an interactive keyboard, command stream, mini editor, operators, text objects, and normal/shift/control command hints.",
+      "Interactive browser-based Vim trainer with a real CodeMirror editing buffer, visual command guidance, guided examples, and syntax-aware playgrounds for eight languages.",
     technologies: ["HTML", "CSS", "JavaScript"],
     methods: ["Keyboard training", "Developer education"],
     category: "Web",
