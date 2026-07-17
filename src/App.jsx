@@ -14,7 +14,7 @@ export default function App() {
   useEffect(() => {
     const revealImmediately = () => {
       document.querySelectorAll(".reveal").forEach((element) => {
-        element.classList.add("revealed");
+        element.classList.add("revealed", "reveal-complete");
       });
     };
 
@@ -31,7 +31,6 @@ export default function App() {
     const focusResetTimers = new Set();
 
     let observer;
-    let observeFrame = 0;
 
     const revealElement = (element) => {
       element.classList.add("revealed");
@@ -53,35 +52,72 @@ export default function App() {
       }
     );
 
-    const observe = () => {
-      observedElements.forEach((element) => {
-        if (!element.isConnected || element.classList.contains("revealed")) {
-          observer.unobserve(element);
-          observedElements.delete(element);
-        }
-      });
+    const observeReveal = (element) => {
+      if (
+        element.classList.contains("revealed") ||
+        observedElements.has(element)
+      ) {
+        return;
+      }
 
-      document.querySelectorAll(".reveal:not(.revealed)").forEach((el) => {
-        if (observedElements.has(el)) return;
-        observer.observe(el);
-        observedElements.add(el);
-      });
+      observer.observe(element);
+      observedElements.add(element);
     };
 
-    const scheduleObserve = () => {
-      if (observeFrame) return;
-      observeFrame = window.requestAnimationFrame(() => {
-        observeFrame = 0;
-        observe();
+    const visitRevealSubtree = (node, callback) => {
+      if (!(node instanceof Element)) return;
+
+      if (node.matches(".reveal")) callback(node);
+      node.querySelectorAll(".reveal").forEach(callback);
+    };
+
+    const mutationObserver = new MutationObserver((records) => {
+      records.forEach((record) => {
+        record.addedNodes.forEach((node) => {
+          visitRevealSubtree(node, observeReveal);
+        });
+        record.removedNodes.forEach((node) => {
+          visitRevealSubtree(node, (element) => {
+            if (!observedElements.has(element)) return;
+            observer.unobserve(element);
+            observedElements.delete(element);
+          });
+        });
       });
+    });
+
+    const completeReveal = (event) => {
+      if (event.animationName === "hero-portrait-settle") {
+        event.target
+          ?.closest?.(".hero-section")
+          ?.classList.add("hero-motion-complete");
+        return;
+      }
+
+      if (
+        event.animationName !== "reveal-cover-sweep" &&
+        event.animationName !== "case-study-media-sweep"
+      ) {
+        return;
+      }
+
+      const element = event.target?.closest?.(".reveal");
+      if (element?.classList.contains("revealed")) {
+        element.classList.add("reveal-complete");
+      }
     };
 
     const revealOnFocus = (event) => {
-      const element = event.target?.closest?.(".reveal");
-      if (!element || element.classList.contains("revealed")) return;
+      event.target
+        ?.closest?.(".hero-section")
+        ?.classList.add("hero-motion-complete");
 
-      element.classList.add("reveal-without-motion");
-      revealElement(element);
+      const element = event.target?.closest?.(".reveal");
+      if (!element || element.classList.contains("reveal-complete")) return;
+
+      const alreadyRevealed = element.classList.contains("revealed");
+      element.classList.add("reveal-without-motion", "reveal-complete");
+      if (!alreadyRevealed) revealElement(element);
 
       const timer = window.setTimeout(() => {
         element.classList.remove("reveal-without-motion");
@@ -90,17 +126,17 @@ export default function App() {
       focusResetTimers.add(timer);
     };
 
-    observe();
-    const timer = window.setTimeout(scheduleObserve, 200);
-    const mutationObserver = new MutationObserver(scheduleObserve);
+    document.querySelectorAll(".reveal").forEach(observeReveal);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("animationend", completeReveal, true);
+    document.addEventListener("animationcancel", completeReveal, true);
     document.addEventListener("focusin", revealOnFocus);
 
     return () => {
-      window.clearTimeout(timer);
-      window.cancelAnimationFrame(observeFrame);
       focusResetTimers.forEach((focusTimer) => window.clearTimeout(focusTimer));
       mutationObserver.disconnect();
+      document.removeEventListener("animationend", completeReveal, true);
+      document.removeEventListener("animationcancel", completeReveal, true);
       document.removeEventListener("focusin", revealOnFocus);
       observer.disconnect();
       observedElements.clear();
@@ -109,9 +145,29 @@ export default function App() {
 
   // Show scroll-to-top button
   useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 500);
+    let animationFrame = 0;
+    let isVisible = window.scrollY > 500;
+    setShowTop(isVisible);
+
+    const updateVisibility = () => {
+      animationFrame = 0;
+      const nextVisible = window.scrollY > 500;
+      if (nextVisible === isVisible) return;
+
+      isVisible = nextVisible;
+      setShowTop(nextVisible);
+    };
+
+    const onScroll = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateVisibility);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (

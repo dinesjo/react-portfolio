@@ -17,9 +17,11 @@ export default function Hero() {
           </span>
           <h1
             id="home-title"
-            className="section-title hero-title hero-sequence-step hero-sequence-step--title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
+            className="section-title hero-title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
           >
-            {profile.name}
+            <span className="hero-title__text hero-sequence-step hero-sequence-step--title">
+              {profile.name}
+            </span>
           </h1>
           <p className="hero-thesis hero-sequence-step hero-sequence-step--thesis mt-6 max-w-2xl font-montserrat text-xl font-bold leading-snug text-slate-950 sm:text-2xl">
             {profile.headline}

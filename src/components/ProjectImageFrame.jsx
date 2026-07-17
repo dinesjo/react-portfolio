@@ -227,7 +227,7 @@ export default function ProjectImageFrame({
             setActiveImage(0);
             setIsOpen(true);
           }}
-          className="work-image-trigger group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--coral)] focus-visible:ring-offset-2"
+          className="work-image-trigger group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--coral)]"
         >
           <img
             ref={previewImageRef}

@@ -50,8 +50,14 @@ export default function Navbar() {
   }, [activeIndex]);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
+    let animationFrame = 0;
+
+    const updateFromScroll = () => {
+      animationFrame = 0;
+      const nextScrolled = window.scrollY > 20;
+      setScrolled((previous) =>
+        previous === nextScrolled ? previous : nextScrolled,
+      );
 
       let current = "home";
       let maxVis = 0;
@@ -67,14 +73,24 @@ export default function Navbar() {
           current = id;
         }
       }
-      const isAtPageEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8;
+      const isAtPageEnd =
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 8;
       const next = isAtPageEnd ? "contact" : sectionToNav[current] || current;
       setActive((prev) => (prev === next ? prev : next));
     };
 
+    const onScroll = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateFromScroll);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    updateFromScroll();
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -139,22 +155,25 @@ export default function Navbar() {
           }}
         />
         {navItems.map((item) => (
-        <button
-          key={item.id}
-          type="button"
-          ref={(node) => {
-            navRefs.current[navItems.findIndex((navItem) => navItem.id === item.id)] = node;
-          }}
-          onClick={() => scrollTo(item.id)}
-          aria-current={active === item.id ? "location" : undefined}
-          className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
-            active === item.id
-              ? "text-white"
-              : "text-slate-500 hover:text-slate-950"
-          }`}
-        >
-          {item.label}
-        </button>
+          <button
+            key={item.id}
+            type="button"
+            ref={(node) => {
+              const index = navItems.findIndex(
+                (navItem) => navItem.id === item.id,
+              );
+              navRefs.current[index] = node;
+            }}
+            onClick={() => scrollTo(item.id)}
+            aria-current={active === item.id ? "location" : undefined}
+            className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
+              active === item.id
+                ? "text-white"
+                : "text-slate-500 hover:text-slate-950"
+            }`}
+          >
+            {item.label}
+          </button>
         ))}
       </div>
     </nav>

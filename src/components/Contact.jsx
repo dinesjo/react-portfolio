@@ -51,7 +51,7 @@ export default function Contact() {
       <div className="section-shell">
         <div
           className="surface-card contact-panel reveal grid overflow-hidden lg:grid-cols-[0.85fr_1.15fr]"
-          data-reveal="panel"
+          data-reveal="trace"
         >
           <div className="border-b border-slate-200/60 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:border-slate-200/60">
             <SectionIntro

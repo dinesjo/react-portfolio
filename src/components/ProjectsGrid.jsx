@@ -129,7 +129,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
   const group = priorityGroups[priority];
 
   return (
-    <header className="collection-group-header reveal" data-reveal="left">
+    <header className="collection-group-header reveal" data-reveal="trace">
       <span className="collection-group-index" aria-hidden="true">
         {String(priority).padStart(2, "0")}
       </span>
@@ -167,7 +167,7 @@ function CaseStudyCard({ project, index }) {
           ? "priority-case-card--text-left"
           : "priority-case-card--text-right"
       }`}
-      data-reveal={index % 2 === 1 ? "right" : "left"}
+      data-reveal="case-study"
       style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <div className={`grid lg:grid-cols-[1.03fr_0.97fr] ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
@@ -245,7 +245,7 @@ function SelectedProjectCard({ project }) {
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
       className="surface-card project-card group reveal flex flex-col overflow-hidden rounded-lg"
-      data-reveal="lift"
+      data-reveal="trace"
       style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <ProjectImageFrame
@@ -377,7 +377,7 @@ export default function ProjectsGrid() {
     const updateFilter = () => {
       flushSync(() => setFilter(nextFilter));
       document.querySelectorAll("#projects .reveal").forEach((element) => {
-        element.classList.add("revealed");
+        element.classList.add("revealed", "reveal-complete");
       });
     };
 
@@ -406,7 +406,7 @@ export default function ProjectsGrid() {
           made in my own time. Use the filters to narrow the list.
         </SectionIntro>
 
-        <div className="project-filters mb-8 reveal" data-reveal="left">
+        <div className="project-filters mb-8 reveal" data-reveal="trace">
           <div className="flex flex-wrap gap-2">
             {projectContexts.map((context) => (
               <button
@@ -429,7 +429,7 @@ export default function ProjectsGrid() {
         <div id="projects" className="content-collection work-collection">
           <div
             className="collection-overview reveal"
-            data-reveal="right"
+            data-reveal="trace"
             aria-live="polite"
             style={{ viewTransitionName: "project-overview" }}
           >
@@ -501,7 +501,7 @@ export default function ProjectsGrid() {
                 priority={3}
                 count={grouped[3].length}
               />
-              <details className="archive-disclosure reveal" data-reveal="lift">
+              <details className="archive-disclosure reveal" data-reveal="trace">
                 <summary className="archive-disclosure__summary">
                   <span className="archive-disclosure__lead">
                     <span className="archive-disclosure__lead-title">
