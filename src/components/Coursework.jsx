@@ -27,7 +27,7 @@ export default function Coursework() {
         </SectionIntro>
 
         <div className="content-collection coursework-collection">
-          <div className="collection-overview reveal">
+          <div className="collection-overview reveal" data-reveal="right">
             <div>
               <p className="collection-overview__label">Coursework collection</p>
               <p className="collection-overview__context">
@@ -44,7 +44,7 @@ export default function Coursework() {
             className="collection-group"
             aria-labelledby="highlighted-coursework-title"
           >
-            <header className="collection-group-header reveal">
+            <header className="collection-group-header reveal" data-reveal="left">
               <span className="collection-group-index" aria-hidden="true">
                 01
               </span>
@@ -67,11 +67,12 @@ export default function Coursework() {
               </div>
             </header>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="reveal-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {featuredCourses.map((course) => (
                 <article
                   key={course.code}
                   className="surface-card course-card reveal p-5"
+                  data-reveal="lift"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <span className="course-card-code border px-2.5 py-1 font-iceland text-base font-bold">
@@ -95,7 +96,7 @@ export default function Coursework() {
             className="collection-group"
             aria-labelledby="course-record-title"
           >
-            <header className="collection-group-header reveal">
+            <header className="collection-group-header reveal" data-reveal="left">
               <span className="collection-group-index" aria-hidden="true">
                 02
               </span>
@@ -112,7 +113,7 @@ export default function Coursework() {
               </div>
             </header>
 
-            <details className="course-record reveal">
+            <details className="course-record reveal" data-reveal="lift">
               <summary className="course-record__summary">
                 <span className="course-record__lead">
                   <span className="course-record__lead-title">

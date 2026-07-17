@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { projects, projectContexts } from "../data/projects";
 import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
@@ -128,7 +129,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
   const group = priorityGroups[priority];
 
   return (
-    <header className="collection-group-header reveal">
+    <header className="collection-group-header reveal" data-reveal="left">
       <span className="collection-group-index" aria-hidden="true">
         {String(priority).padStart(2, "0")}
       </span>
@@ -166,12 +167,14 @@ function CaseStudyCard({ project, index }) {
           ? "priority-case-card--text-left"
           : "priority-case-card--text-right"
       }`}
+      data-reveal={index % 2 === 1 ? "right" : "left"}
+      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <div className={`grid lg:grid-cols-[1.03fr_0.97fr] ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
-          frameClassName="min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
+          frameClassName="case-study-media min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
           imageClassName="h-full min-h-72 w-full object-cover"
           imageSizes="(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
         >
@@ -235,14 +238,15 @@ function CaseStudyCard({ project, index }) {
   );
 }
 
-function SelectedProjectCard({ project, index }) {
+function SelectedProjectCard({ project }) {
   return (
     <article
       id={`project-${project.id}`}
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
-      className="surface-card project-card group flex flex-col overflow-hidden rounded-lg"
-      style={{ animationDelay: `${index * 0.045}s` }}
+      className="surface-card project-card group reveal flex flex-col overflow-hidden rounded-lg"
+      data-reveal="lift"
+      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <ProjectImageFrame
         project={project}
@@ -296,6 +300,7 @@ function ArchiveProjectCard({ project }) {
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
       className="archive-card group grid overflow-hidden sm:grid-cols-[11.5rem_1fr] lg:grid-cols-[13rem_1fr]"
+      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <ProjectImageFrame
         project={project}
@@ -366,6 +371,29 @@ export default function ProjectsGrid() {
     [filtered]
   );
 
+  const changeFilter = (nextFilter) => {
+    if (nextFilter === filter) return;
+
+    const updateFilter = () => {
+      flushSync(() => setFilter(nextFilter));
+      document.querySelectorAll("#projects .reveal").forEach((element) => {
+        element.classList.add("revealed");
+      });
+    };
+
+    const canUseViewTransition =
+      typeof document.startViewTransition === "function" &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!canUseViewTransition) {
+      setFilter(nextFilter);
+      return;
+    }
+
+    const transition = document.startViewTransition(updateFilter);
+    transition.ready.catch(() => undefined);
+  };
+
   return (
     <section id="featured" className="pb-20 pt-24">
       <div className="section-shell">
@@ -378,14 +406,14 @@ export default function ProjectsGrid() {
           made in my own time. Use the filters to narrow the list.
         </SectionIntro>
 
-        <div className="mb-8 reveal">
+        <div className="project-filters mb-8 reveal" data-reveal="left">
           <div className="flex flex-wrap gap-2">
             {projectContexts.map((context) => (
               <button
                 key={context}
                 type="button"
                 aria-pressed={filter === context}
-                onClick={() => setFilter(context)}
+                onClick={() => changeFilter(context)}
                 className={`filter-pill border px-4 py-2 font-montserrat text-sm font-bold transition-all duration-200 ${
                   filter === context
                     ? "border-slate-950 bg-slate-950 text-white"
@@ -399,7 +427,12 @@ export default function ProjectsGrid() {
         </div>
 
         <div id="projects" className="content-collection work-collection">
-          <div className="collection-overview reveal" aria-live="polite">
+          <div
+            className="collection-overview reveal"
+            data-reveal="right"
+            aria-live="polite"
+            style={{ viewTransitionName: "project-overview" }}
+          >
             <div>
               <p className="collection-overview__label">Project collection</p>
               <p className="collection-overview__context">
@@ -428,7 +461,7 @@ export default function ProjectsGrid() {
               <div className="space-y-8">
                 {grouped[1].map((project, index) => (
                   <CaseStudyCard
-                    key={`${filter}-${project.id}`}
+                    key={project.id}
                     project={project}
                     index={index}
                   />
@@ -447,12 +480,11 @@ export default function ProjectsGrid() {
                 priority={2}
                 count={grouped[2].length}
               />
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {grouped[2].map((project, index) => (
+              <div className="reveal-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {grouped[2].map((project) => (
                   <SelectedProjectCard
-                    key={`${filter}-${project.id}`}
+                    key={project.id}
                     project={project}
-                    index={index}
                   />
                 ))}
               </div>
@@ -469,7 +501,7 @@ export default function ProjectsGrid() {
                 priority={3}
                 count={grouped[3].length}
               />
-              <details className="archive-disclosure reveal">
+              <details className="archive-disclosure reveal" data-reveal="lift">
                 <summary className="archive-disclosure__summary">
                   <span className="archive-disclosure__lead">
                     <span className="archive-disclosure__lead-title">
@@ -487,7 +519,7 @@ export default function ProjectsGrid() {
                 <div className="archive-disclosure__list">
                   {grouped[3].map((project) => (
                     <ArchiveProjectCard
-                      key={`${filter}-${project.id}`}
+                      key={project.id}
                       project={project}
                     />
                   ))}

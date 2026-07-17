@@ -11,22 +11,24 @@ export default function Hero() {
       className="hero-section relative px-6 pb-16 pt-32 sm:pt-40"
     >
       <div className="section-shell hero-layout grid items-center gap-12 lg:grid-cols-[1.12fr_0.88fr]">
-        <div className="hero-copy animate-fade-up">
-          <span className="section-eyebrow">{profile.role}</span>
+        <div className="hero-copy">
+          <span className="section-eyebrow hero-sequence-step hero-sequence-step--kicker">
+            {profile.role}
+          </span>
           <h1
             id="home-title"
-            className="section-title hero-title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
+            className="section-title hero-title hero-sequence-step hero-sequence-step--title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
           >
             {profile.name}
           </h1>
-          <p className="hero-thesis mt-6 max-w-2xl font-montserrat text-xl font-bold leading-snug text-slate-950 sm:text-2xl">
+          <p className="hero-thesis hero-sequence-step hero-sequence-step--thesis mt-6 max-w-2xl font-montserrat text-xl font-bold leading-snug text-slate-950 sm:text-2xl">
             {profile.headline}
           </p>
-          <p className="section-copy mt-4 max-w-2xl text-base sm:text-lg">
+          <p className="section-copy hero-sequence-step hero-sequence-step--summary mt-4 max-w-2xl text-base sm:text-lg">
             {profile.summary}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="hero-actions hero-sequence-step hero-sequence-step--actions mt-8 flex flex-wrap gap-3">
             <button
               onClick={() => {
                 const el = document.getElementById("featured");
@@ -51,7 +53,7 @@ export default function Hero() {
             </a>
           </div>
 
-          <dl className="hero-facts mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
+          <dl className="hero-facts hero-sequence-step hero-sequence-step--facts mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
             {profile.facts.map(({ label, value }) => (
               <div key={label} className="hero-stat border-l-2 pl-3">
                 <dt className="font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
@@ -64,8 +66,7 @@ export default function Hero() {
         </div>
 
         <aside
-          className="surface-card hero-brief-card animate-fade-up overflow-hidden"
-          style={{ animationDelay: "0.15s" }}
+          className="surface-card hero-brief-card hero-card-enter overflow-hidden"
         >
           <div className="hero-brief-card__header border-b border-slate-200/60 bg-white/90">
             <div className="p-4 sm:p-5">

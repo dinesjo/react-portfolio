@@ -12,35 +12,98 @@ export default function App() {
 
   // Scroll-based reveal using IntersectionObserver
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const revealImmediately = () => {
+      document.querySelectorAll(".reveal").forEach((element) => {
+        element.classList.add("revealed");
+      });
+    };
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (!("IntersectionObserver" in window) || reducedMotion) {
+      revealImmediately();
+      return undefined;
+    }
+
+    const observedElements = new Set();
+    const focusResetTimers = new Set();
+
+    let observer;
+    let observeFrame = 0;
+
+    const revealElement = (element) => {
+      element.classList.add("revealed");
+      observer.unobserve(element);
+      observedElements.delete(element);
+    };
+
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
+            revealElement(entry.target);
           }
         });
       },
       {
-        threshold: 0.08,
-        rootMargin: "0px 0px -40px 0px",
+        threshold: 0.06,
+        rootMargin: "0px 0px -16px 0px",
       }
     );
 
     const observe = () => {
+      observedElements.forEach((element) => {
+        if (!element.isConnected || element.classList.contains("revealed")) {
+          observer.unobserve(element);
+          observedElements.delete(element);
+        }
+      });
+
       document.querySelectorAll(".reveal:not(.revealed)").forEach((el) => {
+        if (observedElements.has(el)) return;
         observer.observe(el);
+        observedElements.add(el);
       });
     };
 
+    const scheduleObserve = () => {
+      if (observeFrame) return;
+      observeFrame = window.requestAnimationFrame(() => {
+        observeFrame = 0;
+        observe();
+      });
+    };
+
+    const revealOnFocus = (event) => {
+      const element = event.target?.closest?.(".reveal");
+      if (!element || element.classList.contains("revealed")) return;
+
+      element.classList.add("reveal-without-motion");
+      revealElement(element);
+
+      const timer = window.setTimeout(() => {
+        element.classList.remove("reveal-without-motion");
+        focusResetTimers.delete(timer);
+      }, 50);
+      focusResetTimers.add(timer);
+    };
+
     observe();
-    const timer = setTimeout(observe, 200);
-    const mutationObserver = new MutationObserver(observe);
+    const timer = window.setTimeout(scheduleObserve, 200);
+    const mutationObserver = new MutationObserver(scheduleObserve);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("focusin", revealOnFocus);
 
     return () => {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(observeFrame);
+      focusResetTimers.forEach((focusTimer) => window.clearTimeout(focusTimer));
       mutationObserver.disconnect();
+      document.removeEventListener("focusin", revealOnFocus);
       observer.disconnect();
+      observedElements.clear();
     };
   }, []);
 

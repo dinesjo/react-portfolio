@@ -726,6 +726,7 @@ export default function PortfolioAssistant() {
         <div
           id="assistant-panel"
           className="assistant-shell surface-card reveal"
+          data-reveal="panel"
           data-conversation={hasConversation ? "true" : "false"}
         >
         <div className="assistant-workspace">
