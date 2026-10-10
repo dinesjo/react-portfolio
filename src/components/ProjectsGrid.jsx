@@ -36,14 +36,14 @@ const priorityGroups = {
 const overlayStyles = {
   light: {
     container:
-      "project-image-label project-image-label--light border-white/70 bg-[var(--paper-strong)]/95 text-slate-950",
+      "project-image-label project-image-label--light border-white/70 bg-[var(--paper-strong)] text-slate-950",
     label: "text-slate-600",
     icon: "bg-white/80",
   },
   dark: {
     container:
-      "project-image-label project-image-label--dark border-white/20 bg-[var(--ink)]/94 text-white",
-    label: "text-white/60",
+      "project-image-label project-image-label--dark border-white/20 bg-[var(--ink)] text-white",
+    label: "text-slate-200",
     icon: "bg-white/95",
   },
 };
@@ -174,7 +174,7 @@ function CaseStudyCard({ project, index }) {
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
-          frameClassName="case-study-media min-h-72 overflow-hidden border-b border-slate-200/30 bg-slate-900 lg:border-b-0"
+          frameClassName={`case-study-media ${project.category === "Research" ? "case-study-media--research" : "bg-slate-900"} min-h-72 overflow-hidden border-b border-slate-200/30 lg:border-b-0`}
           imageClassName="h-full min-h-72 w-full object-cover"
           imageSizes="(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
         >
@@ -254,7 +254,7 @@ function SelectedProjectCard({ project }) {
         imageClassName="h-full w-full object-cover"
         imageSizes="(min-width: 1180px) 382px, (min-width: 1024px) 31vw, (min-width: 640px) 50vw, calc(100vw - 48px)"
       >
-        <ProjectTags project={project} className="absolute left-3 top-3 max-w-[calc(100%-4rem)]" />
+        <ProjectTags project={project} className="absolute left-3 top-3 max-w-[calc(100%-5rem)]" />
       </ProjectImageFrame>
 
       <div className="flex flex-1 flex-col p-5">
@@ -395,18 +395,17 @@ export default function ProjectsGrid() {
   };
 
   return (
-    <section id="featured" className="pb-20 pt-24">
+    <section id="featured" className="pb-20 pt-8">
       <div className="section-shell">
         <SectionIntro
           eyebrow="Projects"
           title="Things I&rsquo;ve built."
-          className="mb-10"
+          className="mb-5"
         >
-          This includes university research, work projects, and things I have
-          made in my own time. Use the filters to narrow the list.
+          Research, professional tools, and personal apps. Explore the work below.
         </SectionIntro>
 
-        <div className="project-filters mb-8 reveal" data-reveal="trace">
+        <div className="project-filters mb-4 reveal" data-reveal="trace">
           <div className="flex flex-wrap gap-2">
             {projectContexts.map((context) => (
               <button
@@ -427,26 +426,9 @@ export default function ProjectsGrid() {
         </div>
 
         <div id="projects" className="content-collection work-collection">
-          <div
-            className="collection-overview reveal"
-            data-reveal="trace"
-            aria-live="polite"
-            style={{ viewTransitionName: "project-overview" }}
-          >
-            <div>
-              <p className="collection-overview__label">Project collection</p>
-              <p className="collection-overview__context">
-                {filter === "All"
-                  ? "Showing university, professional, and personal work"
-                  : `Showing ${filter.toLowerCase()} work`}
-              </p>
-            </div>
-            <div className="collection-overview__stats" aria-label="Project summary">
-              <span>{grouped[1].length} detailed</span>
-              <span>{grouped[2].length} selected</span>
-              <span>{grouped[3].length} archived</span>
-            </div>
-          </div>
+          <p className="sr-only" role="status">
+            {filtered.length} {filter === "All" ? "" : `${filter.toLowerCase()} `}projects
+          </p>
 
           {grouped[1].length > 0 && (
             <section

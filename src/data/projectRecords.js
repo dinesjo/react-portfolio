@@ -64,7 +64,7 @@ export const projectRecords = [
     id: "bibellandskap",
     title: "Bible Map",
     description:
-      "An English-language Bible atlas using MapLibre and OpenBible data to explore 1,309 biblical places, with search, filters, verse references, confidence bands, and modern identifications.",
+      "English-first Bible atlas built with MapLibre and pinned OpenBible data, mapping 1,309 ancient places across shareable Atlas, Relief, and Satellite views with search, routes, verse references, confidence bands, and modern identifications.",
     technologies: ["JavaScript", "MapLibre", "HTML", "CSS"],
     methods: ["Interactive maps", "Biblical geography", "Search and filtering"],
     category: "Web",
@@ -138,7 +138,7 @@ export const projectRecords = [
     id: "drone",
     title: "3D Drone Relief Software",
     description:
-      "KTH team project for I-CONIC: a C++/wxWidgets measurement tool for images with hidden depth maps, turning video-derived 3D model data into distance, height, area, and volume checks.",
+      "KTH team project for I-CONIC: a C++/wxWidgets desktop tool that combines images, hidden depth maps, and camera data to recover 3D coordinates and measure length, perimeter, area, and volume.",
     technologies: ["C++", "wxWidgets"],
     methods: ["3D measurement", "Depth maps"],
     category: "Desktop",
@@ -164,7 +164,7 @@ export const projectRecords = [
       live: "https://vim.dinesjo.se/",
       github: "https://github.com/dinesjo/vim-motions",
     },
-    date: "August 2025",
+    date: "July 2025 - Present",
     priority: 2,
   },
   {
@@ -187,7 +187,7 @@ export const projectRecords = [
     id: "pathvis-react",
     title: "React Pathfinding Visualization",
     description:
-      "React and Joy UI pathfinding playground for drawing obstacles and comparing Dijkstra and A* with animated visited nodes and shortest paths.",
+      "React and Joy UI pathfinding playground with mouse and touch obstacle drawing, draggable start/end nodes, adjustable grid sizes, and animated Dijkstra and A* exploration.",
     technologies: ["React", "Joy UI", "JavaScript"],
     methods: ["Algorithm visualization", "Graph search"],
     category: "Web",
@@ -196,14 +196,14 @@ export const projectRecords = [
       live: "https://dinesjo.github.io/react-pathfinding-vis/",
       github: "https://github.com/dinesjo/react-pathfinding-vis",
     },
-    date: "September 2023, January 2025",
+    date: "September 2023 - January 2025",
     priority: 3,
   },
   {
     id: "fittrackr",
     title: "FitTrackr",
     description:
-      "KTH group fitness dashboard for workout logging, goals, exercise search APIs, Firebase auth/database, Redux state, and Recharts progress visualizations.",
+      "KTH group fitness tracker for creating and logging workouts, setting goals, searching exercises, and estimating calories, with Firebase authentication and realtime storage, Redux state, and Recharts/calendar progress views.",
     technologies: ["React", "Firebase", "Material UI", "TypeScript"],
     methods: ["Personal improvement", "Progress visualization"],
     category: "Web",
@@ -212,7 +212,7 @@ export const projectRecords = [
       live: "https://dh2642-project-7eb8e.web.app/",
       github: "https://github.com/DH2642-project/FitTrackr",
     },
-    date: "March - June 2024",
+    date: "March - May 2024",
     priority: 2,
   },
   {
@@ -228,14 +228,14 @@ export const projectRecords = [
       live: "https://dinesjo.github.io/deadline-tracker/",
       github: "https://github.com/dinesjo/deadline-tracker",
     },
-    date: "September - October 2023",
+    date: "September 2023 - March 2024",
     priority: 3,
   },
   {
     id: "pathvis",
     title: "Pathfinding Visualization",
     description:
-      "Framework-free final-year project comparing A* and Dijkstra on a hand-built grid, including wall drawing, diagonal movement rules, and path animation.",
+      "Framework-free high-school pathfinding visualizer comparing A* and Dijkstra, with wall and endpoint placement, adjustable cell sizes, animated exploration, and a colorblind mode.",
     technologies: ["JavaScript", "HTML", "CSS"],
     methods: ["Algorithm visualization", "A* and Dijkstra"],
     category: "Web",
@@ -244,14 +244,14 @@ export const projectRecords = [
       live: "https://dinesjo.github.io/pathfinding-vis/",
       github: "https://github.com/dinesjo/pathfinding-vis",
     },
-    date: "November 2020 - March 2021",
+    date: "November 2020 - June 2023",
     priority: 3,
   },
   {
     id: "this",
     title: "This Website",
     description:
-      "This Vite and React portfolio, with Tailwind styling, optimized WebP project images, filterable project data, and GitHub Pages deployment scripts.",
+      "This React, Vite, and Tailwind portfolio presents filterable projects and KTH coursework with optimized WebP media, plus a server-backed assistant grounded in the page's published records.",
     technologies: ["React", "Tailwind CSS", "JavaScript"],
     methods: ["Responsive UI", "Image optimization"],
     category: "Web",

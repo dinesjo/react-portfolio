@@ -143,7 +143,7 @@ export default function Coursework() {
                     >
                       <div className="course-record__year-meta flex items-start justify-between gap-4 lg:block">
                         <div className="text-left">
-                          <span className="block font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                          <span className="block font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-600">
                             Study year
                           </span>
                           <h4
@@ -152,12 +152,12 @@ export default function Coursework() {
                           >
                             Year {year}
                             {year === 5 && (
-                              <span className="ml-2 align-middle text-sm font-semibold text-slate-500">
+                              <span className="ml-2 align-middle text-sm font-semibold text-slate-600">
                                 - preliminary
                               </span>
                             )}
                           </h4>
-                          <span className="mt-1 block text-sm text-slate-500">
+                          <span className="mt-1 block text-sm text-slate-600">
                             {yearCourses.length} courses
                             {year === 5 && " - started August 2025"}
                           </span>
@@ -184,7 +184,7 @@ export default function Coursework() {
                             <span className="text-sm leading-snug text-slate-700 sm:max-w-[22rem]">
                               {course.name}
                               {course.optional && (
-                                <span className="ml-1 text-xs italic text-slate-500">
+                                <span className="ml-1 text-xs italic text-slate-600">
                                   (elective)
                                 </span>
                               )}

@@ -90,28 +90,28 @@ const normalizeImages = (project) => {
 const imageOverlayStyles = {
   light: {
     expand:
-      "border-white/70 bg-[var(--paper-strong)]/94 text-slate-950",
+      "border-white/70 bg-[var(--paper-strong)] text-slate-950",
     modalShell:
       "border-white/30 bg-[var(--paper-strong)] shadow-2xl shadow-slate-950/30",
     modalHeader: "border-slate-200/70 text-slate-950",
-    modalKicker: "text-[var(--coral)]",
+    modalKicker: "text-[var(--coral-text)]",
     modalClose:
       "border-slate-300/70 bg-transparent text-slate-950 hover:bg-slate-950/5 focus-visible:ring-slate-950",
     modalPager:
-      "border-white/70 bg-[var(--paper-strong)]/94 text-slate-950 hover:bg-white focus-visible:ring-slate-950",
+      "border-white/70 bg-[var(--paper-strong)] text-slate-950 hover:bg-white focus-visible:ring-slate-950",
     modalCounter: "border-slate-200/60 text-slate-500",
   },
   dark: {
     expand:
-      "border-white/20 bg-[var(--ink)]/92 text-white",
+      "border-white/20 bg-[var(--ink)] text-white",
     modalShell:
       "border-white/30 bg-[var(--paper-strong)] shadow-2xl shadow-slate-950/30",
     modalHeader: "border-slate-200/70 text-slate-950",
-    modalKicker: "text-[var(--coral)]",
+    modalKicker: "text-[var(--coral-text)]",
     modalClose:
       "border-slate-300/70 bg-transparent text-slate-950 hover:bg-slate-950/5 focus-visible:ring-slate-950",
     modalPager:
-      "border-white/70 bg-[var(--paper-strong)]/94 text-slate-950 hover:bg-white focus-visible:ring-slate-950",
+      "border-white/70 bg-[var(--paper-strong)] text-slate-950 hover:bg-white focus-visible:ring-slate-950",
     modalCounter: "border-slate-200/60 text-slate-500",
   },
 };
@@ -241,7 +241,7 @@ export default function ProjectImageFrame({
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className={`work-image-expand absolute right-4 top-4 grid h-9 w-9 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
+          <span className={`work-image-expand absolute right-4 top-4 grid h-11 w-11 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
         </button>
@@ -266,7 +266,7 @@ export default function ProjectImageFrame({
           <div
             aria-hidden="true"
             onClick={closeModal}
-            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-[var(--ink)]/95 backdrop-blur-sm"
+            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-[var(--ink)] backdrop-blur-sm"
           />
 
           <div className={`image-modal-shell relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden border ${overlayStyle.modalShell}`}>

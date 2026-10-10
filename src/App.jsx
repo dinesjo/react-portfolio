@@ -96,7 +96,8 @@ export default function App() {
 
       if (
         event.animationName !== "reveal-cover-sweep" &&
-        event.animationName !== "case-study-media-sweep"
+        event.animationName !== "case-study-media-sweep" &&
+        event.animationName !== "case-study-image-arrive"
       ) {
         return;
       }

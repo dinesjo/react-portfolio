@@ -3,7 +3,7 @@ export const profile = {
   role: "Computer science student at KTH",
   headline: "I build web apps, internal tools, and research prototypes.",
   summary:
-    "I’m in the final year of the computer science program at KTH and live in Strängnäs. My projects range from personal web apps and university research to tools I’ve built for work.",
+    "My work spans full-stack development, AI evaluation, and software reliability—from personal apps to tools used at work.",
   portfolioSummary: "Projects from KTH, work, and my own time.",
   currentFocus:
     "Finishing my master’s thesis and continuing to build practical tools and web apps.",

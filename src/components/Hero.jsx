@@ -55,32 +55,12 @@ export default function Hero() {
             </a>
           </div>
 
-          <dl className="hero-facts hero-sequence-step hero-sequence-step--facts mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3">
-            {profile.facts.map(({ label, value }) => (
-              <div key={label} className="hero-stat border-l-2 pl-3">
-                <dt className="font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                  {label}
-                </dt>
-                <dd className="mt-1 text-sm font-semibold text-slate-800">{value}</dd>
-              </div>
-            ))}
-          </dl>
+
         </div>
 
         <aside
           className="surface-card hero-brief-card hero-card-enter overflow-hidden"
         >
-          <div className="hero-brief-card__header border-b border-slate-200/60 bg-white/90">
-            <div className="p-4 sm:p-5">
-              <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                About this portfolio
-              </p>
-              <p className="mt-2 hidden text-sm text-slate-600 sm:block">
-                {profile.portfolioSummary}
-              </p>
-            </div>
-          </div>
-
           <div className="hero-brief-card__body grid grid-cols-1 items-stretch gap-0 sm:grid-cols-[0.78fr_1.22fr]">
             <div
               className="min-h-64 overflow-hidden bg-slate-200 sm:min-h-80"
@@ -97,7 +77,7 @@ export default function Hero() {
             </div>
             <div className="flex min-w-0 flex-col justify-between border-t border-slate-200/60 p-4 sm:border-l sm:border-t-0 sm:p-5">
               <div>
-                <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.1em] text-slate-600">
                   Current focus
                 </p>
                 <p className="mt-3 text-lg font-bold leading-tight text-slate-950 sm:text-2xl">
