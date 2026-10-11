@@ -299,6 +299,7 @@ export default function PortfolioAssistant() {
   const [liveStatus, setLiveStatus] = useState("");
   const healthControllerRef = useRef(null);
   const requestControllerRef = useRef(null);
+  const stopAnswerRef = useRef(null);
   const transcriptRef = useRef(null);
   const questionInputRef = useRef(null);
   const inputFocusFrameRef = useRef(null);
@@ -373,7 +374,7 @@ export default function PortfolioAssistant() {
 
   useEffect(() => {
     const revealCurrentHash = () => {
-      if (window.location.hash) beginSourceReveal(window.location.hash);
+      if (/^#(?:project-|courses-year-)/.test(window.location.hash)) beginSourceReveal(window.location.hash);
     };
 
     revealCurrentHash();
@@ -436,6 +437,7 @@ export default function PortfolioAssistant() {
     const assistantMessageId = `message-${++messageSequenceRef.current}`;
     const controller = new AbortController();
     let didTimeOut = false;
+    let didStop = false;
     let didComplete = false;
     let timeoutId;
     let deltaBuffer = "";
@@ -451,7 +453,7 @@ export default function PortfolioAssistant() {
     };
 
     const finalizeAnswer = ({ answer, sources }) => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || didStop) return;
 
       pendingCompletion = null;
       setMessages((current) => [
@@ -464,6 +466,7 @@ export default function PortfolioAssistant() {
         },
       ]);
       setActiveAnswer(null);
+      stopAnswerRef.current = null;
       setLiveStatus(
         `Answer ready. ${assistantAnswerForAnnouncement(answer)}`,
       );
@@ -476,7 +479,7 @@ export default function PortfolioAssistant() {
 
     const flushDeltaBuffer = () => {
       streamTimerRef.current = null;
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || didStop) return;
 
       if (!deltaBuffer) {
         if (pendingCompletion) {
@@ -521,13 +524,14 @@ export default function PortfolioAssistant() {
     };
 
     const queueDelta = (content) => {
-      if (!content) return;
+      if (!content || didStop) return;
 
       deltaBuffer += content;
       scheduleStreamStep();
     };
 
     const completeAnswer = (data, { smooth = false } = {}) => {
+      if (didStop) return;
       const answer = typeof data?.answer === "string" ? data.answer.trim() : "";
       if (!answer) {
         throw new Error("Chat response did not contain an answer");
@@ -551,6 +555,21 @@ export default function PortfolioAssistant() {
     };
 
     requestControllerRef.current = controller;
+    stopAnswerRef.current = () => {
+      didStop = true;
+      controller.abort();
+      window.clearTimeout(timeoutId);
+      window.clearTimeout(streamTimerRef.current);
+      streamTimerRef.current = null;
+      deltaBuffer = "";
+      pendingCompletion = null;
+      stopAnswerRef.current = null;
+      setActiveAnswer(null);
+      setMessages((current) => current.filter((message) => message.id !== userMessageId && message.id !== assistantMessageId));
+      setQuestion(candidate);
+      setLiveStatus("Response stopped. Your question is ready to edit or send again.");
+      questionInputRef.current?.focus();
+    };
     isFollowingRef.current = true;
     setQuestion("");
     setChatError(null);
@@ -587,6 +606,7 @@ export default function PortfolioAssistant() {
 
       if (isNdjsonResponse(response)) {
         await readNdjsonStream(response, (event) => {
+          if (didStop) return;
           armIdleTimeout();
 
           if (event.type === "error") {
@@ -624,7 +644,7 @@ export default function PortfolioAssistant() {
           }
         });
 
-        if (!didComplete) {
+        if (!didComplete && !didStop) {
           throw new Error("The assistant stream ended before the answer was complete.");
         }
       } else {
@@ -633,7 +653,7 @@ export default function PortfolioAssistant() {
         completeAnswer(data);
       }
     } catch (error) {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || didStop) return;
 
       const wasAborted = controller.signal.aborted;
       controller.abort();
@@ -641,6 +661,7 @@ export default function PortfolioAssistant() {
       streamTimerRef.current = null;
       deltaBuffer = "";
       pendingCompletion = null;
+      stopAnswerRef.current = null;
       setActiveAnswer(null);
       setMessages((current) =>
         current.filter(
@@ -708,6 +729,7 @@ export default function PortfolioAssistant() {
   return (
     <section
       id="assistant"
+      tabIndex={-1}
       className="assistant-section"
       aria-labelledby="assistant-title"
     >
@@ -903,13 +925,14 @@ export default function PortfolioAssistant() {
                   {question.length}/{MAX_ASSISTANT_QUESTION_CHARACTERS}
                 </p>
               </div>
-              <button
+              {isLoading ? <button key="stop" type="button" className="assistant-submit-button assistant-stop-button" onClick={() => stopAnswerRef.current?.()}>Stop response</button> : <button
+                key="send"
                 type="submit"
                 className="assistant-submit-button"
                 disabled={!canSubmit}
               >
-                {isLoading ? "Writing…" : "Send"}
-              </button>
+                Send
+              </button>}
             </fieldset>
           </form>
         </div>

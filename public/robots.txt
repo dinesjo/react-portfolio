@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://linusdinesjo.github.io/sitemap.xml
+Sitemap: https://dinesjo.se/sitemap.xml

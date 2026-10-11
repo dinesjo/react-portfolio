@@ -1,5 +1,14 @@
 import { featuredCourses, getCoursesByYear } from "../data/courses";
 import SectionIntro from "./SectionIntro";
+import { focusSection } from "../utils/portfolioNavigation";
+
+const relatedWork = {
+  DD2480: { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests." },
+  DD2395: { id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." },
+  DD2380: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." },
+  DD2350: { id: "pathvis-react", title: "Pathfinding Visualizer", note: "Exploring how search algorithms find a route." },
+  DH2642: { id: "fittrackr", title: "FitTrackr", note: "A React fitness tracker with shared application state." },
+};
 
 const studyYears = [1, 2, 3, 4, 5];
 
@@ -12,6 +21,7 @@ export default function Coursework() {
   return (
     <section
       id="courses-carousel"
+      tabIndex={-1}
       aria-labelledby="coursework-title"
       className="py-20"
     >
@@ -22,50 +32,16 @@ export default function Coursework() {
           titleId="coursework-title"
           className="mb-10"
         >
-          Six highlighted courses and the complete study record they come
-          from, kept together as one view of my academic foundation.
+          A selection of my computer science coursework, with related projects
+          to explore. The complete study record is available below.
         </SectionIntro>
 
         <div className="content-collection coursework-collection">
-          <div className="collection-overview reveal" data-reveal="trace">
-            <div>
-              <p className="collection-overview__label">Coursework collection</p>
-              <p className="collection-overview__context">
-                KTH Computer Science, grouped by study year
-              </p>
-            </div>
-            <div className="collection-overview__stats" aria-label="Coursework summary">
-              <span>{featuredCourses.length} highlighted</span>
-              <span>{totalCourses} courses</span>
-            </div>
-          </div>
-
           <section
             className="collection-group"
             aria-labelledby="highlighted-coursework-title"
           >
-            <header className="collection-group-header reveal" data-reveal="trace">
-              <span className="collection-group-index" aria-hidden="true">
-                01
-              </span>
-              <div>
-                <div className="collection-group-title-row">
-                  <h3
-                    id="highlighted-coursework-title"
-                    className="collection-group-title"
-                  >
-                    Highlighted coursework
-                  </h3>
-                  <span className="collection-group-count">
-                    {featuredCourses.length} courses
-                  </span>
-                </div>
-                <p className="collection-group-copy">
-                  A short selection with the clearest connection to the projects
-                  and engineering topics above.
-                </p>
-              </div>
-            </header>
+            <h3 id="highlighted-coursework-title" className="sr-only">Highlighted coursework</h3>
 
             <div className="reveal-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {featuredCourses.map((course) => (
@@ -86,6 +62,7 @@ export default function Coursework() {
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">
                     {course.featuredNote}
                   </p>
+                  {relatedWork[course.code] && <div className="course-related"><p>{relatedWork[course.code].note}</p><a href={`#project-${relatedWork[course.code].id}`} onClick={focusSection}>Related work: {relatedWork[course.code].title} <span aria-hidden="true">→</span></a></div>}
                 </article>
               ))}
             </div>
@@ -93,13 +70,11 @@ export default function Coursework() {
 
           <section
             id="courses"
+            tabIndex={-1}
             className="collection-group"
             aria-labelledby="course-record-title"
           >
             <header className="collection-group-header reveal" data-reveal="trace">
-              <span className="collection-group-index" aria-hidden="true">
-                02
-              </span>
               <div>
                 <div className="collection-group-title-row">
                   <h3 id="course-record-title" className="collection-group-title">
@@ -107,9 +82,6 @@ export default function Coursework() {
                   </h3>
                   <span className="collection-group-count">Updated May 2026</span>
                 </div>
-                <p className="collection-group-copy">
-                  All completed and ongoing courses, grouped by study year.
-                </p>
               </div>
             </header>
 

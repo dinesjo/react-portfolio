@@ -81,6 +81,18 @@ function buildProjectChunk(project) {
         ? `Published highlights: ${project.highlights.join("; ")}.`
         : "",
       project.statusNote ? `Status note: ${project.statusNote}` : "",
+      project.caseStudy ? [
+        `Case study role: ${project.caseStudy.role}.`,
+        project.caseStudy.result ? `Published result: ${project.caseStudy.result.value}; ${project.caseStudy.result.label}; ${project.caseStudy.result.context}.` : "",
+        ...project.caseStudy.sections.flatMap((section) => [
+          `${section.title}: ${(section.paragraphs || []).join(" ")}`,
+          ...(section.points || []),
+          section.comparisonCaption ? `Benchmark scope: ${section.comparisonCaption}.` : "",
+          ...(section.comparison || []).map((row) =>
+            `${row.approach}: verdict accuracy ${row.accuracy}; median end-to-end response time ${row.medianLatency}.`
+          ),
+        ]),
+      ].filter(Boolean).join("\n") : "",
       links.length ? `Public links: ${links.join("; ")}.` : "",
       project.isPrivate
         ? "Boundary: do not infer confidential responsibilities or implementation details beyond this published text."

@@ -42,6 +42,7 @@ const projectMedia = {
     image: masterThesisKgqaCard,
     imageFull: masterThesisKgqaFull,
     imageOverlayTone: "light",
+    featuredImageFit: "contain",
   },
   "thesis-tracker": {
     image: thesisTrackerCard,
@@ -113,7 +114,7 @@ const projectMedia = {
 };
 
 export const projects = projectRecords.map(({ id, title, highlights, ...content }) => {
-  const { image, imageFull, icon, imageOverlayTone } = projectMedia[id];
+  const { image, imageFull, icon, imageOverlayTone, featuredImageFit } = projectMedia[id];
 
   return {
     id,
@@ -123,6 +124,7 @@ export const projects = projectRecords.map(({ id, title, highlights, ...content 
     ...(icon ? { icon } : {}),
     ...content,
     ...(imageOverlayTone ? { imageOverlayTone } : {}),
+    ...(featuredImageFit ? { featuredImageFit } : {}),
     ...(highlights ? { highlights } : {}),
   };
 });

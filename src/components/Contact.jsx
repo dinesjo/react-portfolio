@@ -47,7 +47,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" tabIndex={-1} className="py-20">
       <div className="section-shell">
         <div
           className="surface-card contact-panel reveal grid overflow-hidden lg:grid-cols-[0.85fr_1.15fr]"

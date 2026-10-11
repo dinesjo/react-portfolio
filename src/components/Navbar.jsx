@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { focusSection } from "../utils/portfolioNavigation";
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -31,12 +32,12 @@ const sectionToNav = {
 
 const navOffset = 112;
 
-export default function Navbar() {
+export default function Navbar({ detailView = false }) {
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
   const navRefs = useRef([]);
-  const activeIndex = Math.max(0, navItems.findIndex((item) => item.id === active));
+  const activeIndex = Math.max(0, navItems.findIndex((item) => item.id === (detailView ? "featured" : active)));
 
   const updateIndicator = useCallback(() => {
     const activeButton = navRefs.current[activeIndex];
@@ -45,7 +46,7 @@ export default function Navbar() {
     setIndicator({
       left: activeButton.offsetLeft,
       width: activeButton.offsetWidth,
-      ready: true,
+      ready: activeButton.offsetWidth > 0,
     });
   }, [activeIndex]);
 
@@ -109,19 +110,6 @@ export default function Navbar() {
     };
   }, [updateIndicator]);
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = id === "home" ? 0 : el.offsetTop - navOffset;
-      window.scrollTo({
-        top: offset,
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      });
-    }
-  };
-
   return (
     <nav
       aria-label="Primary navigation"
@@ -131,10 +119,10 @@ export default function Navbar() {
           : "border-white/75 bg-white/80"
       }`}
     >
-      <button
-        type="button"
+      <a
+        href="#home"
         className="site-nav__brand"
-        onClick={() => scrollTo("home")}
+        onClick={focusSection}
         aria-label="Back to the top"
       >
         <span className="site-nav__monogram">LD</span>
@@ -142,7 +130,7 @@ export default function Navbar() {
           <strong>Portfolio</strong>
           <small>Linus Dinesj&ouml;</small>
         </span>
-      </button>
+      </a>
 
       <div className="site-nav__links">
         <span
@@ -155,25 +143,25 @@ export default function Navbar() {
           }}
         />
         {navItems.map((item) => (
-          <button
+          <a
             key={item.id}
-            type="button"
+            href={`#${item.id}`}
             ref={(node) => {
               const index = navItems.findIndex(
                 (navItem) => navItem.id === item.id,
               );
               navRefs.current[index] = node;
             }}
-            onClick={() => scrollTo(item.id)}
-            aria-current={active === item.id ? "location" : undefined}
+            onClick={focusSection}
+            aria-current={activeIndex === navItems.indexOf(item) ? "location" : undefined}
             className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
-              active === item.id
+              activeIndex === navItems.indexOf(item)
                 ? "text-white"
                 : "text-slate-500 hover:text-slate-950"
             }`}
           >
             {item.label}
-          </button>
+          </a>
         ))}
       </div>
     </nav>

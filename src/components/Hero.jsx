@@ -1,6 +1,7 @@
 import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import portraitSrc from "../assets/project-optimized/portrait.webp";
 import { profile } from "../data/profile";
+import { focusSection } from "../utils/portfolioNavigation";
 
 export default function Hero() {
   return (
@@ -31,22 +32,13 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions hero-sequence-step hero-sequence-step--actions mt-8 flex flex-wrap gap-3">
-            <button
-              onClick={() => {
-                const el = document.getElementById("featured");
-                if (el) {
-                  window.scrollTo({
-                    top: el.offsetTop - 112,
-                    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "auto"
-                      : "smooth",
-                  });
-                }
-              }}
+            <a
+              href="#featured"
+              onClick={focusSection}
               className="sharp-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"
             >
               View work <FaArrowRight className="button-arrow text-xs" />
-            </button>
+            </a>
             <a
               href={`mailto:${profile.contact.email}`}
               className="quiet-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"
@@ -63,7 +55,7 @@ export default function Hero() {
         >
           <div className="hero-brief-card__body grid grid-cols-1 items-stretch gap-0 sm:grid-cols-[0.78fr_1.22fr]">
             <div
-              className="min-h-64 overflow-hidden bg-slate-200 sm:min-h-80"
+              className="hero-portrait overflow-hidden bg-slate-200"
             >
               <img
                 src={portraitSrc}

@@ -1,24 +1,27 @@
+import { caseStudies } from "./caseStudies.js";
+
 export const projectRecords = [
   {
     id: "master-thesis-kgqa",
+    caseStudy: caseStudies["master-thesis-kgqa"],
     title: "Industrial Knowledge Graph QA",
     description:
-      "Master's thesis, \"Retrieval and Graph-Access Strategies for Industrial Knowledge Graph Question Answering,\" evaluating natural-language access to Traton's MAZE graph through retrieval-based answers and direct graph queries.",
+      "Master’s thesis comparing dense RAG, hybrid lexical-semantic RAG, and a bounded SPARQL graph agent for truck-component compatibility questions over Traton’s MAZE knowledge graph.",
     featuredDescription:
-      "For my master's thesis, I am comparing two ways of answering questions against Traton's MAZE knowledge graph: retrieving relevant context for an LLM and querying the graph directly.",
-    technologies: ["Python", "SPARQL", "AWS"],
-    methods: ["Knowledge graphs", "RAG", "LLM evaluation", "Compatibility QA"],
+      "I built and benchmarked three ways to answer truck-component compatibility questions using Traton’s MAZE knowledge graph: dense retrieval, hybrid retrieval, and a SPARQL graph agent.",
+    technologies: ["Python", "SPARQL", "GraphDB", "Qdrant", "Amazon Bedrock"],
+    methods: ["Knowledge graphs", "RAG", "Hybrid retrieval", "LLM evaluation", "Text-to-SPARQL"],
     category: "Research",
     context: "Academic",
     links: {},
-    date: "January 2026 - Present",
+    date: "2026",
     priority: 1,
     featured: true,
     highlights: [
-      "I built and evaluated both approaches on the same benchmark questions",
-      "I compared answer correctness, traceability, response time, and cost",
-      "The retrieval approach answered 96.4% of the benchmark cases correctly",
-      "Direct graph queries were slightly more accurate, but slower and more expensive",
+      "I built the RDF loader, retrieval pipelines, and bounded graph agent in Python",
+      "I generated 280 graph-derived questions and measured verdict accuracy, response time, token usage, and failure modes",
+      "Hybrid retrieval improved verdict accuracy from 77.1% to 96.4% at the top-10 operating point",
+      "The graph agent reached 98.2%, but its small accuracy advantage was not statistically decisive and came with much higher latency and token usage",
     ],
   },
   {
@@ -38,6 +41,7 @@ export const projectRecords = [
   },
   {
     id: "snuskoll",
+    caseStudy: caseStudies.snuskoll,
     title: "SnusKoll",
     description:
       "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
@@ -78,6 +82,7 @@ export const projectRecords = [
   },
   {
     id: "ai-diary",
+    caseStudy: caseStudies["ai-diary"],
     title: "AI-Diary",
     description:
       "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
@@ -113,6 +118,7 @@ export const projectRecords = [
   },
   {
     id: "bachelor",
+    caseStudy: caseStudies.bachelor,
     title: "Efficacy of Context Summarization on LLMs",
     description:
       "Bachelor's thesis testing whether summarized chatbot history can cut LLM cost while preserving answer quality; experiments reduced cost up to 92% without significant performance loss.",

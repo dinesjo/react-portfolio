@@ -6,6 +6,7 @@ import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
 import {
   FaArchive,
+  FaArrowRight,
   FaExternalLinkAlt,
   FaGithub,
   FaInfoCircle,
@@ -33,29 +34,7 @@ const priorityGroups = {
   },
 };
 
-const overlayStyles = {
-  light: {
-    container:
-      "project-image-label project-image-label--light border-white/70 bg-[var(--paper-strong)] text-slate-950",
-    label: "text-slate-600",
-    icon: "bg-white/80",
-  },
-  dark: {
-    container:
-      "project-image-label project-image-label--dark border-white/20 bg-[var(--ink)] text-white",
-    label: "text-slate-200",
-    icon: "bg-white/95",
-  },
-};
-
 const byPriority = (priority) => (project) => (project.priority || 2) === priority;
-
-function getStatusLabel(project) {
-  if (project.isDecommissioned) return "Archived";
-  if (project.isPrivate) return "Private";
-  if (project.date?.toLowerCase().includes("present")) return "In progress";
-  return "Completed";
-}
 
 function getFilteredTitle(filter, priority) {
   const group = priorityGroups[priority];
@@ -65,20 +44,15 @@ function getFilteredTitle(filter, priority) {
 
 function ProjectTags({ project, className = "" }) {
   return (
-    <div className={`flex flex-wrap gap-1.5 ${className}`}>
-      <span className="project-tag project-tag--context px-2.5 py-1 text-xs font-bold">
-        {project.context}
-      </span>
-      <span className="project-tag project-tag--category px-2.5 py-1 text-xs font-bold">
-        {project.category}
-      </span>
+    <div className={`project-kind ${className}`}>
+      <span>{project.context} · {project.category}</span>
       {project.isPrivate && (
-        <span className="project-tag project-tag--status flex items-center gap-1 px-2.5 py-1 text-xs font-semibold">
+        <span className="inline-flex items-center gap-1">
           <FaLock className="text-[10px]" /> Private
         </span>
       )}
       {project.isDecommissioned && (
-        <span className="project-tag project-tag--status flex items-center gap-1 px-2.5 py-1 text-xs font-semibold">
+        <span className="inline-flex items-center gap-1">
           <FaArchive className="text-[10px]" /> Decommissioned
         </span>
       )}
@@ -154,9 +128,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
 }
 
 function CaseStudyCard({ project, index }) {
-  const overlayTone = project.featuredOverlayTone || project.imageOverlayTone;
-  const overlayStyle = overlayStyles[overlayTone] || overlayStyles.dark;
-
+  const keepFullImage = project.featuredImageFit === "contain";
   return (
     <article
       id={`project-${project.id}`}
@@ -174,26 +146,10 @@ function CaseStudyCard({ project, index }) {
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
-          frameClassName={`case-study-media ${project.category === "Research" ? "case-study-media--research" : "bg-slate-900"} min-h-72 overflow-hidden border-b border-slate-200/30 lg:border-b-0`}
-          imageClassName="h-full min-h-72 w-full object-cover"
+          frameClassName={`case-study-media featured-case-image overflow-hidden ${keepFullImage ? "featured-case-image--uncropped" : ""}`}
+          imageClassName="block w-full"
           imageSizes="(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
-        >
-          <div className={`absolute bottom-4 left-4 flex items-center gap-3 border px-3 py-2 ${overlayStyle.container}`}>
-            {project.icon && (
-              <img
-                src={project.icon}
-                alt=""
-                className={`h-8 w-8 rounded p-1 object-contain ${overlayStyle.icon}`}
-              />
-            )}
-            <div>
-              <p className={`font-montserrat text-[0.65rem] font-extrabold uppercase tracking-[0.16em] ${overlayStyle.label}`}>
-                {getStatusLabel(project)}
-              </p>
-              <p className="text-sm font-semibold">{project.date}</p>
-            </div>
-          </div>
-        </ProjectImageFrame>
+        />
 
         <div className="priority-case-card__content flex flex-col justify-between p-6 sm:p-8">
           <div>
@@ -207,10 +163,13 @@ function CaseStudyCard({ project, index }) {
             <p className="section-copy mt-4">
               {project.featuredDescription || project.description}
             </p>
+            <p className="project-date">{project.date}</p>
+
+            {project.caseStudy?.result && <div className="case-result"><strong>{project.caseStudy.result.value}</strong><div><p>{project.caseStudy.result.label}</p><span>{project.caseStudy.result.context}</span></div></div>}
 
             {project.highlights?.length > 0 && (
               <ul className="mt-6 space-y-3">
-                {project.highlights.map((note) => (
+                {project.highlights.slice(0, 2).map((note) => (
                   <li key={note} className="flex gap-3 text-sm text-slate-700">
                     <span className="project-bullet mt-2 flex-shrink-0" />
                     <span>{note}</span>
@@ -226,11 +185,12 @@ function CaseStudyCard({ project, index }) {
               </p>
             )}
 
-            <ProjectBadges project={project} className="mt-6" />
+            <ProjectBadges project={project} showMethods={false} className="mt-6" />
           </div>
 
-          <div className="mt-8">
-            <ProjectLinks project={project} />
+          <div className="case-card-actions mt-6">
+            <a href={`#/work/${project.id}`} className="sharp-button inline-flex items-center gap-2 px-4 py-3 text-sm font-bold">Read case study <FaArrowRight aria-hidden="true" /></a>
+            <ProjectLinks project={project} compact />
           </div>
         </div>
       </div>
@@ -253,11 +213,10 @@ function SelectedProjectCard({ project }) {
         frameClassName="h-44 overflow-hidden border-b border-slate-200/50 bg-slate-200"
         imageClassName="h-full w-full object-cover"
         imageSizes="(min-width: 1180px) 382px, (min-width: 1024px) 31vw, (min-width: 640px) 50vw, calc(100vw - 48px)"
-      >
-        <ProjectTags project={project} className="absolute left-3 top-3 max-w-[calc(100%-5rem)]" />
-      </ProjectImageFrame>
+      />
 
       <div className="flex flex-1 flex-col p-5">
+        <ProjectTags project={project} className="mb-3" />
         <div className="project-card__heading mb-4 border-b pb-3">
           <div className="space-y-2">
             <h4
@@ -283,7 +242,7 @@ function SelectedProjectCard({ project }) {
           </p>
         )}
 
-        <ProjectBadges project={project} className="mb-5" />
+        <ProjectBadges project={project} showMethods={false} className="mb-5" />
 
         <div className="mt-auto">
           <ProjectLinks project={project} compact />
@@ -395,7 +354,7 @@ export default function ProjectsGrid() {
   };
 
   return (
-    <section id="featured" className="pb-20 pt-8">
+    <section id="featured" tabIndex={-1} className="pb-20 pt-8">
       <div className="section-shell">
         <SectionIntro
           eyebrow="Projects"

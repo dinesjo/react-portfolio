@@ -6,7 +6,7 @@ export const profile = {
     "My work spans full-stack development, AI evaluation, and software reliability—from personal apps to tools used at work.",
   portfolioSummary: "Projects from KTH, work, and my own time.",
   currentFocus:
-    "Finishing my master’s thesis and continuing to build practical tools and web apps.",
+    "Master’s thesis in industrial knowledge graph question answering.",
   location: "Strängnäs, Sweden",
   facts: [
     { label: "I work with", value: "Web apps & internal tools" },

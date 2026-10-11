@@ -6,9 +6,42 @@ import PortfolioAssistant from "./components/PortfolioAssistant";
 import Coursework from "./components/Coursework";
 import ProjectsGrid from "./components/ProjectsGrid";
 import Contact from "./components/Contact";
+import CaseStudy from "./components/CaseStudy";
+import { projects } from "./data/projects";
+import { getPortfolioView } from "./utils/portfolioNavigation";
+
+const caseProjects = projects.filter((project) => project.caseStudy);
 
 export default function App() {
   const [showTop, setShowTop] = useState(false);
+  const [hash, setHash] = useState(() => window.location.hash);
+  const view = getPortfolioView(hash);
+  const detailView = view.type === "case-study";
+  const detailProject = detailView ? caseProjects.find((project) => project.id === view.id) : null;
+  const nextProject = detailProject ? caseProjects[(caseProjects.indexOf(detailProject) + 1) % caseProjects.length] : null;
+
+  useEffect(() => {
+    const onHashChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  useEffect(() => {
+    document.title = detailView
+      ? `${detailProject?.title || "Case study not found"} | Linus Dinesjö`
+      : "Linus Dinesjö | Computer Science Portfolio";
+    const frame = window.requestAnimationFrame(() => {
+      if (detailView) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        document.getElementById("detail-title")?.focus({ preventScroll: true });
+      } else if (hash && !/^#(?:project-|courses-year-)/.test(hash)) {
+        const target = document.getElementById(hash.slice(1));
+        target?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        target?.focus({ preventScroll: true });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [hash, detailView, detailProject]);
 
   // Scroll-based reveal using IntersectionObserver
   useEffect(() => {
@@ -175,7 +208,13 @@ export default function App() {
     <div className="relative min-h-screen">
       {/* Skip to content */}
       <a
-        href="#home"
+        href={detailView ? hash : "#home"}
+        onClick={detailView ? (event) => {
+          event.preventDefault();
+          const target = document.getElementById("detail-title");
+          target?.focus({ preventScroll: true });
+          target?.scrollIntoView({ block: "start" });
+        } : undefined}
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:border focus:border-white/30 focus:bg-[var(--ink)] focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
       >
         Skip to content
@@ -183,14 +222,18 @@ export default function App() {
 
       <div className="site-backdrop fixed inset-0 -z-10" />
 
-      <Navbar />
+      <Navbar detailView={detailView} />
 
       <main>
+        {detailView ? (detailProject
+          ? <CaseStudy key={detailProject.id} project={detailProject} nextProject={nextProject} />
+          : <section className="case-detail section-shell"><h1 id="detail-title" tabIndex={-1} className="section-title">Case study not found.</h1><a href="#featured" className="detail-back">Browse the projects →</a></section>) : <>
         <Hero />
         <ProjectsGrid />
         <Coursework />
         <PortfolioAssistant />
         <Contact />
+        </>}
       </main>
 
       {/* Scroll to top */}

@@ -2,6 +2,12 @@
 
 Personal portfolio site for Linus Dinesjö, built with React, Vite, and Tailwind CSS. The site presents selected projects, a filterable project archive, KTH coursework, contact links, and a server-backed portfolio chat.
 
+Featured projects open standalone case studies at shareable hash URLs such as
+`/#/work/snuskoll`. These also work when the app is hosted as static files,
+without server-side route rewrites. Section links use URL fragments and support
+browser history and keyboard focus. Featured cards use the original project
+images, with readable research results beside them and full image previews.
+
 ## Requirements
 
 - Node.js `^20.19.0 || >=22.12.0`
@@ -100,6 +106,8 @@ Safeguards remain explicit:
   while project and general answers stream immediately;
 - the browser buffers transport deltas and reveals complete words at an adaptive
   cadence, so provider chunk sizes do not produce abrupt blocks of text;
+- visitors can stop an answer, which cancels the request and any buffered text,
+  keeps earlier messages, and restores the question for editing;
 - assistant answers support constrained Markdown for emphasis and semantic
   lists. Raw HTML is ignored, unsupported markup is unwrapped to text, and the
   renderer is loaded only after a visitor starts a conversation.
