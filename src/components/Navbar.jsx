@@ -103,12 +103,20 @@ export default function Navbar({ detailView = false }) {
     });
     window.addEventListener("resize", updateIndicator);
 
+    // Follow layout changes through the navigation's responsive transition.
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(updateIndicator)
+      : null;
+    const activeButton = navRefs.current[activeIndex];
+    if (activeButton) resizeObserver?.observe(activeButton);
+
     return () => {
       cancelled = true;
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", updateIndicator);
+      resizeObserver?.disconnect();
     };
-  }, [updateIndicator]);
+  }, [activeIndex, updateIndicator]);
 
   return (
     <nav

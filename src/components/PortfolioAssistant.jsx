@@ -31,7 +31,7 @@ const AssistantMarkdown = lazy(() => import("./AssistantMarkdown"));
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
   "Which KTH courses relate to security and software reliability?",
-  "How has Linus worked with evaluation and retrieval-augmented generation?",
+  "What does Linus work on at AMF?",
 ];
 
 function safeSourceHref(value) {
@@ -740,9 +740,8 @@ export default function PortfolioAssistant() {
           titleId="assistant-title"
           className="assistant-section-intro mb-8"
         >
-          The project cards are the short version. Ask about projects,
-          technologies, results, research, or KTH courses, and the answer will
-          link back to the relevant parts of this page.
+          Ask about my current work at AMF, projects, research, or completed
+          KTH coursework. Answers link back to the relevant parts of this page.
         </SectionIntro>
 
         <div

@@ -70,10 +70,10 @@ export default function Hero() {
             <div className="flex min-w-0 flex-col justify-between border-t border-slate-200/60 p-4 sm:border-l sm:border-t-0 sm:p-5">
               <div>
                 <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.1em] text-slate-600">
-                  Current focus
+                  Current work
                 </p>
                 <p className="mt-3 text-lg font-bold leading-tight text-slate-950 sm:text-2xl">
-                  {profile.currentFocus}
+                  {profile.employment.summary}
                 </p>
               </div>
               <div className="mt-6">

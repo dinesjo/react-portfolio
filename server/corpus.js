@@ -30,6 +30,10 @@ function buildProfileChunk() {
       profile.location,
       "KTH",
       "computer science",
+      "graduate",
+      "graduation",
+      profile.employment.employer,
+      ...profile.employment.focusAreas,
       "master's thesis",
       "contact",
       "email",
@@ -41,7 +45,10 @@ function buildProfileChunk() {
       `Role: ${profile.role}.`,
       `Headline: ${profile.headline}`,
       `Public summary: ${profile.summary}`,
-      `Current focus: ${profile.currentFocus}`,
+      `Education: graduated from ${profile.education.institution} in ${profile.education.graduation.toLowerCase()}. All listed KTH courses are ${profile.education.courseworkStatus}; individual grades are not published.`,
+      `Current employer: ${profile.employment.employer}. Current work: ${joinList(profile.employment.focusAreas)}.`,
+      `Current work context: ${profile.employment.description}`,
+      `Current work scope: ${profile.employment.scope}`,
       `Location: ${profile.location}.`,
       `Public contact: ${profile.contact.email}; GitHub ${profile.contact.github}; LinkedIn ${profile.contact.linkedin}.`,
     ].join("\n"),
@@ -133,9 +140,7 @@ function buildCourseChunk(year) {
     ].filter(Boolean),
     text: [
       `KTH computer science coursework for study year ${year}.`,
-      year === 5
-        ? "Status: year 5 is preliminary and includes completed or ongoing courses; the portfolio does not state individual completion or grades."
-        : "Status: the portfolio presents its course record as completed and ongoing; it does not state individual completion or grades.",
+      `Status: all listed courses in this study year are ${profile.education.courseworkStatus}. Linus graduated from KTH in ${profile.education.graduation.toLowerCase()}. Individual grades are not published.`,
       ...courseLines,
     ].join("\n"),
   };
@@ -151,5 +156,5 @@ export const corpusStats = {
   sourceCount: portfolioChunks.length,
   projectCount: projectRecords.length,
   courseCount: courses.length,
-  lastUpdated: "May 2026",
+  lastUpdated: profile.education.recordUpdated,
 };

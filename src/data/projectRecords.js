@@ -93,7 +93,7 @@ export const projectRecords = [
     category: "Web",
     context: "Professional",
     links: {},
-    date: "November 2024 - Present",
+    date: "November 2024 - June 2026",
     isPrivate: true,
     priority: 1,
     highlights: [

@@ -7,7 +7,7 @@ test("builds one profile, seventeen project, and five course-year chunks", () =>
     sourceCount: 23,
     projectCount: 17,
     courseCount: 39,
-    lastUpdated: "May 2026",
+    lastUpdated: "October 2026",
   });
   assert.equal(portfolioChunks.filter((chunk) => chunk.type === "profile").length, 1);
   assert.equal(portfolioChunks.filter((chunk) => chunk.type === "project").length, 17);
@@ -26,12 +26,33 @@ test("marks professional private summaries with a non-inference boundary", () =>
   assert.match(aiDiary.text, /do not infer confidential/i);
 });
 
-test("packs exact course codes and the preliminary year-five caveat", () => {
+test("confirms all listed courses are completed without publishing grades", () => {
   const yearFour = portfolioChunks.find((chunk) => chunk.id === "courses:year-4");
-  const yearFive = portfolioChunks.find((chunk) => chunk.id === "courses:year-5");
   assert.match(yearFour.text, /DD2395: Computer Security/);
-  assert.match(yearFive.text, /preliminary/i);
-  assert.match(yearFive.text, /does not state individual completion or grades/i);
+  for (const chunk of portfolioChunks.filter((chunk) => chunk.type === "course")) {
+    assert.match(chunk.text, /all listed courses in this study year are completed/i);
+    assert.match(chunk.text, /graduated from KTH in summer 2026/);
+    assert.match(chunk.text, /Individual grades are not published/);
+    assert.doesNotMatch(chunk.text, /preliminary|ongoing/);
+  }
+});
+
+test("publishes graduation and current AMF work as confirmed profile facts", () => {
+  const profile = portfolioChunks.find((chunk) => chunk.type === "profile");
+  assert.match(profile.text, /graduated from KTH Royal Institute of Technology in summer 2026/);
+  assert.match(profile.text, /Current employer: AMF/);
+  assert.match(profile.text, /Full-stack development, Test automation/);
+  assert.match(profile.text, /actuaries independently configure test cases/);
+  assert.match(profile.text, /regression behavior across versions of Lumera/);
+  assert.match(profile.text, /user interface, backend services, test scheduling, fault detection, and CI\/CD pipelines/);
+  assert.doesNotMatch(profile.text, /student|Current focus:.*thesis/i);
+});
+
+test("ends Linus's AI-Diary work in June 2026", () => {
+  const aiDiary = portfolioChunks.find((chunk) => chunk.id === "project:ai-diary");
+  assert.match(aiDiary.text, /Dates: November 2024 - June 2026/);
+  assert.doesNotMatch(aiDiary.text, /Status note:/);
+  assert.doesNotMatch(aiDiary.text, /Lifecycle: ongoing/);
 });
 
 test("grounds case-study answers in benchmark scope and engineering tradeoffs", () => {

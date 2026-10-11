@@ -69,7 +69,9 @@ test("builds a configurable direct-cloud request with bounded generation", () =>
   assert.match(payload.messages[0].content, /cite every sentence/i);
   assert.match(payload.messages[0].content, /worked on.*must not become.*built/i);
   assert.match(payload.messages[0].content, /arbetade med/i);
-  assert.match(payload.messages[0].content, /listed in the portfolio/i);
+  assert.match(payload.messages[0].content, /only when the source explicitly confirms completion/i);
+  assert.match(payload.messages[0].content, /Never infer an individual grade or degree title/i);
+  assert.doesNotMatch(payload.messages[0].content, /Year 5 is preliminary/i);
   assert.match(payload.messages[0].content, /same language as the visitor/i);
   assert.match(payload.messages[0].content, /restrained Markdown/i);
   assert.match(payload.messages[0].content, /three or more comparable items/i);

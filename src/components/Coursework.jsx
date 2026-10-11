@@ -1,4 +1,5 @@
 import { featuredCourses, getCoursesByYear } from "../data/courses";
+import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 import { focusSection } from "../utils/portfolioNavigation";
 
@@ -27,13 +28,15 @@ export default function Coursework() {
     >
       <div className="section-shell">
         <SectionIntro
-          eyebrow="Study"
-          title="Coursework at KTH."
+          eyebrow="Education"
+          title="Education at KTH."
           titleId="coursework-title"
           className="mb-10"
         >
-          A selection of my computer science coursework, with related projects
-          to explore. The complete study record is available below.
+          I graduated from KTH in {profile.education.graduation.toLowerCase()}.
+          These are highlights from my completed computer science coursework,
+          with related projects to explore. All {totalCourses} courses in the
+          record below are completed.
         </SectionIntro>
 
         <div className="content-collection coursework-collection">
@@ -80,7 +83,7 @@ export default function Coursework() {
                   <h3 id="course-record-title" className="collection-group-title">
                     Complete course record
                   </h3>
-                  <span className="collection-group-count">Updated May 2026</span>
+                  <span className="collection-group-count">Graduated {profile.education.graduation.toLowerCase()}</span>
                 </div>
               </div>
             </header>
@@ -92,7 +95,7 @@ export default function Coursework() {
                     Browse all {totalCourses} courses
                   </span>
                   <span className="course-record__lead-count">
-                    Across {studyYears.length} study years
+                    {totalCourses} completed courses · {studyYears.length} study years
                   </span>
                 </span>
                 <span className="course-record__action">
@@ -123,15 +126,9 @@ export default function Coursework() {
                             className="mt-1 block font-montserrat text-2xl font-extrabold text-slate-950"
                           >
                             Year {year}
-                            {year === 5 && (
-                              <span className="ml-2 align-middle text-sm font-semibold text-slate-600">
-                                - preliminary
-                              </span>
-                            )}
                           </h4>
                           <span className="mt-1 block text-sm text-slate-600">
-                            {yearCourses.length} courses
-                            {year === 5 && " - started August 2025"}
+                            {yearCourses.length} completed courses
                           </span>
                         </div>
                         <a
