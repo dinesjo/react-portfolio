@@ -133,7 +133,12 @@ files live in `src/assets/project-optimized/`. The production build refreshes
 them through the `prebuild` script.
 
 Tailwind CSS is processed through PostCSS. Relevant configuration lives in
-`tailwind.config.js`, `postcss.config.js`, and `src/index.css`.
+`postcss.config.js` and `src/index.css`; Tailwind 4's theme and source paths are
+declared in the stylesheet. Supported browsers are Safari 16.4+, Chrome 111+,
+and Firefox 128+.
+
+Install the locked dependencies with `npm ci`. Run `npm audit` to check both
+runtime and build dependencies against current security advisories.
 
 ## Deployment
 

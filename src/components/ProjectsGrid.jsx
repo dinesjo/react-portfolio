@@ -171,7 +171,7 @@ function CaseStudyCard({ project, index }) {
               <ul className="mt-6 space-y-3">
                 {project.highlights.slice(0, 2).map((note) => (
                   <li key={note} className="flex gap-3 text-sm text-slate-700">
-                    <span className="project-bullet mt-2 flex-shrink-0" />
+                    <span className="project-bullet mt-2 shrink-0" />
                     <span>{note}</span>
                   </li>
                 ))}
@@ -180,7 +180,7 @@ function CaseStudyCard({ project, index }) {
 
             {project.statusNote && (
               <p className="project-status-note mt-6 flex items-start gap-2 border px-3 py-2 text-xs font-semibold leading-relaxed">
-                <FaInfoCircle className="mt-0.5 flex-shrink-0 text-slate-400" />
+                <FaInfoCircle className="mt-0.5 shrink-0 text-slate-400" />
                 <span>{project.statusNote}</span>
               </p>
             )}
@@ -237,7 +237,7 @@ function SelectedProjectCard({ project }) {
 
         {project.statusNote && (
           <p className="project-status-note mb-4 flex items-start gap-2 border px-3 py-2 text-xs font-semibold leading-relaxed">
-            <FaInfoCircle className="mt-0.5 flex-shrink-0 text-slate-400" />
+            <FaInfoCircle className="mt-0.5 shrink-0 text-slate-400" />
             <span>{project.statusNote}</span>
           </p>
         )}
@@ -289,7 +289,7 @@ function ArchiveProjectCard({ project }) {
 
         {project.statusNote && (
           <p className="project-status-note mt-3 flex items-start gap-2 border px-3 py-2 text-xs font-semibold leading-relaxed">
-            <FaInfoCircle className="mt-0.5 flex-shrink-0 text-slate-400" />
+            <FaInfoCircle className="mt-0.5 shrink-0 text-slate-400" />
             <span>{project.statusNote}</span>
           </p>
         )}

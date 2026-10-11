@@ -150,7 +150,7 @@ export default function Coursework() {
                             <span className="course-code mt-0.5 w-fit justify-self-start border px-2 py-0.5 font-iceland text-sm font-bold">
                               {course.code}
                             </span>
-                            <span className="text-sm leading-snug text-slate-700 sm:max-w-[22rem]">
+                            <span className="text-sm leading-snug text-slate-700 sm:max-w-88">
                               {course.name}
                               {course.optional && (
                                 <span className="ml-1 text-xs italic text-slate-600">

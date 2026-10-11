@@ -215,7 +215,7 @@ export default function App() {
           target?.focus({ preventScroll: true });
           target?.scrollIntoView({ block: "start" });
         } : undefined}
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:border focus:border-white/30 focus:bg-[var(--ink)] focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-70 focus:border focus:border-white/30 focus:bg-(--ink) focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
       >
         Skip to content
       </a>

@@ -27,7 +27,7 @@ const overlayStyles = {
   },
   dark: {
     container:
-      "border-white/25 bg-slate-950/78 text-white shadow-xl shadow-slate-950/20 backdrop-blur-sm",
+      "border-white/25 bg-slate-950/78 text-white shadow-xl shadow-slate-950/20 backdrop-blur-xs",
     label: "text-white/60",
     icon: "bg-white",
   },
@@ -71,7 +71,7 @@ export default function FeaturedProjects() {
                         <img
                           src={project.icon}
                           alt=""
-                          className={`h-8 w-8 rounded p-1 object-contain ${overlayStyle.icon}`}
+                          className={`h-8 w-8 rounded-sm p-1 object-contain ${overlayStyle.icon}`}
                         />
                       )}
                       <div>
@@ -85,7 +85,7 @@ export default function FeaturedProjects() {
 
                 <div className="flex flex-col justify-between p-6 sm:p-8">
                   <div>
-                    <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--coral)]">
+                    <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-(--coral)">
                       Work spotlight 0{i + 1}
                     </p>
                     <h3 className="mt-3 font-montserrat text-3xl font-extrabold leading-tight text-slate-950">
@@ -98,7 +98,7 @@ export default function FeaturedProjects() {
                     <ul className="mt-6 space-y-3">
                       {(caseStudyNotes[project.id] || []).map((note) => (
                         <li key={note} className="flex gap-3 text-sm text-slate-700">
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[var(--coral)]" />
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-(--coral)" />
                           <span>{note}</span>
                         </li>
                       ))}

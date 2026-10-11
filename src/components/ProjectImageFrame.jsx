@@ -90,28 +90,28 @@ const normalizeImages = (project) => {
 const imageOverlayStyles = {
   light: {
     expand:
-      "border-white/70 bg-[var(--paper-strong)] text-slate-950",
+      "border-white/70 bg-(--paper-strong) text-slate-950",
     modalShell:
-      "border-white/30 bg-[var(--paper-strong)] shadow-2xl shadow-slate-950/30",
+      "border-white/30 bg-(--paper-strong) shadow-2xl shadow-slate-950/30",
     modalHeader: "border-slate-200/70 text-slate-950",
-    modalKicker: "text-[var(--coral-text)]",
+    modalKicker: "text-(--coral-text)",
     modalClose:
       "border-slate-300/70 bg-transparent text-slate-950 hover:bg-slate-950/5 focus-visible:ring-slate-950",
     modalPager:
-      "border-white/70 bg-[var(--paper-strong)] text-slate-950 hover:bg-white focus-visible:ring-slate-950",
+      "border-white/70 bg-(--paper-strong) text-slate-950 hover:bg-white focus-visible:ring-slate-950",
     modalCounter: "border-slate-200/60 text-slate-500",
   },
   dark: {
     expand:
-      "border-white/20 bg-[var(--ink)] text-white",
+      "border-white/20 bg-(--ink) text-white",
     modalShell:
-      "border-white/30 bg-[var(--paper-strong)] shadow-2xl shadow-slate-950/30",
+      "border-white/30 bg-(--paper-strong) shadow-2xl shadow-slate-950/30",
     modalHeader: "border-slate-200/70 text-slate-950",
-    modalKicker: "text-[var(--coral-text)]",
+    modalKicker: "text-(--coral-text)",
     modalClose:
       "border-slate-300/70 bg-transparent text-slate-950 hover:bg-slate-950/5 focus-visible:ring-slate-950",
     modalPager:
-      "border-white/70 bg-[var(--paper-strong)] text-slate-950 hover:bg-white focus-visible:ring-slate-950",
+      "border-white/70 bg-(--paper-strong) text-slate-950 hover:bg-white focus-visible:ring-slate-950",
     modalCounter: "border-slate-200/60 text-slate-500",
   },
 };
@@ -227,7 +227,7 @@ export default function ProjectImageFrame({
             setActiveImage(0);
             setIsOpen(true);
           }}
-          className="work-image-trigger group/image relative z-[1] block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--coral)]"
+          className="work-image-trigger group/image relative z-1 block h-full w-full cursor-zoom-in overflow-hidden text-left focus:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--coral)"
         >
           <img
             ref={previewImageRef}
@@ -261,12 +261,12 @@ export default function ProjectImageFrame({
             event.preventDefault();
             closeModal();
           }}
-          className="image-modal-dialog fixed inset-0 z-[80] m-0 h-[100dvh] max-h-none w-screen max-w-none items-center justify-center border-0 bg-transparent px-3 py-4 sm:px-6"
+          className="image-modal-dialog fixed inset-0 z-80 m-0 h-dvh max-h-none w-screen max-w-none items-center justify-center border-0 bg-transparent px-3 py-4 sm:px-6"
         >
           <div
             aria-hidden="true"
             onClick={closeModal}
-            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-[var(--ink)] backdrop-blur-sm"
+            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-(--ink) backdrop-blur-xs"
           />
 
           <div className={`image-modal-shell relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden border ${overlayStyle.modalShell}`}>
@@ -285,13 +285,13 @@ export default function ProjectImageFrame({
                 type="button"
                 aria-label="Close image preview"
                 onClick={closeModal}
-                className={`image-modal-control grid h-11 w-11 flex-shrink-0 place-items-center border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalClose}`}
+                className={`image-modal-control grid h-11 w-11 shrink-0 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalClose}`}
               >
                 <FaTimes />
               </button>
             </div>
 
-            <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px] p-2 sm:p-4">
+            <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-size-[24px_24px] bg-position-[0_0,12px_12px] p-2 sm:p-4">
               <div key={currentImage.src} className="relative max-h-[calc(100dvh-9rem)] max-w-full">
                 {hasPreviewImage && !isFullImageLoaded && (
                   <img
@@ -324,7 +324,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Previous work image"
                     onClick={showPrevious}
-                    className={`modal-pager image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    className={`modal-pager image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronLeft />
                   </button>
@@ -332,7 +332,7 @@ export default function ProjectImageFrame({
                     type="button"
                     aria-label="Next work image"
                     onClick={showNext}
-                    className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-none focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
                   >
                     <FaChevronRight />
                   </button>
