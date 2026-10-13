@@ -2705,12 +2705,20 @@ h1[tabindex="-1"]:focus { outline: none; }
 .featured-case-image .work-image-trigger { height: auto; padding: 0; }
 .featured-case-image img { height: auto; aspect-ratio: auto 4 / 3; }
 
-/* Photos fill the desktop column; figures keep every chart visible. */
+/* Photos fill the desktop column; figures can keep the full composition. */
 @media (min-width: 1024px) {
   .featured-case-image { min-height: 21rem; }
   .featured-case-image .work-image-trigger { position: absolute; inset: 0; height: 100%; }
   .featured-case-image img { height: 100%; object-fit: cover; }
   .featured-case-image--uncropped img { object-fit: contain; }
+}
+
+/* Branded illustrations need a wider frame before cropping into two columns. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .case-study-layout--full-bleed { grid-template-columns: minmax(0, 1fr); }
+  .case-study-layout--full-bleed .featured-case-image { min-height: 0; }
+  .case-study-layout--full-bleed .work-image-trigger { position: relative; height: auto; }
+  .case-study-layout--full-bleed .featured-case-image img { height: auto; }
 }
 
 .featured-case-image--uncropped .work-image-trigger:hover img,
@@ -2795,6 +2803,8 @@ h1[tabindex="-1"]:focus { outline: none; }
 .detail-image-frame { height: auto; max-height: none; background: var(--paper-strong); border: 1px solid var(--line); }
 .detail-image-frame .work-image-trigger { position: relative; padding: 1rem; }
 .detail-image-frame img { max-height: 44rem; }
+.detail-image-frame--full-bleed .work-image-trigger { padding: 0; }
+.detail-image-frame--full-bleed img { height: auto; max-height: none; }
 .case-detail__figure figcaption { max-width: 47rem; margin-top: 0.85rem; color: var(--muted); font-size: 0.78rem; line-height: 1.7; }
 .case-detail__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 .detail-next { display: flex; align-items: center; gap: 1.5rem; color: var(--muted); font-size: 0.75rem; }

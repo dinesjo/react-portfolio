@@ -51,7 +51,7 @@ export default function CaseStudy({ project, nextProject }) {
           </div>
         </aside>
       </div>
-      <figure className="case-detail__figure"><ProjectImageFrame project={project} displayImageSrc={project.imageFull} frameClassName="detail-image-frame" imageClassName="w-full h-full object-contain" imageSizes="(min-width: 1180px) 1100px, calc(100vw - 48px)" /><figcaption>{study.imageCaption}</figcaption></figure>
+      <figure className="case-detail__figure"><ProjectImageFrame project={project} displayImageSrc={project.imageFull} frameClassName={`detail-image-frame ${project.imageFrame === "full-bleed" ? "detail-image-frame--full-bleed" : ""}`} imageClassName="w-full h-full object-contain" imageSizes={project.imageFrame === "full-bleed" ? "(min-width: 1280px) 1240px, calc(100vw - 48px)" : "(min-width: 1180px) 1100px, calc(100vw - 48px)"} /><figcaption>{study.imageCaption}</figcaption></figure>
       <footer className="case-detail__footer"><a href="#featured" className="detail-back"><FaArrowLeft aria-hidden="true" /> All projects</a>{nextProject && <a href={`#/work/${nextProject.id}`} className="detail-next"><span>Next case study<strong>{nextProject.title}</strong></span><FaArrowRight aria-hidden="true" /></a>}</footer>
     </article>
   );

@@ -48,7 +48,7 @@ export const caseStudies = {
         ],
       },
     ],
-    imageCaption: "Research overview illustration: verdict accuracy and end-to-end latency for the three approaches evaluated on 280 questions. Results are from the thesis benchmark, rather than a production deployment.",
+    imageCaption: "Scania truck components connected to illustrate compatibility questions over an industrial knowledge graph. The coloured links are conceptual, rather than specific MAZE constraints.",
   },
   snuskoll: {
     subtitle: "A mobile-first product catalog with personal ratings and social reviews.",

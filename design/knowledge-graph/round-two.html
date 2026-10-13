@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Knowledge Graph — Scania cutaway variations</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <main>
+    <header class="intro">
+      <a class="back" href="/#project-master-thesis-kgqa">← Portfolio</a>
+      <p class="eyebrow">Knowledge Graph · Scania cutaway variations</p>
+      <h1>One direction. Three variations.</h1>
+      <p class="intro-copy">Scania branding, a simpler component set, and three ways to show compatibility relationships. Compare the original A with these new drafts.</p>
+    </header>
+
+    <div class="choices" role="group" aria-label="Image direction">
+      <button type="button" class="choice" data-direction="a" aria-pressed="false"><img src="a-industrial-cutaway.webp" alt="Original A: unbranded exploded truck assembly with mostly green graph relationships"><span><b>Original A</b><small>The chosen styling</small></span></button>
+      <button type="button" class="choice" data-direction="a1" aria-pressed="true"><img src="a1-scania-relationships.webp" alt="Scania branded cab, inline-six engine, separate gearbox and two-axle chassis with green solid and red dashed links"><span><b>A1 · Relationship lines</b><small>Closest to the original</small></span></button>
+      <button type="button" class="choice" data-direction="a2" aria-pressed="false"><img src="a2-scania-assembly.webp" alt="Scania cab and separate engine and gearbox raised above their positions on a two-axle tractor chassis"><span><b>A2 · Assembly layers</b><small>A more coherent assembly</small></span></button>
+      <button type="button" class="choice" data-direction="a3" aria-pressed="false"><img src="a3-scania-combinations.webp" alt="Scania cab and chassis with separate engine, gearbox and fuel tank grouped by green solid and red dashed contours"><span><b>A3 · Combination contours</b><small>Group the components</small></span></button>
+    </div>
+
+    <section class="selected" aria-labelledby="direction-title">
+      <div class="selected-head">
+        <div><h2 id="direction-title">A1 · Relationship lines</h2><p id="direction-copy">The closest continuation of A: Scania branding, more faithful component shapes, and alternating green solid and red dashed relationships.</p></div>
+        <div class="views" role="group" aria-label="Preview layout">
+          <button type="button" data-view="artwork" aria-pressed="true">Full artwork</button>
+          <button type="button" data-view="card" aria-pressed="false">Project card</button>
+        </div>
+      </div>
+      <div id="card-controls" class="card-controls" hidden>
+        <label><input type="checkbox" id="fill-frame" checked> Fill the image frame</label>
+        <p>Turn this off to compare the current “show the whole image” framing.</p>
+      </div>
+      <div class="preview" id="preview" data-view="artwork" data-fill="true">
+        <div class="media"><img id="main-image" src="a1-scania-relationships.webp" alt="Scania branded cab, inline-six engine, separate gearbox and two-axle chassis with green solid and red dashed links"></div>
+        <div class="project-content">
+          <p class="kind">Academic · Research</p>
+          <h3>Industrial Knowledge Graph QA</h3>
+          <p class="summary">I built and benchmarked three ways to answer truck-component compatibility questions using Traton’s MAZE knowledge graph: dense retrieval, hybrid retrieval, and a SPARQL graph agent.</p>
+          <p class="date">2026</p>
+          <div class="result"><strong>96.4%</strong><div><b>Hybrid retrieval verdict accuracy</b><span>Up from 77.1% with dense retrieval · 280 graph-derived questions</span></div></div>
+          <ul><li>I built the RDF loader, retrieval pipelines, and bounded graph agent in Python</li><li>I generated 280 graph-derived questions and measured verdict accuracy, response time, token usage, and failure modes</li></ul>
+          <p class="stack"><b>Built with</b><span>Python · SPARQL · GraphDB · Qdrant · Amazon Bedrock</span></p>
+          <a class="case-link" href="/#/work/master-thesis-kgqa">Read case study →</a>
+        </div>
+      </div>
+      <div class="caption"><p id="direction-note">Component shapes follow Scania product references. The coloured relationships are illustrative, not actual MAZE rules or certified Scania compatibility constraints.</p><a id="asset-link" href="a1-scania-relationships.webp" target="_blank" rel="noopener">Open image ↗</a></div>
+    </section>
+    <footer><p>All three keep the artwork free of charts and explanatory text. Scania’s official engine, gearbox, chassis and truck images guided the component shapes. These remain generated illustrations rather than CAD drawings. <a href="round-one.html">First-round concepts ↗</a></p><a href="README.md">References and generation prompts ↗</a></footer>
+  </main>
+  <script type="module" src="round-two.js"></script>
+</body>
+</html>

@@ -82,7 +82,7 @@ const normalizeImages = (project) => {
   return [{
     src: project.imageFull || project.image,
     previewSrc: project.image,
-    alt: project.title,
+    alt: project.imageAlt || project.title,
     caption: project.title,
   }];
 };
@@ -234,14 +234,14 @@ export default function ProjectImageFrame({
             src={displaySrc}
             srcSet={displaySrcSet}
             sizes={displaySrcSet ? imageSizes : undefined}
-            alt={project.title}
+            alt={project.imageAlt || project.title}
             loading="lazy"
             decoding="async"
             onLoad={() => setLoaded(true)}
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className={`work-image-expand absolute right-4 top-4 grid h-11 w-11 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
+          <span className={`work-image-expand absolute right-4 ${project.imageFrame === "full-bleed" ? "bottom-4" : "top-4"} grid h-11 w-11 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
         </button>

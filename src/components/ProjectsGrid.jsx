@@ -142,13 +142,13 @@ function CaseStudyCard({ project, index }) {
       data-reveal="case-study"
       style={{ viewTransitionName: `project-card-${project.id}` }}
     >
-      <div className={`grid lg:grid-cols-[1.03fr_0.97fr] ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+      <div className={`grid lg:grid-cols-[1.03fr_0.97fr] ${project.imageFrame === "full-bleed" ? "case-study-layout--full-bleed" : ""} ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
           frameClassName={`case-study-media featured-case-image overflow-hidden ${keepFullImage ? "featured-case-image--uncropped" : ""}`}
           imageClassName="block w-full"
-          imageSizes="(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
+          imageSizes={project.imageFrame === "full-bleed" ? "(min-width: 1280px) 608px, calc(100vw - 48px)" : "(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"}
         />
 
         <div className="priority-case-card__content flex flex-col justify-between p-6 sm:p-8">

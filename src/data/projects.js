@@ -42,7 +42,8 @@ const projectMedia = {
     image: masterThesisKgqaCard,
     imageFull: masterThesisKgqaFull,
     imageOverlayTone: "light",
-    featuredImageFit: "contain",
+    imageFrame: "full-bleed",
+    imageAlt: "Scania cab, chassis, inline-six engine, gearbox and fuel tank connected by green and red links on a reflective floor, with TRATON Group branding.",
   },
   "thesis-tracker": {
     image: thesisTrackerCard,
@@ -114,7 +115,7 @@ const projectMedia = {
 };
 
 export const projects = projectRecords.map(({ id, title, highlights, ...content }) => {
-  const { image, imageFull, icon, imageOverlayTone, featuredImageFit } = projectMedia[id];
+  const { image, imageFull, icon, imageOverlayTone, featuredImageFit, imageFrame, imageAlt } = projectMedia[id];
 
   return {
     id,
@@ -125,6 +126,8 @@ export const projects = projectRecords.map(({ id, title, highlights, ...content 
     ...content,
     ...(imageOverlayTone ? { imageOverlayTone } : {}),
     ...(featuredImageFit ? { featuredImageFit } : {}),
+    ...(imageFrame ? { imageFrame } : {}),
+    ...(imageAlt ? { imageAlt } : {}),
     ...(highlights ? { highlights } : {}),
   };
 });
