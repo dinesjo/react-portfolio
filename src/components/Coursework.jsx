@@ -1,15 +1,7 @@
-import { featuredCourses, getCoursesByYear } from "../data/courses";
+import { courseRelatedWork, featuredCourses, getCoursesByYear } from "../data/courses";
 import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 import { focusSection } from "../utils/portfolioNavigation";
-
-const relatedWork = {
-  DD2480: { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests." },
-  DD2395: { id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." },
-  DD2380: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." },
-  DD2350: { id: "pathvis-react", title: "Pathfinding Visualizer", note: "Exploring how search algorithms find a route." },
-  DH2642: { id: "fittrackr", title: "FitTrackr", note: "A React fitness tracker with shared application state." },
-};
 
 const studyYears = [1, 2, 3, 4, 5];
 
@@ -65,7 +57,7 @@ export default function Coursework() {
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">
                     {course.featuredNote}
                   </p>
-                  {relatedWork[course.code] && <div className="course-related"><p>{relatedWork[course.code].note}</p><a href={`#project-${relatedWork[course.code].id}`} onClick={focusSection}>Related work: {relatedWork[course.code].title} <span aria-hidden="true">→</span></a></div>}
+                  {courseRelatedWork[course.code] && <div className="course-related"><p>{courseRelatedWork[course.code].note}</p><a href={`#project-${courseRelatedWork[course.code].id}`} onClick={focusSection}>Related work: {courseRelatedWork[course.code].title} <span aria-hidden="true">→</span></a></div>}
                 </article>
               ))}
             </div>

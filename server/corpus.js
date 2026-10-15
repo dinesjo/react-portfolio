@@ -1,4 +1,4 @@
-import { courses } from "../src/data/courses.js";
+import { courseRelatedWork, courses } from "../src/data/courses.js";
 import { profile } from "../src/data/profile.js";
 import { projectRecords } from "../src/data/projectRecords.js";
 
@@ -15,7 +15,7 @@ function projectLifecycle(project) {
 function publicProjectLinks(project) {
   return Object.entries(project.links ?? {})
     .filter(([key, value]) => (key === "live" || key === "github") && value)
-    .map(([key, value]) => `${key}: ${value}`);
+    .map(([key, value]) => `${key === "live" ? project.links.liveText || "Try the app" : "Source code"}: ${value}`);
 }
 
 function buildProfileChunk() {
@@ -89,6 +89,7 @@ function buildProjectChunk(project) {
         : "",
       project.statusNote ? `Status note: ${project.statusNote}` : "",
       project.caseStudy ? [
+        `Case study overview: ${project.caseStudy.subtitle}`,
         `Case study role: ${project.caseStudy.role}.`,
         project.caseStudy.result ? `Published result: ${project.caseStudy.result.value}; ${project.caseStudy.result.label}; ${project.caseStudy.result.context}.` : "",
         ...project.caseStudy.sections.flatMap((section) => [
@@ -116,6 +117,9 @@ function buildCourseChunk(year) {
     const details = [
       course.optional ? "elective" : "",
       course.featuredNote ? `portfolio note: ${course.featuredNote}` : "",
+      courseRelatedWork[course.code]
+        ? `published related work: ${courseRelatedWork[course.code].title} (#project-${courseRelatedWork[course.code].id}); connection: ${courseRelatedWork[course.code].note}`
+        : "",
     ].filter(Boolean);
     return `- ${course.code}: ${course.name}${details.length ? ` (${details.join("; ")})` : ""}`;
   });

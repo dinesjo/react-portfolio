@@ -242,6 +242,44 @@ test("applies deterministic course grounding only to course questions", async ()
   assert.match(projectResult.answer, /invented detail/);
 });
 
+test("keeps work and missing-grade answers after course entries and uses the actual course source", () => {
+  const answer = normalizeCourseClaims(
+    "Security courses:\n1. DD2440 – Computer Security — invented detail [S1]\n\nAt AMF, Linus works on full-stack development [S1].\nIndividual grades are not published [S1].",
+    "[S1]\nType: profile\nContent: AMF\n[/S1]\n[S22]\nType: course\nContent: DD2395: Computer Security\n[/S22]",
+  );
+  assert.match(answer, /DD2395 – Computer Security — Systems security and threat modeling \[S22\]/);
+  assert.match(answer, /At AMF, Linus works on full-stack development \[S1\]/);
+  assert.match(answer, /Individual grades are not published \[S1\]/);
+  assert.doesNotMatch(answer, /invented detail/);
+});
+
+test("recognizes degree-project codes and preserves prose that mentions a course", () => {
+  assert.equal(shouldNormalizeCourseAnswer("Did he finish DA231X?"), true);
+  assert.equal(shouldNormalizeCourseAnswer("vilka säkerhetskurser har han läst?"), true);
+  const answer = normalizeCourseClaims("1. DA231X – invented title [S23]\n\nHis grade for DA231X is not published [S1].");
+  assert.match(answer, /DA231X – Degree Project in Computer Science and Engineering \(30 credits\)/);
+  assert.match(answer, /His grade for DA231X is not published/);
+});
+
+test("streamed mixed questions retain later answers and correct course citations before emission", async () => {
+  const deltas = [];
+  const result = await askOllamaStream({
+    apiKey: "test-key",
+    question: "Which KTH course connects to SnusKoll, and what is his AMF job?",
+    context: "[S1]\nType: profile\nContent: AMF\n[/S1]\n[S22]\nType: course\nContent: DD2395: Computer Security\n[/S22]",
+    fetchImpl: async () => ndjsonResponse([
+      { message: { content: "1. DD2395 – Computer Security — invented detail [S1]\nAt AMF, Linus works on test automation [S1].\n\nThe published connection is authentication and access to personal data [S22]." }, done: false },
+      { done: true },
+    ]),
+    onDelta: (content) => deltas.push(content),
+  });
+  assert.equal(deltas.length, 1);
+  assert.equal(deltas.join(""), result.answer);
+  assert.match(result.answer, /threat modeling \[S22\]\n\nAt AMF/);
+  assert.match(result.answer, /published connection is authentication/);
+  assert.doesNotMatch(result.answer, /invented detail/);
+});
+
 test("recognizes explicit course intent and course follow-ups", () => {
   assert.equal(shouldNormalizeCourseAnswer("Which projects use React?"), false);
   assert.equal(shouldNormalizeCourseAnswer("Which KTH courses cover security?"), true);

@@ -80,7 +80,7 @@ The assistant answers from the facts already published on this page. It does
 not crawl linked sites or inspect screenshots. The canonical corpus currently
 contains 23 records: one profile, 17 projects, and five course-year records.
 
-That complete corpus is only about 4,300 estimated prompt tokens, so the live
+That complete corpus is only about 6,600 estimated prompt tokens, so the live
 path deliberately uses all records instead of trying to retrieve a small subset.
 Each request receives the same unabridged, citation-labelled context. This makes
 cross-record questions such as “Which projects used React?” complete and removes
@@ -102,8 +102,9 @@ Safeguards remain explicit:
 - only records actually cited in the final answer appear as quiet, linked
   portfolio entries inside a default-closed disclosure below it; citation
   labels remain internal so the prose stays natural and uncluttered;
-- course questions are buffered for deterministic course-name normalization,
-  while project and general answers stream immediately;
+- course questions are buffered for deterministic course-name and citation
+  normalization without discarding separate work or project answers, while
+  project and general answers stream immediately;
 - the browser buffers transport deltas and reveals complete words at an adaptive
   cadence, so provider chunk sizes do not produce abrupt blocks of text;
 - visitors can stop an answer, which cancels the request and any buffered text,
@@ -125,6 +126,13 @@ override is supplied. The largest normal prompt envelope allowed by the corpus,
 history, question, and output safeguards is estimated below 22K tokens, leaving
 substantial headroom. `think` is disabled for predictable visitor latency. No
 model or internal runtime metadata is sent to the frontend.
+
+The [context review](docs/assistant-context-review.md) maps every prompt input,
+documents the imperfect-query experiments and remaining limitations, and explains
+the shared coursework-to-project evidence. To evaluate only the configured default
+model, run `npm run context:evaluate -- gemma4:31b`. The expanded evaluation uses
+18 cases and exits nonzero for failed checks or provider errors; its checks are
+diagnostics rather than proof that every claim is supported.
 
 ## Images and Styling
 

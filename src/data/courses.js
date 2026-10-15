@@ -81,6 +81,15 @@ export const featuredCourses = courses
   .filter((course) => course.featuredNote)
   .sort((a, b) => a.featuredOrder - b.featuredOrder);
 
+// Published connections to explore, rather than claims that a course caused a project.
+export const courseRelatedWork = {
+  DD2480: { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests." },
+  DD2395: { id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." },
+  DD2380: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." },
+  DD2350: { id: "pathvis-react", title: "Pathfinding Visualizer", note: "Exploring how search algorithms find a route." },
+  DH2642: { id: "fittrackr", title: "FitTrackr", note: "A React fitness tracker with shared application state." },
+};
+
 const colorMap = {
   DD: "#4f46e5",
   SF: "#2563eb",

@@ -1,4 +1,4 @@
-import { portfolioChunks } from "./corpus.js";
+import { corpusStats, portfolioChunks } from "./corpus.js";
 
 export const FULL_CONTEXT_TOKEN_BUDGET = 12_000;
 
@@ -53,9 +53,11 @@ export function buildFullPortfolioContext({
     type: chunk.type,
     href: chunk.href,
   }));
-  const context = chunks
-    .map((chunk, index) => formatSource(chunk, sources[index].citation))
-    .join("\n\n");
+  const context = [
+    `Public portfolio snapshot. Record updated: ${corpusStats.lastUpdated}.`,
+    "Source text uses Linus's first-person voice. Project status and links describe the published record, not live availability checks. Related coursework links are published connections to explore, not evidence that a project was a course assignment or that a course caused a design choice.",
+    ...chunks.map((chunk, index) => formatSource(chunk, sources[index].citation)),
+  ].join("\n\n");
   const estimatedTokens = estimateTokens(context);
 
   if (estimatedTokens > maxTokens) {

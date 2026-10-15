@@ -1,7 +1,10 @@
 import { performance } from "node:perf_hooks";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { buildFullPortfolioContext } from "../server/full-context.js";
 import { askOllama } from "../server/ollama.js";
+import { imperfectCases } from "./assistant-evaluation-cases.mjs";
 
 const DEFAULT_MODELS = [
   "minimax-m3",
@@ -68,7 +71,7 @@ const cases = [
       const normalized = normalizeForComparison(answer);
       return {
         declinesUnsupportedAnswer:
-          /(?:not|isn't|is not|doesn't|does not).{0,50}(?:published|included|available|contain)|outside.{0,50}portfolio/i.test(
+          /(?:not|isn't|is not|doesn't|does not).{0,50}(?:published|included|available|contain)|outside.{0,50}portfolio|(?:don't|do not|cannot|can't).{0,40}(?:access|forecast)|(?:limited|restricted) to.{0,60}portfolio/i.test(
             normalized,
           ),
         noInventedForecast:
@@ -105,21 +108,20 @@ const cases = [
   },
 ];
 
-if (!process.env.OLLAMA_API_KEY) {
-  throw new Error("OLLAMA_API_KEY is required for the live model evaluation.");
-}
+export const evaluationCases = [...cases, ...imperfectCases];
 
-for (const model of models) {
-  const modelResult = { model, cases: [], passed: 0, total: 0 };
+export async function evaluateModel({ model, apiKey, cases = evaluationCases, ask = askOllama }) {
+  const modelResult = { model, cases: [], passed: 0, total: 0, failedCases: 0, errors: 0 };
 
   for (const evaluationCase of cases) {
     const startedAt = performance.now();
 
     try {
-      const result = await askOllama({
-        apiKey: process.env.OLLAMA_API_KEY,
+      const result = await ask({
+        apiKey,
         model,
         question: evaluationCase.question,
+        history: evaluationCase.history ?? [],
         context,
       });
       const checks = evaluationCase.checks(result.answer);
@@ -128,16 +130,22 @@ for (const model of models) {
 
       modelResult.passed += passed;
       modelResult.total += total;
+      if (passed < total) modelResult.failedCases += 1;
       modelResult.cases.push({
         id: evaluationCase.id,
+        question: evaluationCase.question,
+        ...(evaluationCase.history ? { history: evaluationCase.history } : {}),
         durationMs: Math.round(performance.now() - startedAt),
         checks,
         metrics: result.metrics,
         answer: result.answer,
       });
     } catch (error) {
+      modelResult.failedCases += 1;
+      modelResult.errors += 1;
       modelResult.cases.push({
         id: evaluationCase.id,
+        question: evaluationCase.question,
         durationMs: Math.round(performance.now() - startedAt),
         error: {
           code: error?.code ?? "evaluation_failed",
@@ -147,5 +155,16 @@ for (const model of models) {
     }
   }
 
-  process.stdout.write(`${JSON.stringify(modelResult, null, 2)}\n`);
+  return modelResult;
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  if (!process.env.OLLAMA_API_KEY) {
+    throw new Error("OLLAMA_API_KEY is required for the live model evaluation.");
+  }
+  for (const model of models) {
+    const result = await evaluateModel({ model, apiKey: process.env.OLLAMA_API_KEY });
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (result.failedCases > 0) process.exitCode = 1;
+  }
 }

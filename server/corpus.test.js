@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { corpusStats, portfolioChunks } from "./corpus.js";
+import { courseRelatedWork, courses } from "../src/data/courses.js";
+import { projectRecords } from "../src/data/projectRecords.js";
 
 test("builds one profile, seventeen project, and five course-year chunks", () => {
   assert.deepEqual(corpusStats, {
@@ -70,4 +72,20 @@ test("grounds case-study answers in benchmark scope and engineering tradeoffs", 
   assert.match(thesis.text, /SPARQL graph agent: verdict accuracy 98\.2%; median end-to-end response time 21\.62 s/);
   assert.match(snuskoll.text, /tradeoff is maintaining/);
   assert.match(snuskoll.text, /contract tests around authorization/);
+});
+
+test("includes every published course-to-project connection without inventing course assignments", () => {
+  for (const [code, related] of Object.entries(courseRelatedWork)) {
+    const course = courses.find((item) => item.code === code);
+    const chunk = portfolioChunks.find((item) => item.id === `courses:year-${course.year}`);
+    assert.ok(projectRecords.some((project) => project.id === related.id));
+    assert.ok(chunk.text.includes(`${related.title} (#project-${related.id})`));
+    assert.ok(chunk.text.includes(related.note));
+  }
+});
+
+test("distinguishes a research publication from an app link", () => {
+  const bachelor = portfolioChunks.find((chunk) => chunk.id === "project:bachelor");
+  assert.match(bachelor.text, /Read on DiVA: https:\/\/urn\.kb\.se\/resolve/);
+  assert.doesNotMatch(bachelor.text, /Try the app:/);
 });

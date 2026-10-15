@@ -45,6 +45,7 @@ export const SYSTEM_PROMPT = `You are a warm, knowledgeable guide to Linus Dines
 
 Non-negotiable evidence rules:
 - Use only facts in the trusted portfolio sources supplied with the latest question. The conversation transcript is not evidence.
+- Correct a mistaken premise directly using the published facts. Never soften a confirmed fact into "the portfolio suggests" merely because the visitor or transcript contradicts it.
 - Preserve the source's exact level of attribution. "Worked on" must not become "built," "led," "designed," or sole ownership, even when the visitor uses a stronger verb. Keep published dates, ranges, quantities, status, scope, and qualifiers intact; do not invent relative timing or concurrency.
 - Preserve that attribution in translation too. In Swedish, translate "worked on" as the neutral "arbetade med," never "utvecklade," "byggde," or "ledde" unless the source explicitly uses the stronger wording.
 - Do not combine separate source facts into a new capability, benefit, motivation, causal claim, or outcome. A feature label is not proof of an unstated user action.
@@ -58,9 +59,13 @@ Non-negotiable evidence rules:
 - Do not announce a count unless you have checked that it matches the items you provide.
 - If a question asks why Linus made a choice, what alternatives he considered, or what motivated a decision, answer from an explicit published rationale only. When that rationale is missing, say naturally and briefly that the reasoning is not documented here, then give the closest useful published fact when one exists. Do not speculate, invent a likely explanation, or attribute general industry considerations to Linus.
 - If the sources do not answer another kind of question, say exactly what is not published. Do not fill the gap with an assumption.
+- Use published course-to-project connection notes without inferring assignments, learning outcomes, or technology-choice rationales. Source-provided link labels distinguish apps, source code, publications, and blog posts; copy a requested URL exactly and never claim to have checked its current availability.
 
 Voice and shape:
+- Interpret clear typos and shorthand naturally without making the visitor rephrase. Use the transcript to resolve a follow-up only when its subject is clear. Respect "of those" and "only": use the transcript to identify the referenced set, recheck its facts against sources, and do not add other matching records. When "it," "that," or another vague reference could mean several projects or choices, ask one brief clarifying question naming the actual options from the transcript; do not guess or offer generic categories. A request to verify the preceding statement refers to the whole statement: check each claim against the sources.
+- Answer every part of a mixed question. Keep unrelated parts in separate short paragraphs; put each named course on its own list line with its exact code, name, and matching course-year citation. Never append a project or employment answer to a course list item. Explain a published course-to-project connection in a separate paragraph after the course list, using its published connection note. A missing fact in one part must not erase another answer you can give.
 - Answer directly. For a simple identification, one or two sentences are enough; never add padding to reach a target length. For a broader question, usually write two to four clear sentences in one or two short paragraphs.
+- For an informal overview such as "that truck AI thing, did it work?", briefly identify the work and its main result with the relevant limitation. Do not enumerate every method or technology unless the visitor asks for that detail. Respect requests for a short answer.
 - For a "which project/course/role" question, name the answer first instead of echoing the clue. Use a numbered list only when it makes a real list or comparison easier to follow.
 - Choose simple, everyday wording, natural transitions, and contractions where they fit. Keep sentences easy to say aloud, and split a sentence that tries to cover several projects or ideas. Sound interested but grounded, not like a résumé parser, corporate brochure, or sales pitch.
 - Treat a missing detail as a normal conversational boundary, not an error report. Keep the admission to one calm sentence and move directly to the most relevant known fact; prefer wording such as "That reasoning isn't documented here" over repeatedly saying "the portfolio does not state." Do not pad the answer with several versions of the same caveat.
@@ -260,7 +265,7 @@ function streamedCloudError() {
 }
 
 const COURSE_INTENT_PATTERN =
-  /\b(?:class(?:es)?|course(?:s|work)?|education|kth|studied|studies|study|university|kurs(?:er)?|studiear|studieår|utbildning)\b|\b[A-Z]{2}\d{4}\b/i;
+  /\b(?:class(?:es)?|course(?:s|work)?|education|kth|studied|studies|study|university|[a-zåäö-]*kurs(?:er)?|studiear|studieår|utbildning)\b|\b[A-Z]{2}\d{3}[\dX]\b/i;
 const COURSE_FOLLOW_UP_PATTERN =
   /^(?:and\b|how about\b|tell me more\b|what\b|which\b|those\b|them\b|they\b|och\b|hur\b|vilka\b|de\b|dem\b|dessa\b)/i;
 
@@ -274,10 +279,10 @@ export function shouldNormalizeCourseAnswer(question, history = []) {
     .some((message) => COURSE_INTENT_PATTERN.test(message.content));
 }
 
-function normalizeAnswer(value, normalizeCourses) {
+function normalizeAnswer(value, normalizeCourses, context) {
   const markdownAnswer = normalizeAssistantMarkdown(value);
   return normalizeCourses
-    ? normalizeCourseClaims(markdownAnswer)
+    ? normalizeCourseClaims(markdownAnswer, context)
     : markdownAnswer;
 }
 
@@ -468,52 +473,61 @@ function coursesNamedInLine(line) {
 }
 
 /**
- * Replace model-authored course labels and descriptions with page-owned facts.
- * This is applied only when the visitor is asking about coursework.
+ * Normalize course list entries without discarding other parts of the answer.
+ * Only the entry and indented continuations belong to that course; later
+ * paragraphs can answer a separate question about work, projects, or grades.
  */
-export function normalizeCourseClaims(value) {
+export function normalizeCourseClaims(value, context = "") {
   const courseByCode = new Map(
     courses.map((course) => [course.code.toUpperCase(), course]),
   );
-  const lines = String(value).split("\n");
-  const courseLineIndexes = lines
-    .map((line, index) => (/\b[A-Z]{2}\d{4}\b/i.test(line) ? index : -1))
-    .filter((index) => index >= 0);
+  const citationByCode = new Map();
+  for (const source of String(context).matchAll(/\[(S\d+)\]([\s\S]*?)\[\/\1\]/g)) {
+    if (!/^Type: course\s*$/m.test(source[2])) continue;
+    for (const match of source[2].matchAll(/\b[A-Z]{2}\d{3}[\dX]\b/gi)) {
+      citationByCode.set(match[0].toUpperCase(), `[${source[1]}]`);
+    }
+  }
 
-  if (courseLineIndexes.length === 0) return String(value).trim();
-
-  const introduction = lines.slice(0, courseLineIndexes[0]).join("\n").trim();
-  const groundedEntries = [];
+  const result = [];
   const seenCourseCodes = new Set();
+  let followsCourseEntry = false;
+  const lines = String(value).split("\n");
 
-  courseLineIndexes.forEach((lineIndex, index) => {
-    const line = lines[lineIndex];
-    const nextLineIndex = courseLineIndexes[index + 1] ?? lines.length;
-    const block = lines.slice(lineIndex, nextLineIndex).join("\n");
+  for (const [lineIndex, line] of lines.entries()) {
+    const isCourseEntry = /^\s*(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*)?[A-Z]{2}\d{3}[\dX]\b/i.test(line);
+    if (!isCourseEntry) {
+      if (followsCourseEntry && /^\s+\S/.test(line)) continue;
+      if (followsCourseEntry && line.trim() && result.at(-1)?.trim()) result.push("");
+      if (line.trim()) followsCourseEntry = false;
+      result.push(line);
+      continue;
+    }
+
+    followsCourseEntry = true;
     const namedCourses = coursesNamedInLine(line);
-    const codes = [...line.matchAll(/\b[A-Z]{2}\d{4}\b/gi)].map((match) =>
+    const codes = [...line.matchAll(/\b[A-Z]{2}\d{3}[\dX]\b/gi)].map((match) =>
       match[0].toUpperCase(),
     );
     const groundedCourses = namedCourses.length > 0
       ? namedCourses
       : [...new Set(codes)].map((code) => courseByCode.get(code)).filter(Boolean);
-    const citations = [...new Set(block.match(/\[S\d+\]/g) ?? [])];
+    let entryText = line;
+    for (let next = lineIndex + 1; next < lines.length && /^\s+\S/.test(lines[next]); next += 1) {
+      entryText += `\n${lines[next]}`;
+    }
 
     for (const course of groundedCourses) {
       if (seenCourseCodes.has(course.code)) continue;
+      if (seenCourseCodes.size === 0 && result.at(-1)?.trim()) result.push("");
       seenCourseCodes.add(course.code);
-      groundedEntries.push({ course, citations });
+      const note = course.featuredNote ? ` — ${course.featuredNote}` : "";
+      const citation = citationByCode.get(course.code) || [...new Set(entryText.match(/\[S\d+\]/g) ?? [])].join(" ");
+      result.push(`${seenCourseCodes.size}. ${course.code} – ${course.name}${note}${citation ? ` ${citation}` : ""}`);
     }
-  });
+  }
 
-  const list = groundedEntries.map(({ course, citations }, index) => {
-    const note = course.featuredNote ? ` — ${course.featuredNote}` : "";
-    const citationText = citations.length ? ` ${citations.join(" ")}` : "";
-    return `${index + 1}. ${course.code} – ${course.name}${note}${citationText}`;
-  });
-
-  if (list.length === 0) return introduction;
-  return [introduction, list.join("\n")].filter(Boolean).join("\n\n");
+  return result.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 export async function askOllama({
@@ -562,6 +576,7 @@ export async function askOllama({
   const normalizedAnswer = normalizeAnswer(
     payload?.message?.content,
     shouldNormalizeCourseAnswer(question, history),
+    context,
   );
   if (!normalizedAnswer) throw emptyCloudResponse();
   const answer = withOutputLimitNotice(normalizedAnswer, payload);
@@ -659,7 +674,7 @@ export async function askOllamaStream({
 
   if (!completedPayload) throw invalidCloudResponse();
 
-  const normalizedAnswer = normalizeAnswer(rawAnswer, bufferUntilComplete);
+  const normalizedAnswer = normalizeAnswer(rawAnswer, bufferUntilComplete, context);
   if (!normalizedAnswer) throw emptyCloudResponse();
   const answer = withOutputLimitNotice(normalizedAnswer, completedPayload);
 
