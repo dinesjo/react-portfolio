@@ -37,6 +37,8 @@ import thesisTrackerFull from "../assets/project-optimized/thesis-tracker-full.w
 import thesisTrackerIcon from "../assets/project-optimized/icons/thesis-tracker-icon.webp";
 import vimCard from "../assets/project-optimized/vim-motions-guide-card.webp";
 import vimFull from "../assets/project-optimized/vim-motions-guide-full.webp";
+import warehouseCard from "../assets/project-optimized/warehouse-simulation-card.webp";
+import warehouseFull from "../assets/project-optimized/warehouse-simulation-full.webp";
 import { projectRecords } from "./projectRecords";
 
 const projectMedia = {
@@ -61,6 +63,12 @@ const projectMedia = {
     image: s3kInterruptsCard,
     imageFull: s3kInterruptsFull,
     imageAlt: "Conceptual processor labelled S3K, with separated execution regions and a coral interrupt pulse routed through a controlled gateway.",
+    imageOverlayTone: "light",
+  },
+  "warehouse-simulation": {
+    image: warehouseCard,
+    imageFull: warehouseFull,
+    imageAlt: "Conceptual pencil sketch of warehouse robots carrying boxes between shelves and a conveyor, with a coral route around an obstacle.",
     imageOverlayTone: "light",
   },
   bibellandskap: {

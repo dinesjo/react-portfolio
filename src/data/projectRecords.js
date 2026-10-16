@@ -82,6 +82,21 @@ export const projectRecords = [
     priority: 2,
   },
   {
+    id: "warehouse-simulation",
+    title: "Autonomous Warehouse Simulation",
+    description:
+      "Our DD2528 group project simulated warehouse robots and conveyor handoffs, combining Dijkstra route planning, Bug2 obstacle navigation, multi-robot coordination, and battery-aware job assignment.",
+    technologies: ["Python"],
+    methods: ["Robot coordination", "Path planning", "State machines"],
+    category: "Simulation",
+    context: "Academic",
+    links: {
+      github: "https://github.com/KlaraLindemalm/DD2528-Group-1-Assignment-4",
+    },
+    date: "November - December 2025",
+    priority: 2,
+  },
+  {
     id: "bibellandskap",
     title: "Bible Map",
     description:

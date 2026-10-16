@@ -40,6 +40,7 @@ const projectImages = [
   "snuskoll",
   "thesis-tracker",
   "vim-motions-guide",
+  "warehouse-simulation",
 ];
 
 const sourceFiles = {

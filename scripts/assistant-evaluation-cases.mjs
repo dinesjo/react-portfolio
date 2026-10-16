@@ -11,6 +11,17 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'warehouse-course-project',
+    question: 'What did Linus build for DD2528? Was it deployed to physical robots?',
+    checks: (answer) => ({
+      identifiesSimulation: /warehouse/i.test(answer) && /simulat/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      describesPlanning: /Dijkstra|Bug2|path planning|route planning/i.test(answer),
+      noInventedDeployment: !/(?:was|were) deployed (?:on|to) (?:physical|real) robots/i.test(answer),
+      projectCitation: cites(answer, 'project:warehouse-simulation'),
+    }),
+  },
+  {
     id: 's3k-group-project',
     question: "What was Linus's S3K project, and was it a solo project?",
     checks: (answer) => ({
