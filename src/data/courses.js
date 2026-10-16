@@ -86,6 +86,7 @@ export const featuredCourses = courses
 
 // Published connections to explore, rather than claims that a course caused a project.
 export const courseRelatedWork = {
+  DH2643: [{ id: "taskeroo", title: "Taskeroo", note: "Group coursework creating a shared Kanban app with GitHub and Google Calendar integrations." }],
   DD2528: [{ id: "warehouse-simulation", title: "Autonomous Warehouse Simulation", note: "Group simulation of warehouse robots, route planning, conveyor handoffs, and battery-aware scheduling." }],
   DA231X: [{ id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing retrieval pipelines and a SPARQL graph agent at Traton." }],
   DD2497: [{ id: "s3k-interrupts", title: "S3K Interrupt Capabilities", note: "Group project extending S3K with capability-controlled interrupt handling." }],

@@ -11,6 +11,16 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'taskeroo-course-and-visibility',
+    question: 'What is Taskeroo, which course was it for, and can I browse its source?',
+    checks: (answer) => ({
+      identifiesCourseAndApp: /DH2643/.test(answer) && /Kanban/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      respectsPrivateSource: /private/i.test(answer) && !/https:\/\/github.com\/[^\s)]+taskeroo/i.test(answer),
+      projectCitation: cites(answer, 'project:taskeroo'),
+    }),
+  },
+  {
     id: 'ci-course-and-role',
     question: 'What did Linus do on the DD2480 CI server, and was SnusKoll also an assignment for that course?',
     checks: (answer) => ({

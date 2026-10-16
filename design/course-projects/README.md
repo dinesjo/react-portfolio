@@ -25,6 +25,14 @@ were not executed. These are group projects, not claims of sole authorship.
   server uses Jetty, JGit, and Maven. Its notification tests write real GitHub
   statuses, so none were executed. The existing SnusKoll connection remains a
   related personal project, separate from the course assignment.
+- **DH2643 — Taskeroo:** private group repository reviewed read-only. The owner
+  confirmed the course connection in this conversation; the repository itself
+  does not identify DH2643. React/TypeScript frontend, Express backend, Supabase
+  data/auth, boards, tasks, members, comments, and GitHub/Calendar integrations
+  are supported by README and selected source. Linus's visible commits include
+  auth/routing, Supabase, task/backend integration, and UI changes. Public copy
+  retains group attribution and supplies no private repository link. Deployment,
+  OAuth flows, and authorization behavior were not runtime-verified.
 
 Course connections support multiple projects per course and appear in both the
 highlight cards and the complete course record, using the same lists as ASK.

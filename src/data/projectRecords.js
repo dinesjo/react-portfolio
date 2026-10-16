@@ -112,6 +112,20 @@ export const projectRecords = [
     priority: 2,
   },
   {
+    id: "taskeroo",
+    title: "Taskeroo",
+    description:
+      "Our DH2643 group project built a shared Kanban app with boards, tasks, comments, and members. It used React/TypeScript, Express, and Supabase, with GitHub issue links and Google Calendar integration.",
+    technologies: ["React", "TypeScript", "Express", "Supabase", "PostgreSQL"],
+    methods: ["Collaborative task management", "API integration", "Interaction programming"],
+    category: "Web",
+    context: "Academic",
+    links: {},
+    date: "September - October 2025",
+    isPrivate: true,
+    priority: 2,
+  },
+  {
     id: "bibellandskap",
     title: "Bible Map",
     description:

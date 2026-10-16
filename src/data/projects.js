@@ -35,6 +35,8 @@ import snuskollLogo from "../assets/project-optimized/icons/snuskoll-logo.webp";
 import s3kInterruptsCard from "../assets/project-optimized/s3k-interrupts-card.webp";
 import s3kInterruptsFull from "../assets/project-optimized/s3k-interrupts-full.webp";
 import thesisTrackerCard from "../assets/project-optimized/thesis-tracker-card.webp";
+import taskerooCard from "../assets/project-optimized/taskeroo-card.webp";
+import taskerooFull from "../assets/project-optimized/taskeroo-full.webp";
 import thesisTrackerFull from "../assets/project-optimized/thesis-tracker-full.webp";
 import thesisTrackerIcon from "../assets/project-optimized/icons/thesis-tracker-icon.webp";
 import vimCard from "../assets/project-optimized/vim-motions-guide-card.webp";
@@ -77,6 +79,12 @@ const projectMedia = {
     image: ciServerCard,
     imageFull: ciServerFull,
     imageAlt: "Conceptual pencil sketch of a commit graph flowing through a build mechanism and a testing gate, with a coral feedback loop.",
+    imageOverlayTone: "light",
+  },
+  taskeroo: {
+    image: taskerooCard,
+    imageFull: taskerooFull,
+    imageAlt: "Conceptual pencil sketch of Kanban columns with a coral task card moving between them, connected to a calendar and an issue graph.",
     imageOverlayTone: "light",
   },
   bibellandskap: {

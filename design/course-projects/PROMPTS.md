@@ -1,5 +1,22 @@
 # Generated course-project illustrations
 
+## Taskeroo
+
+Saved original: `src/assets/project-originals/taskeroo.png`
+
+```text
+Use case: stylized-concept
+Asset type: landscape portfolio illustration, 3:2.
+Primary request: abstract sketch-style illustration for Taskeroo, a collaborative Kanban task app. Three lightly sketched upright board columns carry a handful of paper task cards. A card is midway along a gently arcing path between columns. Small connected calendar squares and a branching issue graph suggest calendar and code-issue integrations. Show collaboration through a few simple connector lines between cards, without people.
+Style/medium: restrained editorial graphite and fine ink on warm off-white paper, visible pencil construction lines and subtle crosshatching, one muted coral accent on the moving card and its path.
+Composition: compact horizontal scene, large clear cards and columns within the central horizontal half, quiet negative space around it; legible at a small wide portfolio-card crop.
+Constraints: conceptual artwork, no real app screenshot, no words, letters, numbers, logos, watermarks, dense UI, decorative status indicators, glossy 3D, neon or photorealism. Avoid making it look like a physical factory.
+```
+
+Mode: built-in image generation. All images are conceptual portfolio artwork,
+not screenshots. Original PNGs and optimized WebPs are committed in the asset
+directories; the optimizer produces card and full-image size variants.
+
 ## Continuous Integration Server
 
 Saved original: `src/assets/project-originals/ci-server.png`
@@ -12,10 +29,6 @@ Style/medium: restrained editorial graphite and fine ink on warm off-white paper
 Composition: horizontal flow of three main elements in the central half, plenty of paper around them, readable at small portfolio-card size and a wide crop.
 Constraints: conceptual illustration, no app screenshot, words, numbers, logos, watermarks, dense diagram labels, decorative status lights, neon, glossy 3D or photorealism. Avoid literal warehouses or factory scenery.
 ```
-
-Mode: built-in image generation. All images are conceptual portfolio artwork,
-not screenshots. Original PNGs and optimized WebPs are committed in the asset
-directories; the optimizer produces card and full-image size variants.
 
 ## Autonomous Warehouse Simulation
 

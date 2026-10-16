@@ -40,6 +40,7 @@ const projectImages = [
   "s3k-interrupts",
   "snuskoll",
   "thesis-tracker",
+  "taskeroo",
   "vim-motions-guide",
   "warehouse-simulation",
 ];
