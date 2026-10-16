@@ -1,9 +1,7 @@
-import { courseRelatedWork, featuredCourses, getCoursesByYear } from "../data/courses";
+import { courseRelatedWork, featuredCourses, getCoursesByYear, studyYears } from "../data/courses";
 import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 import { focusSection } from "../utils/portfolioNavigation";
-
-const studyYears = [1, 2, 3, 4, 5];
 
 export default function Coursework() {
   const totalCourses = studyYears.reduce(

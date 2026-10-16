@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S3K — image directions</title>
+  <link rel="stylesheet" href="variants.css">
+</head>
+<body>
+  <main>
+    <header>
+      <a href="/#project-s3k-interrupts">← Portfolio</a>
+      <p class="eyebrow">S3K Interrupt Capabilities</p>
+      <h1>Three image directions.</h1>
+      <p class="intro">Kernel hardware, protected execution, and interrupt dispatch. Compare the complete artwork with the crop used in the selected-project cards.</p>
+    </header>
+    <div class="toolbar" role="group" aria-label="Preview layout">
+      <button type="button" data-mode="artwork" aria-pressed="true">Full artwork</button>
+      <button type="button" data-mode="card" aria-pressed="false">Project card crop</button>
+    </div>
+    <section class="drafts" data-mode="artwork" aria-label="Image drafts">
+      <article class="draft">
+        <figure><img src="a-kernel-routing.webp" alt="Conceptual processor with separated execution regions and a single interrupt pulse routed through a gate." width="1536" height="1024"></figure>
+        <div class="draft-copy">
+          <p class="eyebrow">Selected A</p>
+          <h2>Kernel and interrupt routing</h2>
+          <p>A processor, separated execution regions, and one controlled signal route.</p>
+          <a href="a-kernel-routing.png" target="_blank" rel="noopener">Open full image ↗</a>
+        </div>
+        <div class="project-copy">
+          <p class="kind">Academic · Systems · Private</p>
+          <h3>S3K Interrupt Capabilities</h3>
+          <p class="date"></p>
+          <p class="summary"></p>
+          <p class="stack"><b>Built with</b><span></span></p>
+          <a class="project-link" href="https://github.com/kth-step/s3k" target="_blank" rel="noopener">About S3K ↗</a>
+        </div>
+      </article>
+      <article class="draft">
+        <figure><img src="b-protected-layers.webp" alt="Exploded processor and kernel stack with isolated user processes and one admitted interrupt." width="1536" height="1024"></figure>
+        <div class="draft-copy">
+          <p class="eyebrow">Draft B</p>
+          <h2>Protected kernel layers</h2>
+          <p>The kernel and isolated user processes shown as layers, with an interrupt crossing one interface.</p>
+          <a href="b-protected-layers.png" target="_blank" rel="noopener">Open full image ↗</a>
+        </div>
+        <div class="project-copy">
+          <p class="kind">Academic · Systems · Private</p>
+          <h3>S3K Interrupt Capabilities</h3>
+          <p class="date"></p>
+          <p class="summary"></p>
+          <p class="stack"><b>Built with</b><span></span></p>
+          <a class="project-link" href="https://github.com/kth-step/s3k" target="_blank" rel="noopener">About S3K ↗</a>
+        </div>
+      </article>
+      <article class="draft">
+        <figure><img src="c-interrupt-dispatch.webp" alt="Kernel chip routing a single interrupt waveform to one isolated execution track." width="1536" height="1024"></figure>
+        <div class="draft-copy">
+          <p class="eyebrow">Draft C</p>
+          <h2>Interrupt dispatch</h2>
+          <p>A graphic direction that gives the interrupt event and its destination the strongest emphasis.</p>
+          <a href="c-interrupt-dispatch.png" target="_blank" rel="noopener">Open full image ↗</a>
+        </div>
+        <div class="project-copy">
+          <p class="kind">Academic · Systems · Private</p>
+          <h3>S3K Interrupt Capabilities</h3>
+          <p class="date"></p>
+          <p class="summary"></p>
+          <p class="stack"><b>Built with</b><span></span></p>
+          <a class="project-link" href="https://github.com/kth-step/s3k" target="_blank" rel="noopener">About S3K ↗</a>
+        </div>
+      </article>
+    </section>
+    <details class="current">
+      <summary>Compare with the earlier artwork</summary>
+      <img src="original-compartments.webp" alt="Earlier illustration: sculptural compartments and a coral signal." width="1536" height="1024">
+    </details>
+    <footer>These are conceptual illustrations, not exact S3K architecture diagrams or measured scheduling results. <a href="DRAFT_PROMPTS.md">Generation prompts ↗</a></footer>
+  </main>
+  <script type="module" src="variants.js"></script>
+</body>
+</html>

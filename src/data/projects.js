@@ -30,6 +30,8 @@ import portfolioSiteFull from "../assets/project-optimized/portfolio-site-full.w
 import snuskollCard from "../assets/project-optimized/snuskoll-card.webp";
 import snuskollFull from "../assets/project-optimized/snuskoll-full.webp";
 import snuskollLogo from "../assets/project-optimized/icons/snuskoll-logo.webp";
+import s3kInterruptsCard from "../assets/project-optimized/s3k-interrupts-card.webp";
+import s3kInterruptsFull from "../assets/project-optimized/s3k-interrupts-full.webp";
 import thesisTrackerCard from "../assets/project-optimized/thesis-tracker-card.webp";
 import thesisTrackerFull from "../assets/project-optimized/thesis-tracker-full.webp";
 import thesisTrackerIcon from "../assets/project-optimized/icons/thesis-tracker-icon.webp";
@@ -54,6 +56,12 @@ const projectMedia = {
     image: snuskollCard,
     imageFull: snuskollFull,
     icon: snuskollLogo,
+  },
+  "s3k-interrupts": {
+    image: s3kInterruptsCard,
+    imageFull: s3kInterruptsFull,
+    imageAlt: "Conceptual processor labelled S3K, with separated execution regions and a coral interrupt pulse routed through a controlled gateway.",
+    imageOverlayTone: "light",
   },
   bibellandskap: {
     image: bibellandskapCard,

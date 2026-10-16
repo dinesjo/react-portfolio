@@ -11,6 +11,26 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 's3k-group-project',
+    question: "What was Linus's S3K project, and was it a solo project?",
+    checks: (answer) => ({
+      identifiesProject: /S3K/.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      describesPublishedWork: /interrupt/i.test(answer) && /capabilit/i.test(answer),
+      projectCitation: cites(answer, 'project:s3k-interrupts'),
+    }),
+  },
+  {
+    id: 's3k-highlighted-course',
+    question: 'Which highlighted KTH course connects to S3K, and how?',
+    checks: (answer) => ({
+      identifiesCourse: /DD2497/.test(answer) && /Project course in System Security/.test(answer),
+      identifiesProject: /S3K/.test(answer),
+      explainsPublishedConnection: /interrupt/i.test(answer) && /capabilit/i.test(answer),
+      courseCitation: cites(answer, 'courses:year-5'),
+    }),
+  },
+  {
     id: 'typo-current-work',
     question: 'whats linus doing at amf rn?',
     checks: (answer) => ({

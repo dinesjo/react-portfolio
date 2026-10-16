@@ -1,19 +1,24 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { corpusStats, portfolioChunks } from "./corpus.js";
-import { courseRelatedWork, courses } from "../src/data/courses.js";
+import { courseRelatedWork, courses, studyYears } from "../src/data/courses.js";
 import { projectRecords } from "../src/data/projectRecords.js";
+import { profile } from "../src/data/profile.js";
 
-test("builds one profile, seventeen project, and five course-year chunks", () => {
+test("builds exactly one profile and every canonical project and course year", () => {
+  const years = [...new Set(courses.map((course) => course.year))].sort((a, b) => a - b);
+  assert.deepEqual(studyYears, years);
   assert.deepEqual(corpusStats, {
-    sourceCount: 23,
-    projectCount: 17,
-    courseCount: 39,
-    lastUpdated: "October 2026",
+    sourceCount: 1 + projectRecords.length + years.length,
+    projectCount: projectRecords.length,
+    courseCount: courses.length,
+    lastUpdated: profile.education.recordUpdated,
   });
-  assert.equal(portfolioChunks.filter((chunk) => chunk.type === "profile").length, 1);
-  assert.equal(portfolioChunks.filter((chunk) => chunk.type === "project").length, 17);
-  assert.equal(portfolioChunks.filter((chunk) => chunk.type === "course").length, 5);
+  assert.deepEqual(portfolioChunks.map((chunk) => chunk.id), [
+    "profile:linus-dinesjo",
+    ...projectRecords.map((project) => `project:${project.id}`),
+    ...years.map((year) => `courses:year-${year}`),
+  ]);
 });
 
 test("contains only semantic text and stable in-page source links", () => {

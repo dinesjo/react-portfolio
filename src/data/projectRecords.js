@@ -65,6 +65,23 @@ export const projectRecords = [
     ],
   },
   {
+    id: "s3k-interrupts",
+    title: "S3K Interrupt Capabilities",
+    description:
+      "Our DD2497 group project extended S3K, an experimental RISC-V separation kernel, with capability-controlled interrupt handling. We added interrupt delegation, kernel syscalls, and user-space demos for waiting on and handling interrupts.",
+    technologies: ["C", "RISC-V", "QEMU"],
+    methods: ["Capability-based security", "Kernel development", "Interrupt handling"],
+    category: "Systems",
+    context: "Academic",
+    links: {
+      live: "https://github.com/kth-step/s3k",
+      liveText: "About S3K",
+    },
+    date: "November - December 2025",
+    isPrivate: true,
+    priority: 2,
+  },
+  {
     id: "bibellandskap",
     title: "Bible Map",
     description:

@@ -36,6 +36,7 @@ const projectImages = [
   "pathfinding-visualizer",
   "portfolio-site",
   "react-pathfinding-visualizer",
+  "s3k-interrupts",
   "snuskoll",
   "thesis-tracker",
   "vim-motions-guide",

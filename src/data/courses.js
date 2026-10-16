@@ -55,27 +55,30 @@ export const courses = [
     featuredNote: "Search, planning, and evaluation methods",
   },
   { code: "ID2216", name: "Developing Mobile Applications", year: 4 },
-  {
-    code: "DD2525",
-    name: "Language-Based Security",
-    year: 4,
-    featuredOrder: 3,
-    featuredNote: "Language security and program analysis",
-  },
-  {
-    code: "DD2480",
-    name: "Software Engineering Fundamentals",
-    year: 4,
-    featuredOrder: 1,
-    featuredNote: "Engineering process, testing, delivery",
-  },
+  { code: "DD2525", name: "Language-Based Security", year: 4 },
+  { code: "DD2480", name: "Software Engineering Fundamentals", year: 4 },
   { code: "DD2459", name: "Software Reliability", year: 4 },
   { code: "DD2528", name: "Dependable Autonomous Systems", year: 5 },
-  { code: "DD2497", name: "Project course in System Security", year: 5 },
+  {
+    code: "DD2497",
+    name: "Project course in System Security",
+    year: 5,
+    featuredOrder: 3,
+    featuredNote: "Capability-based security and kernel development",
+  },
   { code: "DH2643", name: "Advanced Interaction Programming", year: 5 },
   { code: "ID2221", name: "Data-Intensive Computing", year: 5 },
-  { code: "DA231X", name: "Degree Project in Computer Science and Engineering (30 credits)", year: 5 },
+  {
+    code: "DA231X",
+    name: "Degree Project in Computer Science and Engineering (30 credits)",
+    year: 5,
+    featuredOrder: 1,
+    featuredNote: "Master’s thesis on knowledge graph question answering",
+  },
 ];
+
+export const studyYears = [...new Set(courses.map((course) => course.year))]
+  .sort((a, b) => a - b);
 
 export const featuredCourses = courses
   .filter((course) => course.featuredNote)
@@ -83,6 +86,8 @@ export const featuredCourses = courses
 
 // Published connections to explore, rather than claims that a course caused a project.
 export const courseRelatedWork = {
+  DA231X: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing retrieval pipelines and a SPARQL graph agent at Traton." },
+  DD2497: { id: "s3k-interrupts", title: "S3K Interrupt Capabilities", note: "Group project extending S3K with capability-controlled interrupt handling." },
   DD2480: { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests." },
   DD2395: { id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." },
   DD2380: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." },

@@ -1,4 +1,4 @@
-import { courseRelatedWork, courses } from "../src/data/courses.js";
+import { courseRelatedWork, courses, studyYears } from "../src/data/courses.js";
 import { profile } from "../src/data/profile.js";
 import { projectRecords } from "../src/data/projectRecords.js";
 
@@ -73,7 +73,7 @@ function buildProjectChunk(project) {
       project.context,
       ...project.technologies,
       ...project.methods,
-      ...(project.isPrivate ? ["private", "professional", "work"] : []),
+      ...(project.isPrivate ? ["private", "work"] : []),
       ...(projectLifecycle(project) === "ongoing" ? ["current", "ongoing"] : []),
     ],
     text: [
@@ -116,6 +116,7 @@ function buildCourseChunk(year) {
   const courseLines = yearCourses.map((course) => {
     const details = [
       course.optional ? "elective" : "",
+      course.featuredNote ? `highlighted coursework, position ${course.featuredOrder}` : "",
       course.featuredNote ? `portfolio note: ${course.featuredNote}` : "",
       courseRelatedWork[course.code]
         ? `published related work: ${courseRelatedWork[course.code].title} (#project-${courseRelatedWork[course.code].id}); connection: ${courseRelatedWork[course.code].note}`
@@ -153,7 +154,7 @@ function buildCourseChunk(year) {
 export const portfolioChunks = [
   buildProfileChunk(),
   ...projectRecords.map(buildProjectChunk),
-  ...[1, 2, 3, 4, 5].map(buildCourseChunk),
+  ...studyYears.map(buildCourseChunk),
 ];
 
 export const corpusStats = {
