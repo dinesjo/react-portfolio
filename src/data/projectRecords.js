@@ -126,6 +126,21 @@ export const projectRecords = [
     priority: 2,
   },
   {
+    id: "deserialization-security",
+    title: "Python Deserialization Security",
+    description:
+      "Our DD2525 group project explored unsafe Python pickle deserialization through file-tampering and Flask diary demos. I added HMAC integrity checks; authenticating a payload does not make malicious pickle data safe to load.",
+    technologies: ["Python", "Flask", "HMAC"],
+    methods: ["Deserialization security", "Integrity checks", "Threat demonstrations"],
+    category: "Security",
+    context: "Academic",
+    links: {
+      github: "https://github.com/eliasfloreteng/language-security-project",
+    },
+    date: "May - June 2025",
+    priority: 2,
+  },
+  {
     id: "bibellandskap",
     title: "Bible Map",
     description:

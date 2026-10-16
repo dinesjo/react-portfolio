@@ -11,6 +11,16 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'pickle-integrity-boundary',
+    question: 'Did the DD2525 project make any pickle payload safe by adding HMAC?',
+    checks: (answer) => ({
+      correctsPremise: /\bno\b|does not|doesn't|cannot|can't|not.*safe/i.test(answer),
+      distinguishesIntegrity: /integrity|tamper|authenticat/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      projectCitation: cites(answer, 'project:deserialization-security'),
+    }),
+  },
+  {
     id: 'taskeroo-course-and-visibility',
     question: 'What is Taskeroo, which course was it for, and can I browse its source?',
     checks: (answer) => ({

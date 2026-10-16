@@ -12,6 +12,8 @@ import deadlineTrackerCard from "../assets/project-optimized/deadline-tracker-ca
 import deadlineTrackerFull from "../assets/project-optimized/deadline-tracker-full.webp";
 import droneCard from "../assets/project-optimized/drone-relief-software-card.webp";
 import droneFull from "../assets/project-optimized/drone-relief-software-full.webp";
+import deserializationCard from "../assets/project-optimized/deserialization-security-card.webp";
+import deserializationFull from "../assets/project-optimized/deserialization-security-full.webp";
 import fittrackrCard from "../assets/project-optimized/fittrackr-card.webp";
 import fittrackrFull from "../assets/project-optimized/fittrackr-full.webp";
 import habitGrowerCard from "../assets/project-optimized/habit-grower-card.webp";
@@ -85,6 +87,12 @@ const projectMedia = {
     image: taskerooCard,
     imageFull: taskerooFull,
     imageAlt: "Conceptual pencil sketch of Kanban columns with a coral task card moving between them, connected to a calendar and an issue graph.",
+    imageOverlayTone: "light",
+  },
+  "deserialization-security": {
+    image: deserializationCard,
+    imageFull: deserializationFull,
+    imageAlt: "Conceptual pencil sketch of a sealed data parcel revealing a tangled mechanism as it crosses a trust boundary and unfolds into gears.",
     imageOverlayTone: "light",
   },
   bibellandskap: {

@@ -33,6 +33,13 @@ were not executed. These are group projects, not claims of sole authorship.
   auth/routing, Supabase, task/backend integration, and UI changes. Public copy
   retains group attribution and supplies no private repository link. Deployment,
   OAuth flows, and authorization behavior were not runtime-verified.
+- **DD2525 — Python Deserialization Security:**
+  [group repository](https://github.com/eliasfloreteng/language-security-project).
+  README identifies the course and describes file-tampering and Flask diary
+  demonstrations, HMAC integrity checks, and safer data-only formats. Linus's
+  commit `1c0237be` adds the HMAC defense. The summary explicitly distinguishes
+  integrity from safe deserialization: an authenticated malicious pickle can
+  still execute code. No vulnerable app or payload was executed during review.
 
 Course connections support multiple projects per course and appear in both the
 highlight cards and the complete course record, using the same lists as ASK.
@@ -45,3 +52,16 @@ conceptual illustrations, not screenshots or measured system diagrams.
 
 Generated using the built-in image generation tool. The exact prompts are kept
 in [PROMPTS.md](PROMPTS.md).
+
+## Verification
+
+- Portfolio unit/context tests, ESLint, production build, and Git whitespace checks passed.
+- All four entries and their artwork were checked in the Codex browser on desktop
+  and at a 390px mobile viewport. Image previews load, course links focus the
+  corresponding card, and Taskeroo exposes no private source link.
+- The local server was restarted and its health endpoint confirms the expanded
+  ASK corpus is loaded. Tests verify that every shared record reaches the model
+  request without truncation.
+- Four focused model-evaluation cases cover group scope, course connections,
+  Taskeroo privacy, and the HMAC boundary. They are prepared for a future
+  authorized provider run; no new cloud inference was requested for these additions.

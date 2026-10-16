@@ -86,6 +86,7 @@ export const featuredCourses = courses
 
 // Published connections to explore, rather than claims that a course caused a project.
 export const courseRelatedWork = {
+  DD2525: [{ id: "deserialization-security", title: "Python Deserialization Security", note: "Group demonstrations of unsafe pickle deserialization and the limits of HMAC integrity checks." }],
   DH2643: [{ id: "taskeroo", title: "Taskeroo", note: "Group coursework creating a shared Kanban app with GitHub and Google Calendar integrations." }],
   DD2528: [{ id: "warehouse-simulation", title: "Autonomous Warehouse Simulation", note: "Group simulation of warehouse robots, route planning, conveyor handoffs, and battery-aware scheduling." }],
   DA231X: [{ id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing retrieval pipelines and a SPARQL graph agent at Traton." }],

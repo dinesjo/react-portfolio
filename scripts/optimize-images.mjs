@@ -28,6 +28,7 @@ const projectImages = [
   "ci-server",
   "context-summarization-research",
   "deadline-tracker",
+  "deserialization-security",
   "drone-relief-software",
   "fittrackr",
   "habit-grower",
