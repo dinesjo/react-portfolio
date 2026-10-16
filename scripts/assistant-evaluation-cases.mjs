@@ -11,6 +11,17 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'ci-course-and-role',
+    question: 'What did Linus do on the DD2480 CI server, and was SnusKoll also an assignment for that course?',
+    checks: (answer) => ({
+      identifiesCI: /CI|continuous integration/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      identifiesRole: /notification|commit status/i.test(answer) && /asynchron/i.test(answer),
+      keepsPersonalProjectSeparate: /personal/i.test(answer) && /SnusKoll/i.test(answer),
+      projectCitation: cites(answer, 'project:ci-server'),
+    }),
+  },
+  {
     id: 'warehouse-course-project',
     question: 'What did Linus build for DD2528? Was it deployed to physical robots?',
     checks: (answer) => ({

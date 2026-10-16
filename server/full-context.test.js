@@ -67,8 +67,7 @@ test("carries every course, highlight, and related-work connection into ASK", ()
     } else {
       assert.doesNotMatch(line, /highlighted coursework/);
     }
-    const related = courseRelatedWork[course.code];
-    if (related) {
+    for (const related of courseRelatedWork[course.code] ?? []) {
       assert.ok(line.includes(related.note), `Missing related-work note for ${course.code}`);
       assert.ok(line.includes(`#project-${related.id}`), `Missing project link for ${course.code}`);
       assert.ok(sources.some((item) => item.id === `project:${related.id}`));

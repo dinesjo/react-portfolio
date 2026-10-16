@@ -97,6 +97,21 @@ export const projectRecords = [
     priority: 2,
   },
   {
+    id: "ci-server",
+    title: "Continuous Integration Server",
+    description:
+      "Our DD2480 group built a Java CI server for GitHub webhooks, branch builds, Maven tests, and commit statuses. I worked with a teammate on notifications and their tests, plus asynchronous request handling.",
+    technologies: ["Java", "Jetty", "JGit", "Maven", "JUnit"],
+    methods: ["Continuous integration", "Webhook processing", "Test automation"],
+    category: "Developer tools",
+    context: "Academic",
+    links: {
+      github: "https://github.com/DD2480-group16-VT25/continuous-integration",
+    },
+    date: "February 2025",
+    priority: 2,
+  },
+  {
     id: "bibellandskap",
     title: "Bible Map",
     description:

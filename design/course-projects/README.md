@@ -18,6 +18,16 @@ were not executed. These are group projects, not claims of sole authorship.
   scheduling. Linus's visible commits include battery work, fetch/put operations,
   and box-movement demos. This is a simulation prototype; no formal safety or
   physical-robot deployment claim is made.
+- **DD2480 — Continuous Integration Server:**
+  [group repository](https://github.com/DD2480-group16-VT25/continuous-integration).
+  README contribution statement credits Linus and Robin with notifications and
+  tests, and Linus with asynchronous processing/request differentiation. The
+  server uses Jetty, JGit, and Maven. Its notification tests write real GitHub
+  statuses, so none were executed. The existing SnusKoll connection remains a
+  related personal project, separate from the course assignment.
+
+Course connections support multiple projects per course and appear in both the
+highlight cards and the complete course record, using the same lists as ASK.
 
 ## Artwork
 

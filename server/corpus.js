@@ -118,9 +118,9 @@ function buildCourseChunk(year) {
       course.optional ? "elective" : "",
       course.featuredNote ? `highlighted coursework, position ${course.featuredOrder}` : "",
       course.featuredNote ? `portfolio note: ${course.featuredNote}` : "",
-      courseRelatedWork[course.code]
-        ? `published related work: ${courseRelatedWork[course.code].title} (#project-${courseRelatedWork[course.code].id}); connection: ${courseRelatedWork[course.code].note}`
-        : "",
+      ...(courseRelatedWork[course.code] ?? []).map((related) =>
+        `published related work: ${related.title} (#project-${related.id}); connection: ${related.note}`
+      ),
     ].filter(Boolean);
     return `- ${course.code}: ${course.name}${details.length ? ` (${details.join("; ")})` : ""}`;
   });

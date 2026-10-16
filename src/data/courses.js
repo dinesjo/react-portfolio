@@ -86,14 +86,17 @@ export const featuredCourses = courses
 
 // Published connections to explore, rather than claims that a course caused a project.
 export const courseRelatedWork = {
-  DD2528: { id: "warehouse-simulation", title: "Autonomous Warehouse Simulation", note: "Group simulation of warehouse robots, route planning, conveyor handoffs, and battery-aware scheduling." },
-  DA231X: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing retrieval pipelines and a SPARQL graph agent at Traton." },
-  DD2497: { id: "s3k-interrupts", title: "S3K Interrupt Capabilities", note: "Group project extending S3K with capability-controlled interrupt handling." },
-  DD2480: { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests." },
-  DD2395: { id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." },
-  DD2380: { id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." },
-  DD2350: { id: "pathvis-react", title: "Pathfinding Visualizer", note: "Exploring how search algorithms find a route." },
-  DH2642: { id: "fittrackr", title: "FitTrackr", note: "A React fitness tracker with shared application state." },
+  DD2528: [{ id: "warehouse-simulation", title: "Autonomous Warehouse Simulation", note: "Group simulation of warehouse robots, route planning, conveyor handoffs, and battery-aware scheduling." }],
+  DA231X: [{ id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing retrieval pipelines and a SPARQL graph agent at Traton." }],
+  DD2497: [{ id: "s3k-interrupts", title: "S3K Interrupt Capabilities", note: "Group project extending S3K with capability-controlled interrupt handling." }],
+  DD2480: [
+    { id: "ci-server", title: "Continuous Integration Server", note: "Group coursework building a Java webhook, build, test, and commit-status pipeline." },
+    { id: "snuskoll", title: "SnusKoll", note: "API boundaries and authorization contract tests in a personal project." },
+  ],
+  DD2395: [{ id: "snuskoll", title: "SnusKoll", note: "Authentication and access to personal data." }],
+  DD2380: [{ id: "master-thesis-kgqa", title: "Knowledge Graph QA", note: "Comparing answer quality across AI approaches." }],
+  DD2350: [{ id: "pathvis-react", title: "Pathfinding Visualizer", note: "Exploring how search algorithms find a route." }],
+  DH2642: [{ id: "fittrackr", title: "FitTrackr", note: "A React fitness tracker with shared application state." }],
 };
 
 const colorMap = {

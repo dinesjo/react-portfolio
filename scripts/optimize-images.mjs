@@ -25,6 +25,7 @@ const projectImages = [
   "ai-diary",
   "bibellandskap",
   "chess-reporter",
+  "ci-server",
   "context-summarization-research",
   "deadline-tracker",
   "drone-relief-software",

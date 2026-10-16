@@ -1,5 +1,18 @@
 # Generated course-project illustrations
 
+## Continuous Integration Server
+
+Saved original: `src/assets/project-originals/ci-server.png`
+
+```text
+Use case: stylized-concept
+Asset type: landscape portfolio project illustration, 3:2.
+Primary request: abstract sketch-style illustration of a continuous integration server. A hand-drawn branching commit graph feeds a small mechanical build-and-test assembly: stacked source sheets enter an open server-like box with a simple gear, emerge through a testing gate, and return a small check-mark tile along a looping line to the commit graph. Make the software pipeline idea legible with a few clear symbolic objects.
+Style/medium: restrained editorial graphite and fine ink on warm off-white paper, visible pencil construction lines, delicate crosshatching; a single muted coral line traces the flow. Same quiet technical notebook character as an architectural pencil study.
+Composition: horizontal flow of three main elements in the central half, plenty of paper around them, readable at small portfolio-card size and a wide crop.
+Constraints: conceptual illustration, no app screenshot, words, numbers, logos, watermarks, dense diagram labels, decorative status lights, neon, glossy 3D or photorealism. Avoid literal warehouses or factory scenery.
+```
+
 Mode: built-in image generation. All images are conceptual portfolio artwork,
 not screenshots. Original PNGs and optimized WebPs are committed in the asset
 directories; the optimizer produces card and full-image size variants.

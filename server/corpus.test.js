@@ -80,12 +80,14 @@ test("grounds case-study answers in benchmark scope and engineering tradeoffs", 
 });
 
 test("includes every published course-to-project connection without inventing course assignments", () => {
-  for (const [code, related] of Object.entries(courseRelatedWork)) {
+  for (const [code, relatedProjects] of Object.entries(courseRelatedWork)) {
     const course = courses.find((item) => item.code === code);
     const chunk = portfolioChunks.find((item) => item.id === `courses:year-${course.year}`);
-    assert.ok(projectRecords.some((project) => project.id === related.id));
-    assert.ok(chunk.text.includes(`${related.title} (#project-${related.id})`));
-    assert.ok(chunk.text.includes(related.note));
+    for (const related of relatedProjects) {
+      assert.ok(projectRecords.some((project) => project.id === related.id));
+      assert.ok(chunk.text.includes(`${related.title} (#project-${related.id})`));
+      assert.ok(chunk.text.includes(related.note));
+    }
   }
 });
 

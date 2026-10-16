@@ -6,6 +6,8 @@ import bibellandskapCard from "../assets/project-optimized/bibellandskap-card.we
 import bibellandskapFull from "../assets/project-optimized/bibellandskap-full.webp";
 import chessReporterCard from "../assets/project-optimized/chess-reporter-card.webp";
 import chessReporterFull from "../assets/project-optimized/chess-reporter-full.webp";
+import ciServerCard from "../assets/project-optimized/ci-server-card.webp";
+import ciServerFull from "../assets/project-optimized/ci-server-full.webp";
 import deadlineTrackerCard from "../assets/project-optimized/deadline-tracker-card.webp";
 import deadlineTrackerFull from "../assets/project-optimized/deadline-tracker-full.webp";
 import droneCard from "../assets/project-optimized/drone-relief-software-card.webp";
@@ -69,6 +71,12 @@ const projectMedia = {
     image: warehouseCard,
     imageFull: warehouseFull,
     imageAlt: "Conceptual pencil sketch of warehouse robots carrying boxes between shelves and a conveyor, with a coral route around an obstacle.",
+    imageOverlayTone: "light",
+  },
+  "ci-server": {
+    image: ciServerCard,
+    imageFull: ciServerFull,
+    imageAlt: "Conceptual pencil sketch of a commit graph flowing through a build mechanism and a testing gate, with a coral feedback loop.",
     imageOverlayTone: "light",
   },
   bibellandskap: {
