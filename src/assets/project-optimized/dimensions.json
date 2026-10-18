@@ -1,0 +1,558 @@
+{
+  "ai-diary-card-480.webp": {
+    "width": 480,
+    "height": 360
+  },
+  "ai-diary-card-768.webp": {
+    "width": 768,
+    "height": 576
+  },
+  "ai-diary-card.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "ai-diary-full-1200.webp": {
+    "width": 1200,
+    "height": 900
+  },
+  "ai-diary-full-960.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "ai-diary-full.webp": {
+    "width": 1448,
+    "height": 1086
+  },
+  "bibellandskap-card-480.webp": {
+    "width": 480,
+    "height": 360
+  },
+  "bibellandskap-card-768.webp": {
+    "width": 768,
+    "height": 576
+  },
+  "bibellandskap-card.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "bibellandskap-full-1200.webp": {
+    "width": 1200,
+    "height": 900
+  },
+  "bibellandskap-full-960.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "bibellandskap-full.webp": {
+    "width": 1448,
+    "height": 1086
+  },
+  "chess-reporter-card-480.webp": {
+    "width": 480,
+    "height": 592
+  },
+  "chess-reporter-card-768.webp": {
+    "width": 678,
+    "height": 836
+  },
+  "chess-reporter-card.webp": {
+    "width": 678,
+    "height": 836
+  },
+  "chess-reporter-full-1200.webp": {
+    "width": 678,
+    "height": 836
+  },
+  "chess-reporter-full-960.webp": {
+    "width": 678,
+    "height": 836
+  },
+  "chess-reporter-full.webp": {
+    "width": 678,
+    "height": 836
+  },
+  "ci-server-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "ci-server-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "ci-server-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "ci-server-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "ci-server-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "ci-server-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "context-summarization-research-card-480.webp": {
+    "width": 480,
+    "height": 384
+  },
+  "context-summarization-research-card-768.webp": {
+    "width": 768,
+    "height": 615
+  },
+  "context-summarization-research-card.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "context-summarization-research-full-1200.webp": {
+    "width": 1200,
+    "height": 960
+  },
+  "context-summarization-research-full-960.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "context-summarization-research-full.webp": {
+    "width": 1402,
+    "height": 1122
+  },
+  "deadline-tracker-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "deadline-tracker-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "deadline-tracker-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "deadline-tracker-full-1200.webp": {
+    "width": 1122,
+    "height": 1402
+  },
+  "deadline-tracker-full-960.webp": {
+    "width": 960,
+    "height": 1200
+  },
+  "deadline-tracker-full.webp": {
+    "width": 1122,
+    "height": 1402
+  },
+  "deserialization-security-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "deserialization-security-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "deserialization-security-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "deserialization-security-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "deserialization-security-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "deserialization-security-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "drone-relief-software-card-480.webp": {
+    "width": 480,
+    "height": 271
+  },
+  "drone-relief-software-card-768.webp": {
+    "width": 768,
+    "height": 433
+  },
+  "drone-relief-software-card.webp": {
+    "width": 800,
+    "height": 451
+  },
+  "drone-relief-software-full-1200.webp": {
+    "width": 800,
+    "height": 451
+  },
+  "drone-relief-software-full-960.webp": {
+    "width": 800,
+    "height": 451
+  },
+  "drone-relief-software-full.webp": {
+    "width": 800,
+    "height": 451
+  },
+  "fittrackr-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "fittrackr-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "fittrackr-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "fittrackr-full-1200.webp": {
+    "width": 1122,
+    "height": 1402
+  },
+  "fittrackr-full-960.webp": {
+    "width": 960,
+    "height": 1200
+  },
+  "fittrackr-full.webp": {
+    "width": 1122,
+    "height": 1402
+  },
+  "habit-grower-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "habit-grower-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "habit-grower-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "habit-grower-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "habit-grower-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "habit-grower-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "logportal-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "logportal-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "logportal-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "logportal-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "logportal-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "logportal-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "master-thesis-kgqa-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "master-thesis-kgqa-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "master-thesis-kgqa-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "master-thesis-kgqa-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "master-thesis-kgqa-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "master-thesis-kgqa-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "master-thesis-kgqa-panorama-1200.webp": {
+    "width": 1200,
+    "height": 480
+  },
+  "master-thesis-kgqa-panorama-960.webp": {
+    "width": 960,
+    "height": 384
+  },
+  "master-thesis-kgqa-panorama.webp": {
+    "width": 1800,
+    "height": 720
+  },
+  "master-thesis-kgqa-portrait-480.webp": {
+    "width": 480,
+    "height": 600
+  },
+  "master-thesis-kgqa-portrait-768.webp": {
+    "width": 768,
+    "height": 960
+  },
+  "master-thesis-kgqa-portrait.webp": {
+    "width": 1120,
+    "height": 1400
+  },
+  "note-hero-card-480.webp": {
+    "width": 480,
+    "height": 360
+  },
+  "note-hero-card-768.webp": {
+    "width": 768,
+    "height": 576
+  },
+  "note-hero-card.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "note-hero-full-1200.webp": {
+    "width": 1200,
+    "height": 900
+  },
+  "note-hero-full-960.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "note-hero-full.webp": {
+    "width": 1448,
+    "height": 1086
+  },
+  "pathfinding-visualizer-card-480.webp": {
+    "width": 480,
+    "height": 222
+  },
+  "pathfinding-visualizer-card-768.webp": {
+    "width": 768,
+    "height": 356
+  },
+  "pathfinding-visualizer-card.webp": {
+    "width": 960,
+    "height": 445
+  },
+  "pathfinding-visualizer-full-1200.webp": {
+    "width": 1200,
+    "height": 556
+  },
+  "pathfinding-visualizer-full-960.webp": {
+    "width": 960,
+    "height": 445
+  },
+  "pathfinding-visualizer-full.webp": {
+    "width": 1800,
+    "height": 834
+  },
+  "portfolio-site-card-480.webp": {
+    "width": 480,
+    "height": 423
+  },
+  "portfolio-site-card-768.webp": {
+    "width": 643,
+    "height": 567
+  },
+  "portfolio-site-card.webp": {
+    "width": 643,
+    "height": 567
+  },
+  "portfolio-site-full-1200.webp": {
+    "width": 643,
+    "height": 567
+  },
+  "portfolio-site-full-960.webp": {
+    "width": 643,
+    "height": 567
+  },
+  "portfolio-site-full.webp": {
+    "width": 643,
+    "height": 567
+  },
+  "portrait.webp": {
+    "width": 900,
+    "height": 900
+  },
+  "react-pathfinding-visualizer-card-480.webp": {
+    "width": 480,
+    "height": 384
+  },
+  "react-pathfinding-visualizer-card-768.webp": {
+    "width": 768,
+    "height": 615
+  },
+  "react-pathfinding-visualizer-card.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "react-pathfinding-visualizer-full-1200.webp": {
+    "width": 1200,
+    "height": 960
+  },
+  "react-pathfinding-visualizer-full-960.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "react-pathfinding-visualizer-full.webp": {
+    "width": 1402,
+    "height": 1122
+  },
+  "s3k-interrupts-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "s3k-interrupts-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "s3k-interrupts-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "s3k-interrupts-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "s3k-interrupts-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "s3k-interrupts-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "snuskoll-card-480.webp": {
+    "width": 480,
+    "height": 360
+  },
+  "snuskoll-card-768.webp": {
+    "width": 768,
+    "height": 576
+  },
+  "snuskoll-card.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "snuskoll-full-1200.webp": {
+    "width": 1200,
+    "height": 900
+  },
+  "snuskoll-full-960.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "snuskoll-full.webp": {
+    "width": 1448,
+    "height": 1086
+  },
+  "taskeroo-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "taskeroo-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "taskeroo-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "taskeroo-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "taskeroo-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "taskeroo-full.webp": {
+    "width": 1536,
+    "height": 1024
+  },
+  "thesis-tracker-card-480.webp": {
+    "width": 480,
+    "height": 360
+  },
+  "thesis-tracker-card-768.webp": {
+    "width": 768,
+    "height": 576
+  },
+  "thesis-tracker-card.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "thesis-tracker-full-1200.webp": {
+    "width": 1200,
+    "height": 900
+  },
+  "thesis-tracker-full-960.webp": {
+    "width": 960,
+    "height": 720
+  },
+  "thesis-tracker-full.webp": {
+    "width": 1448,
+    "height": 1086
+  },
+  "vim-motions-guide-card-480.webp": {
+    "width": 480,
+    "height": 384
+  },
+  "vim-motions-guide-card-768.webp": {
+    "width": 768,
+    "height": 615
+  },
+  "vim-motions-guide-card.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "vim-motions-guide-full-1200.webp": {
+    "width": 1200,
+    "height": 960
+  },
+  "vim-motions-guide-full-960.webp": {
+    "width": 960,
+    "height": 768
+  },
+  "vim-motions-guide-full.webp": {
+    "width": 1402,
+    "height": 1122
+  },
+  "warehouse-simulation-card-480.webp": {
+    "width": 480,
+    "height": 320
+  },
+  "warehouse-simulation-card-768.webp": {
+    "width": 768,
+    "height": 512
+  },
+  "warehouse-simulation-card.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "warehouse-simulation-full-1200.webp": {
+    "width": 1200,
+    "height": 800
+  },
+  "warehouse-simulation-full-960.webp": {
+    "width": 960,
+    "height": 640
+  },
+  "warehouse-simulation-full.webp": {
+    "width": 1536,
+    "height": 1024
+  }
+}

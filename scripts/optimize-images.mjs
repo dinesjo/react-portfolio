@@ -1,25 +1,13 @@
-import { mkdir, stat } from "node:fs/promises";
+import { mkdir, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import { projectImageVariants } from "../src/utils/projectImageSources.js";
 
 const sourceDir = "src/assets/project-originals";
 const outputDir = "src/assets/project-optimized";
 const techSourceDir = "src/assets";
 const techOutputDir = "src/assets/tech-optimized";
 const publicDir = "public";
-
-const projectImageVariants = {
-  card: [
-    { suffix: "card-480", width: 480, quality: 82 },
-    { suffix: "card-768", width: 768, quality: 84 },
-    { suffix: "card", width: 960, quality: 84 },
-  ],
-  full: [
-    { suffix: "full-960", width: 960, quality: 88 },
-    { suffix: "full-1200", width: 1200, quality: 88 },
-    { suffix: "full", width: 1800, quality: 88 },
-  ],
-};
 
 const projectImages = [
   "ai-diary",
@@ -49,10 +37,15 @@ const projectImages = [
 const sourceFiles = {
   "ci-server": "ci-server-sketch-v2.png",
   "deserialization-security": "deserialization-security-sketch-v2.png",
-  "master-thesis-kgqa": "master-thesis.png",
+  "master-thesis-kgqa": "master-thesis-wide-v2.png",
   "s3k-interrupts": "s3k-interrupts-sketch-v2.png",
   taskeroo: "taskeroo-device-demo.png",
   "thesis-tracker": "thesis-tracker.jpg",
+};
+
+const cardSourceFiles = {
+  fittrackr: "fittrackr-wide-v2.png",
+  "deadline-tracker": "deadline-tracker-wide-v2.png",
 };
 
 const icons = [
@@ -68,6 +61,11 @@ const standaloneImages = [
     width: 900,
     quality: 86,
   },
+];
+
+const directedImages = [
+  { id: "master-thesis-kgqa", source: "master-thesis-portrait-v2.png", variant: "portrait" },
+  { id: "master-thesis-kgqa", source: "master-thesis-panorama-v2.png", variant: "panorama" },
 ];
 
 const techImages = [
@@ -107,15 +105,15 @@ async function writeWebp({ input, output, width, quality }) {
 async function optimizeProjectImage(id) {
   const sourceFile = sourceFiles[id] || `${id}.png`;
   const input = path.join(sourceDir, sourceFile);
-  const outputs = Object.values(projectImageVariants)
-    .flat()
+  const cardInput = cardSourceFiles[id] ? path.join(sourceDir, cardSourceFiles[id]) : input;
+  const outputs = [...projectImageVariants.card, ...projectImageVariants.full]
     .map((variant) => ({
       ...variant,
       output: path.join(outputDir, `${id}-${variant.suffix}.webp`),
     }));
 
   await Promise.all(outputs.map((variant) => writeWebp({
-    input,
+    input: variant.suffix.startsWith("card") ? cardInput : input,
     output: variant.output,
     width: variant.width,
     quality: variant.quality,
@@ -150,6 +148,26 @@ async function optimizeIcon(id) {
   ]);
 
   return `${id}: ${formatKb(inputSize)} -> ${formatKb(outputSize)}`;
+}
+
+async function optimizeDirectedImage({ id, source, variant }) {
+  const input = path.join(sourceDir, source);
+  const outputs = projectImageVariants[variant].map(({ suffix, ...settings }) => ({
+    ...settings,
+    output: path.join(outputDir, `${id}-${suffix}.webp`),
+  }));
+
+  await Promise.all(outputs.map((settings) => writeWebp({ input, ...settings })));
+  return `${id}: ${variant} variants ${outputs.map(({ width }) => `${width}px`).join(", ")}`;
+}
+
+async function writeImageDimensions() {
+  const filenames = (await readdir(outputDir)).filter((filename) => filename.endsWith(".webp")).sort();
+  const entries = await Promise.all(filenames.map(async (filename) => {
+    const { width, height } = await sharp(path.join(outputDir, filename)).metadata();
+    return [filename, { width, height }];
+  }));
+  await writeFile(path.join(outputDir, "dimensions.json"), `${JSON.stringify(Object.fromEntries(entries), null, 2)}\n`);
 }
 
 async function optimizeStandaloneImage({ source, output, width, quality }) {
@@ -238,11 +256,16 @@ for (const image of standaloneImages) {
   results.push(await optimizeStandaloneImage(image));
 }
 
+for (const image of directedImages) {
+  results.push(await optimizeDirectedImage(image));
+}
+
 for (const image of techImages) {
   results.push(await optimizeTechImage(image));
 }
 
 results.push(await generateOpenGraphImage());
+await writeImageDimensions();
 
 console.log(`Optimized ${results.length} image sources`);
 for (const result of results) {
