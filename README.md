@@ -159,6 +159,25 @@ Tailwind CSS is processed through PostCSS. Relevant configuration lives in
 declared in the stylesheet. Supported browsers are Safari 16.4+, Chrome 111+,
 and Firefox 128+.
 
+Cards keep a readable minimum column width, and stacked case-study artwork is
+bounded by the viewport. Full illustrations stay uncropped and can be expanded.
+
+For rendered layout regression checks, start the app and use Playwright CLI:
+
+```bash
+playwright-cli -s=responsive open http://127.0.0.1:8080
+playwright-cli -s=responsive run-code --filename=scripts/check-responsive.browser.js
+playwright-cli -s=responsive close
+```
+
+Repeat with `--browser=firefox` or `--browser=webkit` on the `open` command.
+The script checks the portfolio, expanded disclosures, every case-study route,
+and image-viewer dismissal/focus across mobile, landscape, tablet, laptop, and
+wide desktop sizes. Its 320px and 640px layouts also cover the reflow widths of
+a 1280px browser at 400% and 200% zoom. It checks overflow and clipped text;
+visual review and interactive ASK checks remain separate. It sends no questions
+to the model provider.
+
 Install the locked dependencies with `npm ci`. Run `npm audit` to check both
 runtime and build dependencies against current security advisories.
 
