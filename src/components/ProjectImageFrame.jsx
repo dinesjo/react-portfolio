@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaChevronLeft, FaChevronRight, FaExpand, FaTimes } from "react-icons/fa";
+import projectImageDimensions from "../assets/project-optimized/dimensions.json";
+import {
+  getProjectImageAssetId,
+  getArtworkVariant,
+  getResponsiveImageCandidates,
+  toImageSrcSet as toSrcSet,
+} from "../utils/projectImageSources";
 
 const projectImageModules = import.meta.glob("../assets/project-optimized/*.webp", {
   eager: true,
@@ -10,53 +17,14 @@ const projectImageModules = import.meta.glob("../assets/project-optimized/*.webp
 const projectImageUrls = Object.fromEntries(
   Object.entries(projectImageModules).map(([path, url]) => [path.split("/").pop(), url])
 );
+const imageDimensionsByUrl = Object.fromEntries(
+  Object.entries(projectImageUrls).map(([filename, url]) => [url, projectImageDimensions[filename]])
+);
 
-const projectImageAssetIds = {
-  bachelor: "context-summarization-research",
-  drone: "drone-relief-software",
-  "pathvis-react": "react-pathfinding-visualizer",
-  pathvis: "pathfinding-visualizer",
-  this: "portfolio-site",
-  vim: "vim-motions-guide",
-};
-
-const responsiveImageVariants = {
-  card: [
-    { suffix: "card-480", width: 480 },
-    { suffix: "card-768", width: 768 },
-    { suffix: "card", width: 960 },
-  ],
-  full: [
-    { suffix: "full-960", width: 960 },
-    { suffix: "full-1200", width: 1200 },
-    { suffix: "full", width: 1800 },
-  ],
-};
-
-const getProjectImageAssetId = (project) =>
-  project.imageAssetId || projectImageAssetIds[project.id] || project.id;
-
-const getResponsiveCandidates = (project, variant, fallbackSrc) => {
-  const assetId = getProjectImageAssetId(project);
-  const seen = new Set();
-
-  return (responsiveImageVariants[variant] || [])
-    .map(({ suffix, width }) => {
-      const src = projectImageUrls[`${assetId}-${suffix}.webp`] ||
-        (suffix === variant ? fallbackSrc : undefined);
-
-      if (!src || seen.has(src)) return null;
-      seen.add(src);
-
-      return { src, width };
-    })
-    .filter(Boolean);
-};
-
-const toSrcSet = (candidates) =>
-  candidates.length > 1
-    ? candidates.map(({ src, width }) => `${src} ${width}w`).join(", ")
-    : undefined;
+const getResponsiveCandidates = (project, variant, fallbackSrc) => getResponsiveImageCandidates({
+  assetId: getProjectImageAssetId(project), variant, fallbackSrc,
+  urls: projectImageUrls, dimensions: projectImageDimensions,
+});
 
 const normalizeImages = (project) => {
   if (Array.isArray(project.images) && project.images.length > 0) {
@@ -119,6 +87,7 @@ const imageOverlayStyles = {
 export default function ProjectImageFrame({
   project,
   displayImageSrc,
+  responsiveArtwork = false,
   frameClassName = "",
   imageClassName = "",
   imageSizes = "(min-width: 1024px) 50vw, (min-width: 640px) 50vw, calc(100vw - 48px)",
@@ -128,6 +97,8 @@ export default function ProjectImageFrame({
   const [loadedFullImages, setLoadedFullImages] = useState(() => new Set());
   const [isOpen, setIsOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+  const [artworkVariant, setArtworkVariant] = useState("full");
+  const frameRef = useRef(null);
   const previewImageRef = useRef(null);
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
@@ -141,8 +112,12 @@ export default function ProjectImageFrame({
   const hasPreviewImage = currentImage.previewSrc && currentImage.previewSrc !== currentImage.src;
   const isFullImageLoaded =
     !hasPreviewImage || loadedFullImages.has(currentImage.src);
-  const displaySrc = displayImageSrc || project.image;
-  const displayVariant = displaySrc === project.imageFull ? "full" : "card";
+  const hasDirectedArtwork = responsiveArtwork && Boolean(project.imagePortrait || project.imagePanorama);
+  const artworkSources = { full: project.imageFull, portrait: project.imagePortrait, panorama: project.imagePanorama };
+  const directedVariant = hasDirectedArtwork && artworkSources[artworkVariant] ? artworkVariant : undefined;
+  const displaySrc = directedVariant ? artworkSources[directedVariant] : displayImageSrc || project.image;
+  const displayVariant = directedVariant || (displaySrc === project.imageFull ? "full" : "card");
+  const displayDimensions = imageDimensionsByUrl[displaySrc];
   const displaySrcSet = toSrcSet(
     getResponsiveCandidates(project, displayVariant, displaySrc)
   );
@@ -179,6 +154,22 @@ export default function ProjectImageFrame({
   );
 
   useEffect(() => {
+    if (!hasDirectedArtwork) return undefined;
+    const frame = frameRef.current;
+    const updateArtwork = () => {
+      if (frame) setArtworkVariant(getArtworkVariant(frame.clientWidth, frame.clientHeight));
+    };
+    updateArtwork();
+    const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateArtwork) : null;
+    if (frame) observer?.observe(frame);
+    window.addEventListener("resize", updateArtwork);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", updateArtwork);
+    };
+  }, [hasDirectedArtwork]);
+
+  useEffect(() => {
     if (!isOpen) return undefined;
 
     const dialog = dialogRef.current;
@@ -191,6 +182,17 @@ export default function ProjectImageFrame({
     const onKeyDown = (event) => {
       if (hasMultipleImages && event.key === "ArrowLeft") showPrevious();
       if (hasMultipleImages && event.key === "ArrowRight") showNext();
+      if (event.key === "Tab" && dialog) {
+        const controls = [...dialog.querySelectorAll("button:not(:disabled)")];
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (first && (!dialog.contains(document.activeElement) ||
+          (event.shiftKey && document.activeElement === first) ||
+          (!event.shiftKey && document.activeElement === last))) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        }
+      }
     };
 
     window.addEventListener("keydown", onKeyDown);
@@ -214,7 +216,13 @@ export default function ProjectImageFrame({
 
   return (
     <>
-      <div className={`relative ${frameClassName}`}>
+      <div ref={frameRef} className={`relative ${frameClassName}`} style={{
+        ...(displayDimensions ? {
+          "--project-image-width": `${displayDimensions.width}px`,
+          "--project-image-ratio": displayDimensions.width / displayDimensions.height,
+        } : {}),
+        ...(project.imagePreviewBackground ? { background: project.imagePreviewBackground } : {}),
+      }}>
         {!loaded && (
           <div className="absolute inset-0 z-0 animate-pulse bg-slate-200" />
         )}
@@ -236,9 +244,12 @@ export default function ProjectImageFrame({
             srcSet={displaySrcSet}
             sizes={displaySrcSet ? imageSizes : undefined}
             alt={project.imageAlt || project.title}
+            width={displayDimensions?.width}
+            height={displayDimensions?.height}
             loading="lazy"
             decoding="async"
             onLoad={() => setLoaded(true)}
+            style={project.imagePreviewFit ? { objectFit: project.imagePreviewFit } : undefined}
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 

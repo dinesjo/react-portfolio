@@ -129,7 +129,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
 }
 
 function CaseStudyCard({ project, index }) {
-  const keepFullImage = project.featuredImageFit === "contain" || project.imageFrame === "full-bleed";
+  const keepFullImage = project.featuredImageFit === "contain";
   return (
     <article
       id={`project-${project.id}`}
@@ -147,7 +147,8 @@ function CaseStudyCard({ project, index }) {
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
-          frameClassName={`case-study-media featured-case-image overflow-hidden ${keepFullImage ? "featured-case-image--uncropped" : ""}`}
+          responsiveArtwork
+          frameClassName={`case-study-media featured-case-image overflow-hidden ${project.imagePortrait ? "featured-case-image--art-directed" : ""} ${keepFullImage ? "featured-case-image--uncropped" : ""}`}
           imageClassName="block w-full"
           imageSizes="(min-width: 1288px) 624px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
         />
@@ -264,9 +265,9 @@ function ArchiveProjectCard({ project }) {
     >
       <ProjectImageFrame
         project={project}
-        frameClassName="h-44 overflow-hidden bg-slate-200 sm:h-full sm:min-h-44"
+        frameClassName="archive-card-media overflow-hidden"
         imageClassName="h-full w-full object-cover"
-        imageSizes="(min-width: 1024px) 208px, (min-width: 640px) 184px, calc(100vw - 48px)"
+        imageSizes="(min-width: 1024px) 188px, (min-width: 640px) 164px, calc(100vw - 48px)"
       />
 
       <div className="flex min-w-0 flex-col p-5">

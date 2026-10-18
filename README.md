@@ -159,8 +159,18 @@ Tailwind CSS is processed through PostCSS. Relevant configuration lives in
 declared in the stylesheet. Supported browsers are Safari 16.4+, Chrome 111+,
 and Firefox 128+.
 
-Cards keep a readable minimum column width, and stacked case-study artwork is
-bounded by the viewport. Full illustrations stay uncropped and can be expanded.
+Cards keep a readable minimum column width. Case studies switch columns using
+their available width in text-relative units, so enlarged text also causes reflow.
+The Knowledge Graph illustration has landscape, portrait, and panoramic
+compositions selected from the actual image frame's shape. Technical screenshots
+use uncropped previews, and the image viewer preserves the full composition.
+See [responsive artwork notes](design/knowledge-graph/responsive-framing.md) for
+the generated sources and prompts.
+
+Image optimization also writes `dimensions.json` from the encoded WebP files.
+Responsive image descriptors use those actual widths, including sources smaller
+than the requested resize width. Card-specific artwork stays out of the full-image
+viewer when its aspect ratio differs from the original.
 
 For rendered layout regression checks, start the app and use Playwright CLI:
 
@@ -175,8 +185,10 @@ The script checks the portfolio, expanded disclosures, every case-study route,
 and image-viewer dismissal/focus across mobile, landscape, tablet, laptop, and
 wide desktop sizes. Its 320px and 640px layouts also cover the reflow widths of
 a 1280px browser at 400% and 200% zoom. It checks overflow and clipped text;
-visual review and interactive ASK checks remain separate. It sends no questions
-to the model provider.
+visual review and interactive ASK checks remain separate. It additionally checks
+125–200% text sizes, the illustration's key subject bounds, viewer focus, and
+stable figure dimensions while image responses are delayed.
+It sends no questions to the model provider.
 
 Install the locked dependencies with `npm ci`. Run `npm audit` to check both
 runtime and build dependencies against current security advisories.

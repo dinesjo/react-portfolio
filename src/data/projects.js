@@ -23,6 +23,8 @@ import logportalCard from "../assets/project-optimized/logportal-card.webp";
 import logportalFull from "../assets/project-optimized/logportal-full.webp";
 import masterThesisKgqaCard from "../assets/project-optimized/master-thesis-kgqa-card.webp";
 import masterThesisKgqaFull from "../assets/project-optimized/master-thesis-kgqa-full.webp";
+import masterThesisKgqaPortrait from "../assets/project-optimized/master-thesis-kgqa-portrait.webp";
+import masterThesisKgqaPanorama from "../assets/project-optimized/master-thesis-kgqa-panorama.webp";
 import noteHeroCard from "../assets/project-optimized/note-hero-card.webp";
 import noteHeroFull from "../assets/project-optimized/note-hero-full.webp";
 import pathvisCard from "../assets/project-optimized/pathfinding-visualizer-card.webp";
@@ -51,6 +53,8 @@ const projectMedia = {
   "master-thesis-kgqa": {
     image: masterThesisKgqaCard,
     imageFull: masterThesisKgqaFull,
+    imagePortrait: masterThesisKgqaPortrait,
+    imagePanorama: masterThesisKgqaPanorama,
     imageOverlayTone: "light",
     imageFrame: "full-bleed",
     imageAlt: "Pencil sketch of an engineer viewing a MAZE compatibility answer marked BLOCKED, with an Evidence button on the screen and a complete truck in the background.",
@@ -138,14 +142,20 @@ const projectMedia = {
   pathvis: {
     image: pathvisCard,
     imageFull: pathvisFull,
+    imagePreviewFit: "contain",
+    imagePreviewBackground: "#e7e7e7",
   },
   this: {
     image: portfolioSiteCard,
     imageFull: portfolioSiteFull,
+    imagePreviewFit: "contain",
+    imagePreviewBackground: "#242424",
   },
   "chess-reporter": {
     image: chessReporterCard,
     imageFull: chessReporterFull,
+    imagePreviewFit: "contain",
+    imagePreviewBackground: "#000000",
   },
   "note-hero": {
     image: noteHeroCard,
@@ -154,13 +164,17 @@ const projectMedia = {
 };
 
 export const projects = projectRecords.map(({ id, title, highlights, ...content }) => {
-  const { image, imageFull, icon, imageOverlayTone, featuredImageFit, imageFrame, imageAlt } = projectMedia[id];
+  const { image, imageFull, imagePortrait, imagePanorama, imagePreviewFit, imagePreviewBackground, icon, imageOverlayTone, featuredImageFit, imageFrame, imageAlt } = projectMedia[id];
 
   return {
     id,
     title,
     image,
     imageFull,
+    ...(imagePortrait ? { imagePortrait } : {}),
+    ...(imagePanorama ? { imagePanorama } : {}),
+    ...(imagePreviewFit ? { imagePreviewFit } : {}),
+    ...(imagePreviewBackground ? { imagePreviewBackground } : {}),
     ...(icon ? { icon } : {}),
     ...content,
     ...(imageOverlayTone ? { imageOverlayTone } : {}),

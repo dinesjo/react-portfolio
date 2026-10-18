@@ -30,22 +30,25 @@ const sectionToNav = {
   contact: "contact",
 };
 
-const navOffset = 112;
-
 export default function Navbar({ detailView = false }) {
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0, ready: false });
+  const [indicator, setIndicator] = useState({ left: 0, top: 0, width: 0, height: 0, ready: false });
+  const navRef = useRef(null);
   const navRefs = useRef([]);
   const activeIndex = Math.max(0, navItems.findIndex((item) => item.id === (detailView ? "featured" : active)));
 
   const updateIndicator = useCallback(() => {
+    const nav = navRef.current;
+    if (nav) document.documentElement.style.setProperty("--nav-clearance", `${Math.ceil(nav.getBoundingClientRect().bottom + 16)}px`);
     const activeButton = navRefs.current[activeIndex];
     if (!activeButton) return;
 
     setIndicator({
       left: activeButton.offsetLeft,
+      top: activeButton.offsetTop + 3,
       width: activeButton.offsetWidth,
+      height: Math.max(0, activeButton.offsetHeight - 6),
       ready: activeButton.offsetWidth > 0,
     });
   }, [activeIndex]);
@@ -62,6 +65,7 @@ export default function Navbar({ detailView = false }) {
 
       let current = "home";
       let maxVis = 0;
+      const navOffset = (navRef.current?.getBoundingClientRect().bottom ?? 96) + 16;
       for (const id of allSections) {
         const el = document.getElementById(id);
         if (!el) continue;
@@ -87,10 +91,12 @@ export default function Navbar({ detailView = false }) {
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     updateFromScroll();
     return () => {
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
@@ -109,6 +115,7 @@ export default function Navbar({ detailView = false }) {
       : null;
     const activeButton = navRefs.current[activeIndex];
     if (activeButton) resizeObserver?.observe(activeButton);
+    if (navRef.current) resizeObserver?.observe(navRef.current);
 
     return () => {
       cancelled = true;
@@ -120,6 +127,7 @@ export default function Navbar({ detailView = false }) {
 
   return (
     <nav
+      ref={navRef}
       aria-label="Primary navigation"
       className={`site-nav safe-top-nav fixed left-1/2 z-50 flex -translate-x-1/2 items-center border backdrop-blur-md transition-all duration-300 ${
         scrolled
@@ -148,6 +156,8 @@ export default function Navbar({ detailView = false }) {
             opacity: indicator.ready ? 1 : 0,
             transform: `translateX(${indicator.left}px)`,
             width: `${indicator.width}px`,
+            top: `${indicator.top}px`,
+            height: `${indicator.height}px`,
           }}
         />
         {navItems.map((item) => (
