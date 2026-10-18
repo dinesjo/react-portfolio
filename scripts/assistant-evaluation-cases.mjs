@@ -11,6 +11,69 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'pickle-integrity-boundary',
+    question: 'Did the DD2525 project make any pickle payload safe by adding HMAC?',
+    checks: (answer) => ({
+      correctsPremise: /\bno\b|does not|doesn't|cannot|can't|not.*safe/i.test(answer),
+      distinguishesIntegrity: /integrity|tamper|authenticat/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      projectCitation: cites(answer, 'project:deserialization-security'),
+    }),
+  },
+  {
+    id: 'taskeroo-course-and-visibility',
+    question: 'What is Taskeroo, which course was it for, and where can I try it or browse its source?',
+    checks: (answer) => ({
+      identifiesCourseAndApp: /DH2643/.test(answer) && /Kanban/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      publicDemoLink: answer.includes('https://taskeroo-frontend.onrender.com'),
+      respectsPrivateSource: /private/i.test(answer) && /source|repository/i.test(answer) && !/https:\/\/github.com\/[^\s)]+taskeroo/i.test(answer),
+      projectCitation: cites(answer, 'project:taskeroo'),
+    }),
+  },
+  {
+    id: 'ci-course-and-role',
+    question: 'What did Linus do on the DD2480 CI server, and was SnusKoll also an assignment for that course?',
+    checks: (answer) => ({
+      identifiesCI: /CI|continuous integration/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      identifiesRole: /notification|commit status/i.test(answer) && /asynchron/i.test(answer),
+      keepsPersonalProjectSeparate: /personal/i.test(answer) && /SnusKoll/i.test(answer),
+      projectCitation: cites(answer, 'project:ci-server'),
+    }),
+  },
+  {
+    id: 'warehouse-course-project',
+    question: 'What did Linus build for DD2528? Was it deployed to physical robots?',
+    checks: (answer) => ({
+      identifiesSimulation: /warehouse/i.test(answer) && /simulat/i.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      describesPlanning: /Dijkstra|Bug2|path planning|route planning/i.test(answer),
+      noInventedDeployment: !/(?:was|were) deployed (?:on|to) (?:physical|real) robots/i.test(answer),
+      projectCitation: cites(answer, 'project:warehouse-simulation'),
+    }),
+  },
+  {
+    id: 's3k-group-project',
+    question: "What was Linus's S3K project, and was it a solo project?",
+    checks: (answer) => ({
+      identifiesProject: /S3K/.test(answer),
+      preservesGroupAttribution: /group|team|collaborat/i.test(answer),
+      describesPublishedWork: /interrupt/i.test(answer) && /capabilit/i.test(answer),
+      projectCitation: cites(answer, 'project:s3k-interrupts'),
+    }),
+  },
+  {
+    id: 's3k-highlighted-course',
+    question: 'Which highlighted KTH course connects to S3K, and how?',
+    checks: (answer) => ({
+      identifiesCourse: /DD2497/.test(answer) && /Project course in System Security/.test(answer),
+      identifiesProject: /S3K/.test(answer),
+      explainsPublishedConnection: /interrupt/i.test(answer) && /capabilit/i.test(answer),
+      courseCitation: cites(answer, 'courses:year-5'),
+    }),
+  },
+  {
     id: 'typo-current-work',
     question: 'whats linus doing at amf rn?',
     checks: (answer) => ({

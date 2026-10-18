@@ -65,7 +65,94 @@ export const projectRecords = [
     ],
   },
   {
+    id: "s3k-interrupts",
+    timeline: { start: "2025-11", end: "2025-12" },
+    title: "S3K Interrupt Capabilities",
+    description:
+      "Our DD2497 group project extended S3K, an experimental RISC-V separation kernel, with capability-controlled interrupt handling. We added interrupt delegation, kernel syscalls, and user-space demos for waiting on and handling interrupts.",
+    technologies: ["C", "RISC-V", "QEMU"],
+    methods: ["Capability-based security", "Kernel development", "Interrupt handling"],
+    category: "Systems",
+    context: "Academic",
+    links: {
+      live: "https://github.com/kth-step/s3k",
+      liveText: "About S3K",
+    },
+    date: "November - December 2025",
+    isPrivate: true,
+    priority: 3,
+  },
+  {
+    id: "warehouse-simulation",
+    timeline: { start: "2025-11", end: "2025-12" },
+    title: "Autonomous Warehouse Simulation",
+    description:
+      "Our DD2528 group project simulated warehouse robots and conveyor handoffs, combining Dijkstra route planning, Bug2 obstacle navigation, multi-robot coordination, and battery-aware job assignment.",
+    technologies: ["Python"],
+    methods: ["Robot coordination", "Path planning", "State machines"],
+    category: "Simulation",
+    context: "Academic",
+    links: {
+      github: "https://github.com/KlaraLindemalm/DD2528-Group-1-Assignment-4",
+    },
+    date: "November - December 2025",
+    priority: 3,
+  },
+  {
+    id: "ci-server",
+    timeline: { start: "2025-02", end: "2025-02" },
+    title: "Continuous Integration Server",
+    description:
+      "Our DD2480 group built a Java CI server for GitHub webhooks, branch builds, Maven tests, and commit statuses. I worked with a teammate on notifications and their tests, plus asynchronous request handling.",
+    technologies: ["Java", "Jetty", "JGit", "Maven", "JUnit"],
+    methods: ["Continuous integration", "Webhook processing", "Test automation"],
+    category: "Developer tools",
+    context: "Academic",
+    links: {
+      github: "https://github.com/DD2480-group16-VT25/continuous-integration",
+    },
+    date: "February 2025",
+    priority: 3,
+  },
+  {
+    id: "taskeroo",
+    timeline: { start: "2025-09", end: "2025-10" },
+    title: "Taskeroo",
+    description:
+      "Our DH2643 group project built a shared Kanban app with boards, tasks, comments, and members. It used React/TypeScript, Express, and Supabase, with GitHub issue links and Google Calendar integration.",
+    technologies: ["React", "TypeScript", "Express", "Supabase", "PostgreSQL"],
+    methods: ["Collaborative task management", "API integration", "Interaction programming"],
+    category: "Web",
+    context: "Academic",
+    links: {
+      live: "https://taskeroo-frontend.onrender.com",
+      liveText: "Try it",
+    },
+    date: "September - October 2025",
+    priority: 2,
+    highlights: [
+      "The deployed web app is public; the source repository is private",
+    ],
+  },
+  {
+    id: "deserialization-security",
+    timeline: { start: "2025-05", end: "2025-06" },
+    title: "Python Deserialization Security",
+    description:
+      "Our DD2525 group project explored unsafe Python pickle deserialization through file-tampering and Flask diary demos. I added HMAC integrity checks; authenticating a payload does not make malicious pickle data safe to load.",
+    technologies: ["Python", "Flask", "HMAC"],
+    methods: ["Deserialization security", "Integrity checks", "Threat demonstrations"],
+    category: "Security",
+    context: "Academic",
+    links: {
+      github: "https://github.com/eliasfloreteng/language-security-project",
+    },
+    date: "May - June 2025",
+    priority: 3,
+  },
+  {
     id: "bibellandskap",
+    timeline: { start: "2026-03", end: null },
     title: "Bible Map",
     description:
       "English-first Bible atlas built with MapLibre and pinned OpenBible data, mapping 1,309 ancient places across shareable Atlas, Relief, and Satellite views with search, routes, verse references, confidence bands, and modern identifications.",
@@ -104,6 +191,7 @@ export const projectRecords = [
   },
   {
     id: "logportal",
+    timeline: { start: "2023-06", end: "2024-08" },
     title: "LogPortal",
     description:
       "A secure Bravida support portal for Azure log lookup, order tracing, and remote automation toggles behind a controlled internal web UI.",
@@ -142,6 +230,7 @@ export const projectRecords = [
   },
   {
     id: "drone",
+    timeline: { start: "2023-01", end: "2023-06" },
     title: "3D Drone Relief Software",
     description:
       "KTH team project for I-CONIC: a C++/wxWidgets desktop tool that combines images, hidden depth maps, and camera data to recover 3D coordinates and measure length, perimeter, area, and volume.",
@@ -159,6 +248,7 @@ export const projectRecords = [
   },
   {
     id: "vim",
+    timeline: { start: "2025-07", end: null },
     title: "Interactive Vim Motions Guide",
     description:
       "Interactive browser-based Vim trainer with a real CodeMirror editing buffer, visual command guidance, guided examples, and syntax-aware playgrounds for eight languages.",
@@ -175,6 +265,7 @@ export const projectRecords = [
   },
   {
     id: "habitgrower",
+    timeline: { start: "2024-04", end: null },
     title: "HabitGrower",
     description:
       "React and TypeScript PWA for habit tracking with Firebase auth/storage, custom habit icons and colors, activity heatmaps, and scheduled reminder notifications.",
@@ -207,6 +298,7 @@ export const projectRecords = [
   },
   {
     id: "fittrackr",
+    timeline: { start: "2024-03", end: "2024-05" },
     title: "FitTrackr",
     description:
       "KTH group fitness tracker for creating and logging workouts, setting goals, searching exercises, and estimating calories, with Firebase authentication and realtime storage, Redux state, and Recharts/calendar progress views.",

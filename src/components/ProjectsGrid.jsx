@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
 import { projects, projectContexts } from "../data/projects";
+import { compareProjectRecency } from "../utils/projectOrdering";
 import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
@@ -24,7 +25,7 @@ const priorityGroups = {
     title: "Selected projects",
     filteredTitle: "selected projects",
     copy:
-      "Other projects from work, university, and my own time.",
+      "Ongoing work first, then completed projects from newest to oldest.",
   },
   3: {
     title: "Project archive",
@@ -324,7 +325,7 @@ export default function ProjectsGrid() {
   const grouped = useMemo(
     () => ({
       1: filtered.filter(byPriority(1)),
-      2: filtered.filter(byPriority(2)),
+      2: filtered.filter(byPriority(2)).sort(compareProjectRecency),
       3: filtered.filter(byPriority(3)),
     }),
     [filtered]

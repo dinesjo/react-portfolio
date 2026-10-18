@@ -1,9 +1,7 @@
-import { courseRelatedWork, featuredCourses, getCoursesByYear } from "../data/courses";
+import { courseRelatedWork, featuredCourses, getCoursesByYear, studyYears } from "../data/courses";
 import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 import { focusSection } from "../utils/portfolioNavigation";
-
-const studyYears = [1, 2, 3, 4, 5];
 
 export default function Coursework() {
   const totalCourses = studyYears.reduce(
@@ -57,7 +55,14 @@ export default function Coursework() {
                   <p className="mt-3 text-sm leading-relaxed text-slate-600">
                     {course.featuredNote}
                   </p>
-                  {courseRelatedWork[course.code] && <div className="course-related"><p>{courseRelatedWork[course.code].note}</p><a href={`#project-${courseRelatedWork[course.code].id}`} onClick={focusSection}>Related work: {courseRelatedWork[course.code].title} <span aria-hidden="true">→</span></a></div>}
+                  {(courseRelatedWork[course.code] ?? []).map((related) => (
+                    <div key={related.id} className="course-related">
+                      <p>{related.note}</p>
+                      <a href={`#project-${related.id}`} onClick={focusSection}>
+                        Related work: {related.title} <span aria-hidden="true">→</span>
+                      </a>
+                    </div>
+                  ))}
                 </article>
               ))}
             </div>
@@ -149,6 +154,16 @@ export default function Coursework() {
                                   (elective)
                                 </span>
                               )}
+                              {(courseRelatedWork[course.code] ?? []).map((related) => (
+                                <a
+                                  key={related.id}
+                                  href={`#project-${related.id}`}
+                                  onClick={focusSection}
+                                  className="mt-2 block text-xs font-bold underline decoration-slate-300 underline-offset-4 hover:text-slate-950 focus-visible:outline focus-visible:outline-offset-4"
+                                >
+                                  Related work: {related.title} <span aria-hidden="true">→</span>
+                                </a>
+                              ))}
                             </span>
                           </div>
                         ))}

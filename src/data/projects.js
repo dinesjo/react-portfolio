@@ -6,10 +6,14 @@ import bibellandskapCard from "../assets/project-optimized/bibellandskap-card.we
 import bibellandskapFull from "../assets/project-optimized/bibellandskap-full.webp";
 import chessReporterCard from "../assets/project-optimized/chess-reporter-card.webp";
 import chessReporterFull from "../assets/project-optimized/chess-reporter-full.webp";
+import ciServerCard from "../assets/project-optimized/ci-server-card.webp";
+import ciServerFull from "../assets/project-optimized/ci-server-full.webp";
 import deadlineTrackerCard from "../assets/project-optimized/deadline-tracker-card.webp";
 import deadlineTrackerFull from "../assets/project-optimized/deadline-tracker-full.webp";
 import droneCard from "../assets/project-optimized/drone-relief-software-card.webp";
 import droneFull from "../assets/project-optimized/drone-relief-software-full.webp";
+import deserializationCard from "../assets/project-optimized/deserialization-security-card.webp";
+import deserializationFull from "../assets/project-optimized/deserialization-security-full.webp";
 import fittrackrCard from "../assets/project-optimized/fittrackr-card.webp";
 import fittrackrFull from "../assets/project-optimized/fittrackr-full.webp";
 import habitGrowerCard from "../assets/project-optimized/habit-grower-card.webp";
@@ -30,11 +34,17 @@ import portfolioSiteFull from "../assets/project-optimized/portfolio-site-full.w
 import snuskollCard from "../assets/project-optimized/snuskoll-card.webp";
 import snuskollFull from "../assets/project-optimized/snuskoll-full.webp";
 import snuskollLogo from "../assets/project-optimized/icons/snuskoll-logo.webp";
+import s3kInterruptsCard from "../assets/project-optimized/s3k-interrupts-card.webp";
+import s3kInterruptsFull from "../assets/project-optimized/s3k-interrupts-full.webp";
 import thesisTrackerCard from "../assets/project-optimized/thesis-tracker-card.webp";
+import taskerooCard from "../assets/project-optimized/taskeroo-card.webp";
+import taskerooFull from "../assets/project-optimized/taskeroo-full.webp";
 import thesisTrackerFull from "../assets/project-optimized/thesis-tracker-full.webp";
 import thesisTrackerIcon from "../assets/project-optimized/icons/thesis-tracker-icon.webp";
 import vimCard from "../assets/project-optimized/vim-motions-guide-card.webp";
 import vimFull from "../assets/project-optimized/vim-motions-guide-full.webp";
+import warehouseCard from "../assets/project-optimized/warehouse-simulation-card.webp";
+import warehouseFull from "../assets/project-optimized/warehouse-simulation-full.webp";
 import { projectRecords } from "./projectRecords";
 
 const projectMedia = {
@@ -43,7 +53,7 @@ const projectMedia = {
     imageFull: masterThesisKgqaFull,
     imageOverlayTone: "light",
     imageFrame: "full-bleed",
-    imageAlt: "Scania cab, chassis, inline-six engine, gearbox and fuel tank connected by green and red links on a reflective floor, with TRATON Group branding.",
+    imageAlt: "Pencil sketch of an engineer viewing a MAZE compatibility answer marked BLOCKED, with an Evidence button on the screen and a complete truck in the background.",
   },
   "thesis-tracker": {
     image: thesisTrackerCard,
@@ -54,6 +64,35 @@ const projectMedia = {
     image: snuskollCard,
     imageFull: snuskollFull,
     icon: snuskollLogo,
+  },
+  "s3k-interrupts": {
+    image: s3kInterruptsCard,
+    imageFull: s3kInterruptsFull,
+    imageAlt: "Conceptual pencil sketch of an S3K processor, with separated execution regions and a coral interrupt pulse routed through a controlled gateway.",
+    imageOverlayTone: "light",
+  },
+  "warehouse-simulation": {
+    image: warehouseCard,
+    imageFull: warehouseFull,
+    imageAlt: "Conceptual pencil sketch of warehouse robots carrying boxes between shelves and a conveyor, with a coral route around an obstacle.",
+    imageOverlayTone: "light",
+  },
+  "ci-server": {
+    image: ciServerCard,
+    imageFull: ciServerFull,
+    imageAlt: "Conceptual pencil sketch of a Git commit graph feeding a laptop's build and test panel, with a server tower beside it.",
+    imageOverlayTone: "light",
+  },
+  taskeroo: {
+    image: taskerooCard,
+    imageFull: taskerooFull,
+    imageAlt: "Photorealistic device mockup of Taskeroo: a laptop displays the KTH Kanban board and a phone displays the Google sign-in page.",
+  },
+  "deserialization-security": {
+    image: deserializationCard,
+    imageFull: deserializationFull,
+    imageAlt: "Conceptual pencil sketch of a sealed data parcel revealing a tangled mechanism as it crosses a trust boundary and unfolds into gears.",
+    imageOverlayTone: "light",
   },
   bibellandskap: {
     image: bibellandskapCard,

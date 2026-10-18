@@ -76,15 +76,28 @@ and comparison point, but they are no longer imported by the live server.
 
 ## Portfolio Assistant
 
-The assistant answers from the facts already published on this page. It does
-not crawl linked sites or inspect screenshots. The canonical corpus currently
-contains 23 records: one profile, 17 projects, and five course-year records.
+The assistant answers from the same shared data that renders the page. Project
+facts come from `src/data/projectRecords.js` and referenced case studies; courses,
+highlight order/notes, and related-work links come from `src/data/courses.js`;
+profile facts come from `src/data/profile.js`. Update the facts there once and
+both the page and ASK receive them. There is no separate project list to maintain
+in the model instructions. ASK does not crawl linked sites, inspect screenshots,
+or read text that exists only in README/design notes.
 
-That complete corpus is only about 6,600 estimated prompt tokens, so the live
-path deliberately uses all records instead of trying to retrieve a small subset.
+`server/corpus.js` generates a profile record, one record for every project, and
+one for each study year present in the course data. The live path deliberately
+uses every record instead of trying to retrieve a small subset.
 Each request receives the same unabridged, citation-labelled context. This makes
 cross-record questions such as “Which projects used React?” complete and removes
 embedding and ranking failure modes from the visitor-facing path.
+
+The server builds this context at startup, so restart `npm run dev` after shared
+data changes; browser hot reload alone does not refresh ASK. In production,
+rebuild and deploy the updated container. Startup logs report the generated
+source count and estimated tokens. `npm test` checks that every canonical project,
+course, highlight note, and course-to-project connection reaches the trusted
+context with a citation; expected inventories are derived from the data.
+See [AGENTS.md](AGENTS.md) for the maintenance instructions used by coding agents.
 
 Safeguards remain explicit:
 
@@ -131,7 +144,8 @@ The [context review](docs/assistant-context-review.md) maps every prompt input,
 documents the imperfect-query experiments and remaining limitations, and explains
 the shared coursework-to-project evidence. To evaluate only the configured default
 model, run `npm run context:evaluate -- gemma4:31b`. The expanded evaluation uses
-18 cases and exits nonzero for failed checks or provider errors; its checks are
+the general grounding cases plus S3K group-attribution and highlighted-course
+checks, and exits nonzero for failed checks or provider errors; its checks are
 diagnostics rather than proof that every claim is supported.
 
 ## Images and Styling

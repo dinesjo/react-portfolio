@@ -25,8 +25,10 @@ const projectImages = [
   "ai-diary",
   "bibellandskap",
   "chess-reporter",
+  "ci-server",
   "context-summarization-research",
   "deadline-tracker",
+  "deserialization-security",
   "drone-relief-software",
   "fittrackr",
   "habit-grower",
@@ -36,13 +38,20 @@ const projectImages = [
   "pathfinding-visualizer",
   "portfolio-site",
   "react-pathfinding-visualizer",
+  "s3k-interrupts",
   "snuskoll",
   "thesis-tracker",
+  "taskeroo",
   "vim-motions-guide",
+  "warehouse-simulation",
 ];
 
 const sourceFiles = {
+  "ci-server": "ci-server-sketch-v2.png",
+  "deserialization-security": "deserialization-security-sketch-v2.png",
   "master-thesis-kgqa": "master-thesis.png",
+  "s3k-interrupts": "s3k-interrupts-sketch-v2.png",
+  taskeroo: "taskeroo-device-demo.png",
   "thesis-tracker": "thesis-tracker.jpg",
 };
 
