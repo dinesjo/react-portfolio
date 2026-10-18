@@ -53,7 +53,7 @@ const projectMedia = {
     imageFull: masterThesisKgqaFull,
     imageOverlayTone: "light",
     imageFrame: "full-bleed",
-    imageAlt: "Scania cab, chassis, inline-six engine, gearbox and fuel tank connected by green and red links on a reflective floor, with TRATON Group branding.",
+    imageAlt: "Pencil sketch of an engineer viewing a MAZE compatibility answer marked BLOCKED, with an Evidence button on the screen and a complete truck in the background.",
   },
   "thesis-tracker": {
     image: thesisTrackerCard,
@@ -68,7 +68,7 @@ const projectMedia = {
   "s3k-interrupts": {
     image: s3kInterruptsCard,
     imageFull: s3kInterruptsFull,
-    imageAlt: "Conceptual processor labelled S3K, with separated execution regions and a coral interrupt pulse routed through a controlled gateway.",
+    imageAlt: "Conceptual pencil sketch of an S3K processor, with separated execution regions and a coral interrupt pulse routed through a controlled gateway.",
     imageOverlayTone: "light",
   },
   "warehouse-simulation": {
@@ -80,14 +80,13 @@ const projectMedia = {
   "ci-server": {
     image: ciServerCard,
     imageFull: ciServerFull,
-    imageAlt: "Conceptual pencil sketch of a commit graph flowing through a build mechanism and a testing gate, with a coral feedback loop.",
+    imageAlt: "Conceptual pencil sketch of a Git commit graph feeding a laptop's build and test panel, with a server tower beside it.",
     imageOverlayTone: "light",
   },
   taskeroo: {
     image: taskerooCard,
     imageFull: taskerooFull,
-    imageAlt: "Conceptual pencil sketch of Kanban columns with a coral task card moving between them, connected to a calendar and an issue graph.",
-    imageOverlayTone: "light",
+    imageAlt: "Photorealistic device mockup of Taskeroo: a laptop displays the KTH Kanban board and a phone displays the Google sign-in page.",
   },
   "deserialization-security": {
     image: deserializationCard,

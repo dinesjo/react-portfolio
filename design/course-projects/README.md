@@ -31,8 +31,12 @@ were not executed. These are group projects, not claims of sole authorship.
   data/auth, boards, tasks, members, comments, and GitHub/Calendar integrations
   are supported by README and selected source. Linus's visible commits include
   auth/routing, Supabase, task/backend integration, and UI changes. Public copy
-  retains group attribution and supplies no private repository link. Deployment,
-  OAuth flows, and authorization behavior were not runtime-verified.
+  retains group attribution and supplies no private repository link. The owner
+  subsequently supplied the public app URL, https://taskeroo-frontend.onrender.com,
+  and screenshots for a device mockup. The public login page was verified in the
+  Codex browser on 16 October 2026; OAuth and authenticated behavior were not tested.
+  The card links to the public app, while ASK explicitly retains the private-source
+  boundary.
 - **DD2525 — Python Deserialization Security:**
   [group repository](https://github.com/eliasfloreteng/language-security-project).
   README identifies the course and describes file-tampering and Flask diary
@@ -44,6 +48,14 @@ were not executed. These are group projects, not claims of sole authorship.
 Course connections support multiple projects per course and appear in both the
 highlight cards and the complete course record, using the same lists as ASK.
 
+## Portfolio placement
+
+The CI server, Python deserialization, S3K, and warehouse simulation entries are
+now in the collapsed Project archive. This keeps the main selection focused while
+preserving the coursework evidence, artwork, public source links, course
+connections, and complete ASK context. Course and ASK source links reveal the
+corresponding archive entry automatically.
+
 ## Artwork
 
 Originals are saved in `src/assets/project-originals/`; the normal optimizer
@@ -52,6 +64,26 @@ conceptual illustrations, not screenshots or measured system diagrams.
 
 Generated using the built-in image generation tool. The exact prompts are kept
 in [PROMPTS.md](PROMPTS.md).
+
+### Approved artwork revisions
+
+Following visual feedback, the warehouse image is retained. Taskeroo now shows
+a recognizable Kanban app on a laptop; CI shows a commit feeding automated
+build/test results; S3K uses the same graphite-and-paper style. The deserialization
+image keeps its composition with the dotted guide paths removed.
+
+The current CI, deserialization, and S3K originals use the `-sketch-v2.png`
+suffix, selected explicitly in the optimizer's `sourceFiles` map. Previous
+originals are retained for comparison.
+
+Taskeroo was subsequently updated to a photorealistic laptop-and-phone demo using
+the owner's real board and login screenshots. Its current original is
+`src/assets/project-originals/taskeroo-device-demo.png`, with the built-in
+generation prompt in [taskeroo-demo](taskeroo-demo/README.md).
+The superseded sketch and comparison pages remain local review artifacts.
+
+[Revision prompts](revisions/PROMPTS.md) record the built-in generation and
+cleanup passes. Unused review images and comparison pages are excluded from the PR.
 
 ## Verification
 

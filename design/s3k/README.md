@@ -2,6 +2,10 @@
 
 Added to the selected projects on 16 October 2026. This is an academic group project from KTH DD2497 (Project course in System Security), developed in November–December 2025.
 
+The entry is now in the Project archive as part of a more focused main selection.
+Its DD2497 connection and ASK source remain available; in-page links reveal the
+archived entry automatically.
+
 ## Source review
 
 Reviewed `cseas002/syssec-group7` through GitHub CLI and a temporary clone, at commit `f69d1b7` on `main`. The repository is private. The README lists Linus Dinesjö among the team, and Linus confirmed the collaboration. The portfolio describes the team's work without assigning individual implementation ownership.
@@ -17,6 +21,12 @@ This was a source review; the kernel was not rebuilt or booted. The portfolio su
 - [KTH DD2497](https://www.kth.se/student/kurser/kurs/DD2497?l=en): course context.
 
 ## Artwork
+
+The current portfolio uses an approved pencil-and-ink revision to match the other
+course-project illustrations. Its source is
+`src/assets/project-originals/s3k-interrupts-sketch-v2.png`; the earlier selected
+render remains available below. The final generation and cleanup prompts are
+recorded in [the course-project revision notes](../course-projects/revisions/PROMPTS.md).
 
 Draft A, “Kernel and interrupt routing,” was selected on 16 October 2026 and installed as `src/assets/project-originals/s3k-interrupts.png`, from `design/s3k/a-kernel-routing.png`. It was generated with the built-in imagegen tool. All six responsive WebP derivatives are produced by `scripts/optimize-images.mjs`.
 

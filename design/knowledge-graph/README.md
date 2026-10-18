@@ -1,8 +1,51 @@
-# A3.1 — simple connections and TRATON branding
+# Knowledge Graph QA artwork
+
+Accepted on 18 October 2026: **2 — Soft pencil**, generated with the built-in
+image generation tool. The approved original is
+`src/assets/project-originals/master-thesis.png`. The standard optimizer creates
+all six responsive WebPs; the existing full-bleed frame is preserved.
+
+The owner supplied the actual MAZE UI as the authoritative screen reference.
+The anonymous engineer and whole-truck scene are illustrative. The selected
+image uses the real question/answer hierarchy, a BLOCKED answer, and the Evidence
+control; it is not a photograph or proof of a production deployment. Alt text
+and the case-study caption preserve that distinction.
+
+New style-study comparisons, source references, and discarded images remain local
+design artifacts and are excluded from this PR. The approved original is kept in the
+normal asset pipeline, so builds do not depend on the local design workspace.
+
+Desktop card, case-study, and mobile image-preview framing were checked in the
+Codex browser. The selected original matches the reviewed PNG byte for byte.
+
+## Exact generation prompt
+
+The initial generation name was "Airy workspace"; the review labeled it
+"2 — Soft pencil".
+
+```text
+Use case: illustration-story
+Asset type: minimal sketch portfolio cover, variants of the selected engineer-at-computer scene.
+Input references: IMAGE 1 is a SCENE-CONCEPT reference only: anonymous man at computer, whole truck in the background. Its dense hatching, office detail, binder and invented screen content are NOT to be copied. IMAGE 2 is the AUTHORITATIVE UI reference: use this actual MAZE question-answer screen as the content and layout on the monitor, redrawn lightly in pencil. These are new minimal compositions, not pixel-preserving edits.
+Screen requirements: preserve the white conversational layout of image 2: one right-aligned rounded user-question bubble near the top, an outlined answer panel below, a small Evidence control at its lower-right, generous white space and the rounded input composer along the bottom. Reflow the portrait reference naturally into the visible desktop monitor area while retaining this recognizable hierarchy. Only these four text fragments should be readable, spelled exactly:
+"Can I use FPC448 J with FPC552 DQ?"
+"This configuration is BLOCKED."
+"Evidence"
+"Ask about MAZE..."
+The explanation paragraph becomes only a few thin light pencil strokes inside the answer panel. The repeated title and timing/token row may be omitted or reduced to faint unlabelled lines. Use a tiny understated coral pencil underline on BLOCKED, with the rest of the interface neutral. NO oversized fake headings such as "Supporting rule" or "Can this build be used?". DO NOT copy the large play triangle, image/video crop handles, selection outline, lower-left hash overlay or recording artifacts: they are not part of the app. No extra text anywhere.
+Shared style: a genuinely MINIMAL architectural/editorial pencil sketch on clean warm ivory paper, delicate charcoal contours, very selective short hatching only at contact points, large expanses of untouched paper. No photorealism, no dense shading, no dark solid shirt mass, no detailed hair strands, no full ceiling/window grid, no workshop clutter. Keep the man, screen and whole truck recognizable through a few confident shapes. The anonymous adult man is seen from behind or a discreet rear profile, ordinary shirt, natural posture; face and hands understated. No graph diagrams, floating component trio, neural networks, unrelated objects or branding.
+Canvas: square 1:1. Keep essential screen, man and truck within the central 80% so the composition works in a near-square portfolio frame. The truck is one COMPLETE unbranded European cab-over tractor vehicle in the background, with cab, chassis and wheels assembled. It is a quiet contextual sketch, never a floating exploded vehicle.
+Variant 2 composition — AIRY WORKSPACE: a wider, spacious rear three-quarter view, with a lightly drawn seated man at the left of a simple desk, the computer monitor slightly right of centre, and the whole truck farther behind at upper right through one broadly suggested workshop opening. A few long horizontal lines establish the desk and sill. The chair is only an economical outline, not a huge dark object. The three subjects form an open triangular composition surrounded by generous blank ivory paper. Monitor roughly 45% of canvas width and front face turned enough toward the viewer to read the UI. Looser gestural graphite line quality, a few pale grey washes, no heavy crosshatching. Omit documents and all small office props. Keep this a minimal workplace illustration rather than a full room drawing.
+```
+
+## Previous artwork — A3.1
+
+Historical notes for the illustration accepted on 13 October 2026 and superseded
+by Soft pencil above. The implementation descriptions below refer to that earlier version.
 
 Refined with the built-in imagegen tool on 13 October 2026. The user preferred A3's subject, colours and slightly reflective floor, and requested simple component links in place of overlapping groups plus a TRATON logo at top right.
 
-## Current draft
+### Current draft
 
 - Image: `a31-scania-simple-links.webp` — 1448 × 1086 pixels.
 - [Interactive comparison](http://127.0.0.1:8080/design/knowledge-graph/preview.html) — previous A3 versus A3.1, with full artwork and project-card views.
@@ -11,11 +54,11 @@ The refinement retains A3's Scania-branded cab, two-axle tractor chassis, inline
 
 TRATON GROUP branding was guided by the official angular mark and the original case-study artwork. A targeted follow-up moves it farther inward within the upper-right area so that a square centre crop keeps the full logo. It is incorporated into the image itself.
 
-## Accepted implementation
+### Accepted implementation
 
 A3.1 is now installed as `src/assets/project-originals/master-thesis.png`, using the generated PNG source rather than a re-encoded preview. The existing optimizer regenerates all six responsive Knowledge Graph WebP assets. The project card fills its image frame at wide desktop widths; at 1024–1279 pixels it uses a full-width image above the text to protect the branding and links. Mobile also shows the entire composition. The case-study image has no inner padding or height cap. The caption and image alt text describe the new illustration. The previous poster is retained in `original-overview.webp` for comparison.
 
-## References
+### References
 
 - Edit target: `a3-scania-combinations.webp`.
 - Original branding style reference: `original-overview.webp`.
@@ -25,11 +68,11 @@ A3.1 is now installed as `src/assets/project-originals/master-thesis.png`, using
 
 These remain generated editorial illustrations, not exact CAD or verified bills of materials. The main component shapes and counts have been visually reviewed.
 
-## Earlier rounds
+### Earlier rounds
 
 [Scania variations](round-two.html) · [first-round concepts](round-one.html) · [first-round prompts](ROUND_ONE_PROMPTS.md).
 
-## Edit prompt
+### Edit prompt
 
 ```text
 Use case: precise-object-edit
@@ -47,7 +90,7 @@ Branding: in the empty TOP-RIGHT area, add a clean modest dark charcoal/navy TRA
 Output: same 4:3 landscape dimensions and full-bleed composition as image 1. No charts, labels, metrics, captions or extra text. Preserve the aesthetically calm industrial image and reflective floor. Make only the relationship cleanup and logo addition described above.
 ```
 
-## Logo inset correction
+### Logo inset correction
 
 ```text
 Use case: precise-object-edit

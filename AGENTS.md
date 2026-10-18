@@ -5,6 +5,7 @@ Prefer robustness over flashiness.
 ## Keep portfolio content and ASK in sync
 
 - Enter project facts once in `src/data/projectRecords.js`. Put detailed case-study facts in `src/data/caseStudies.js`, referenced by the project record. `src/data/projects.js` adds presentation and image assets; do not put facts there that ASK needs to know.
+- Selected projects (`priority: 2`) use `timeline: { start: "YYYY-MM", end: "YYYY-MM" | null }` for automatic ordering. A null end means ongoing. Keep these month-precision values consistent with the published `date`; ongoing projects sort by start date, followed by completed projects by end date. Equal dates retain their record order.
 - Maintain course names, completion records, highlight order/notes, and course-to-project connections in `src/data/courses.js`. Maintain personal and employment facts in `src/data/profile.js`. Both the page and ASK consume these shared records.
 - `server/corpus.js` derives ASK's sources from those records; `server/full-context.js` includes every source in the trusted model context. Do not maintain a second project/course list in the system prompt, or hardcode inventory counts. If a new content field appears on the page, include its relevant text in the corpus serializer and extend the data-to-context coverage checks.
 - Text that appears only in JSX, README/design notes, images, or linked repositories is not automatically available to ASK. Publish approved facts in the shared records; ASK does not crawl links, inspect artwork, or read private repositories.

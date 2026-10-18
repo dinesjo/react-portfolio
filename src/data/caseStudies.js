@@ -48,7 +48,7 @@ export const caseStudies = {
         ],
       },
     ],
-    imageCaption: "Scania truck components connected to illustrate compatibility questions over an industrial knowledge graph. The coloured links are conceptual, rather than specific MAZE constraints.",
+    imageCaption: "The MAZE research interface sketched in an engineering setting. The person and truck scene are illustrative.",
   },
   snuskoll: {
     subtitle: "A mobile-first product catalog with personal ratings and social reviews.",

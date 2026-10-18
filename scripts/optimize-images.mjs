@@ -47,7 +47,11 @@ const projectImages = [
 ];
 
 const sourceFiles = {
+  "ci-server": "ci-server-sketch-v2.png",
+  "deserialization-security": "deserialization-security-sketch-v2.png",
   "master-thesis-kgqa": "master-thesis.png",
+  "s3k-interrupts": "s3k-interrupts-sketch-v2.png",
+  taskeroo: "taskeroo-device-demo.png",
   "thesis-tracker": "thesis-tracker.jpg",
 };
 
