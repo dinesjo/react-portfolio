@@ -18,7 +18,7 @@ export default function Hero() {
           </span>
           <h1
             id="home-title"
-            className="section-title hero-title mt-6 max-w-4xl text-5xl sm:text-7xl lg:text-[5.6rem]"
+            className="section-title hero-title mt-6 max-w-4xl"
           >
             <span className="hero-title__text hero-sequence-step hero-sequence-step--title">
               {profile.name}

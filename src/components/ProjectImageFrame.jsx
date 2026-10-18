@@ -181,7 +181,6 @@ export default function ProjectImageFrame({
   useEffect(() => {
     if (!isOpen) return undefined;
 
-    previousFocusRef.current = document.activeElement;
     const dialog = dialogRef.current;
     if (dialog && !dialog.open) dialog.showModal();
     closeButtonRef.current?.focus();
@@ -200,7 +199,7 @@ export default function ProjectImageFrame({
       document.body.style.overflow = previousOverflow;
       if (dialog?.open) dialog.close();
       window.removeEventListener("keydown", onKeyDown);
-      previousFocusRef.current?.focus?.();
+      previousFocusRef.current?.focus?.({ preventScroll: true });
     };
   }, [closeModal, hasMultipleImages, images.length, isOpen, showNext, showPrevious]);
 
@@ -223,7 +222,9 @@ export default function ProjectImageFrame({
         <button
           type="button"
           aria-label={`Open ${project.title} work image`}
-          onClick={() => {
+          onClick={(event) => {
+            // Safari does not focus buttons on a pointer click.
+            previousFocusRef.current = event.currentTarget;
             setActiveImage(0);
             setIsOpen(true);
           }}

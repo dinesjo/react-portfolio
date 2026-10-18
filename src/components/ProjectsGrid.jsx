@@ -66,10 +66,10 @@ function ProjectLinks({ project, compact = false }) {
   if (!hasLinks) return null;
 
   const primaryClass = compact
-    ? "sharp-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold"
+    ? "sharp-button inline-flex min-h-11 items-center gap-1.5 px-3 py-2 text-xs font-bold"
     : "sharp-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold";
   const secondaryClass = compact
-    ? "quiet-button inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold"
+    ? "quiet-button inline-flex min-h-11 items-center gap-1.5 px-3 py-2 text-xs font-bold"
     : "quiet-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold";
 
   return (
@@ -129,7 +129,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
 }
 
 function CaseStudyCard({ project, index }) {
-  const keepFullImage = project.featuredImageFit === "contain";
+  const keepFullImage = project.featuredImageFit === "contain" || project.imageFrame === "full-bleed";
   return (
     <article
       id={`project-${project.id}`}
@@ -143,21 +143,21 @@ function CaseStudyCard({ project, index }) {
       data-reveal="case-study"
       style={{ viewTransitionName: `project-card-${project.id}` }}
     >
-      <div className={`grid lg:grid-cols-[1.03fr_0.97fr] ${project.imageFrame === "full-bleed" ? "case-study-layout--full-bleed" : ""} ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+      <div className={`case-study-layout ${index % 2 === 1 ? "case-study-layout--text-first" : ""}`}>
         <ProjectImageFrame
           project={project}
           displayImageSrc={project.imageFull || project.image}
           frameClassName={`case-study-media featured-case-image overflow-hidden ${keepFullImage ? "featured-case-image--uncropped" : ""}`}
           imageClassName="block w-full"
-          imageSizes={project.imageFrame === "full-bleed" ? "(min-width: 1280px) 608px, calc(100vw - 48px)" : "(min-width: 1180px) 608px, (min-width: 1024px) 50vw, calc(100vw - 48px)"}
+          imageSizes="(min-width: 1288px) 624px, (min-width: 1024px) 50vw, calc(100vw - 48px)"
         />
 
-        <div className="priority-case-card__content flex flex-col justify-between p-6 sm:p-8">
+        <div className="priority-case-card__content flex flex-col justify-between">
           <div>
             <ProjectTags project={project} className="mb-5" />
             <h4
               id={`project-${project.id}-title`}
-              className="font-montserrat text-3xl font-extrabold leading-tight text-slate-950"
+              className="case-card-title font-montserrat font-extrabold leading-tight text-slate-950"
             >
               {project.title}
             </h4>
@@ -211,9 +211,9 @@ function SelectedProjectCard({ project }) {
     >
       <ProjectImageFrame
         project={project}
-        frameClassName="h-44 overflow-hidden border-b border-slate-200/50 bg-slate-200"
+        frameClassName="project-card-image overflow-hidden border-b border-slate-200/50 bg-slate-200"
         imageClassName="h-full w-full object-cover"
-        imageSizes="(min-width: 1180px) 382px, (min-width: 1024px) 31vw, (min-width: 640px) 50vw, calc(100vw - 48px)"
+        imageSizes="(min-width: 1300px) 400px, (min-width: 1040px) 32vw, (min-width: 700px) 50vw, calc(100vw - 48px)"
       />
 
       <div className="flex flex-1 flex-col p-5">
@@ -422,7 +422,7 @@ export default function ProjectsGrid() {
                 priority={2}
                 count={grouped[2].length}
               />
-              <div className="reveal-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="project-grid reveal-grid grid gap-5">
                 {grouped[2].map((project) => (
                   <SelectedProjectCard
                     key={project.id}

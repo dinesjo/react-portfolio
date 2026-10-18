@@ -36,7 +36,7 @@ export default function Coursework() {
           >
             <h3 id="highlighted-coursework-title" className="sr-only">Highlighted coursework</h3>
 
-            <div className="reveal-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="course-grid reveal-grid grid gap-3">
               {featuredCourses.map((course) => (
                 <article
                   key={course.code}
@@ -74,7 +74,7 @@ export default function Coursework() {
             className="collection-group"
             aria-labelledby="course-record-title"
           >
-            <header className="collection-group-header reveal" data-reveal="trace">
+            <header className="collection-group-header collection-group-header--plain reveal" data-reveal="trace">
               <div>
                 <div className="collection-group-title-row">
                   <h3 id="course-record-title" className="collection-group-title">
@@ -138,11 +138,11 @@ export default function Coursework() {
                         </a>
                       </div>
 
-                      <div className="grid gap-x-4 gap-y-1 sm:grid-cols-2">
+                      <div className="course-record__courses grid gap-x-4 gap-y-1">
                         {yearCourses.map((course) => (
                           <div
                             key={course.code}
-                            className="course-row grid grid-cols-[4.6rem_1fr] items-start gap-3 px-2 py-2"
+                            className="course-row grid grid-cols-[4.6rem_minmax(0,1fr)] items-start gap-3 px-2 py-2"
                           >
                             <span className="course-code mt-0.5 w-fit justify-self-start border px-2 py-0.5 font-iceland text-sm font-bold">
                               {course.code}

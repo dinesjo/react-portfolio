@@ -69,7 +69,7 @@ export default function Contact() {
             <p className="font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">
               Email
             </p>
-            <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="mt-4 flex flex-wrap items-center gap-4">
               <a
                 href={`mailto:${email}`}
                 className="contact-email font-montserrat text-2xl font-extrabold"
