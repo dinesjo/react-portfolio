@@ -144,6 +144,7 @@ const projectMedia = {
     imageFull: pathvisFull,
     imagePreviewFit: "contain",
     imagePreviewBackground: "#e7e7e7",
+    imageAlt: "Classroom laptop displaying Pathfinding Visualised, with a Swedish keyboard and a Dijkstra weighted graph on the whiteboard behind it.",
   },
   this: {
     image: portfolioSiteCard,

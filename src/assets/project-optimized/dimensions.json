@@ -337,27 +337,27 @@
   },
   "pathfinding-visualizer-card-480.webp": {
     "width": 480,
-    "height": 222
+    "height": 320
   },
   "pathfinding-visualizer-card-768.webp": {
     "width": 768,
-    "height": 356
+    "height": 512
   },
   "pathfinding-visualizer-card.webp": {
     "width": 960,
-    "height": 445
+    "height": 640
   },
   "pathfinding-visualizer-full-1200.webp": {
     "width": 1200,
-    "height": 556
+    "height": 800
   },
   "pathfinding-visualizer-full-960.webp": {
     "width": 960,
-    "height": 445
+    "height": 640
   },
   "pathfinding-visualizer-full.webp": {
-    "width": 1800,
-    "height": 834
+    "width": 1536,
+    "height": 1024
   },
   "portfolio-site-card-480.webp": {
     "width": 480,
