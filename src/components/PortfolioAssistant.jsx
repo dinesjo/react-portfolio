@@ -25,6 +25,7 @@ import {
 import SectionIntro from "./SectionIntro";
 import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
 import AssistantStage from "./AssistantStage";
+import PrimaryButton from "./PrimaryButton";
 import { openDisclosuresForTarget } from "../utils/portfolioNavigation";
 
 const REQUEST_TIMEOUT_MS = 45_000;
@@ -940,14 +941,14 @@ export default function PortfolioAssistant() {
                   {question.length}/{MAX_ASSISTANT_QUESTION_CHARACTERS}
                 </p>
               </div>
-              {isLoading ? <button key="stop" type="button" className="assistant-submit-button assistant-stop-button" onClick={() => stopAnswerRef.current?.()}>Stop response</button> : <button
+              {isLoading ? <PrimaryButton key="stop" type="button" className="assistant-submit-button assistant-stop-button" onClick={() => stopAnswerRef.current?.()}>Stop response</PrimaryButton> : <PrimaryButton
                 key="send"
                 type="submit"
                 className="assistant-submit-button"
                 disabled={!canSubmit}
               >
                 Send
-              </button>}
+              </PrimaryButton>}
             </fieldset>
           </form>
         </div>

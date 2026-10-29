@@ -8,6 +8,7 @@ import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
 import { ProjectMotionCard, ProjectMotionGroup } from "./ProjectMotion";
 import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
+import PrimaryButton from "./PrimaryButton";
 import {
   FaArchive,
   FaArrowRight,
@@ -69,15 +70,15 @@ function ProjectLinks({ project, compact = false }) {
   return (
     <div className={`flex flex-wrap ${compact ? "gap-2" : "gap-3"}`}>
       {project.links.live && (
-        <a
+        <PrimaryButton
           href={project.links.live}
           target="_blank"
           rel="noopener noreferrer"
           className={primaryClass}
+          icon={<FaExternalLinkAlt className="text-[10px]" />} iconMotion="external"
         >
-          <FaExternalLinkAlt className="text-[10px]" />
           {project.links.liveText || "Try it"}
-        </a>
+        </PrimaryButton>
       )}
       {project.links.github && (
         <a
@@ -184,7 +185,8 @@ function CaseStudyCard({ project, index, settled }) {
           </div>
 
           <div className="case-card-actions mt-6">
-            <a href={`#/work/${project.id}`} className="sharp-button inline-flex items-center gap-2 px-4 py-3 text-sm font-bold">Read case study <FaArrowRight aria-hidden="true" /></a>
+            <PrimaryButton href={`#/work/${project.id}`} className="sharp-button inline-flex items-center gap-2 px-4 py-3 text-sm font-bold"
+              icon={<FaArrowRight />} iconPosition="end">Read case study</PrimaryButton>
             <ProjectLinks project={project} compact />
           </div>
         </div>

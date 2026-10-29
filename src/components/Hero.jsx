@@ -2,6 +2,7 @@ import { FaArrowRight, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import portraitSrc from "../assets/project-optimized/portrait.webp";
 import { profile } from "../data/profile";
 import { focusSection } from "../utils/portfolioNavigation";
+import PrimaryButton from "./PrimaryButton";
 
 export default function Hero() {
   return (
@@ -32,13 +33,14 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions hero-sequence-step hero-sequence-step--actions mt-8 flex flex-wrap gap-3">
-            <a
+            <PrimaryButton
               href="#featured"
               onClick={focusSection}
               className="sharp-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"
+              icon={<FaArrowRight className="text-xs" />} iconPosition="end"
             >
-              View work <FaArrowRight className="button-arrow text-xs" />
-            </a>
+              View work
+            </PrimaryButton>
             <a
               href={`mailto:${profile.contact.email}`}
               className="quiet-button inline-flex items-center gap-2 px-5 py-3 font-montserrat text-sm font-bold"

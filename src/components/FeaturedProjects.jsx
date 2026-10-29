@@ -2,6 +2,7 @@ import { featuredProjects } from "../data/projects";
 import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
+import PrimaryButton from "./PrimaryButton";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const caseStudyNotes = {
@@ -109,15 +110,15 @@ export default function FeaturedProjects() {
 
                   <div className="mt-8 flex flex-wrap gap-3">
                     {project.links.live && (
-                      <a
+                      <PrimaryButton
                         href={project.links.live}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="sharp-button inline-flex items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold"
+                        icon={<FaExternalLinkAlt className="text-xs" />} iconMotion="external"
                       >
-                        <FaExternalLinkAlt className="text-xs" />
                         Try it
-                      </a>
+                      </PrimaryButton>
                     )}
                     {project.links.github && (
                       <a
