@@ -26,6 +26,7 @@ import SectionIntro from "./SectionIntro";
 import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
 import AssistantStage from "./AssistantStage";
 import PrimaryButton from "./PrimaryButton";
+import InteractiveArrow from "./InteractiveArrow";
 import { openDisclosuresForTarget } from "../utils/portfolioNavigation";
 
 const REQUEST_TIMEOUT_MS = 45_000;
@@ -127,9 +128,9 @@ function AssistantSources({ sources, onSourceClick }) {
                 )}
               </span>
               {source.href && (
-                <span className="assistant-source-arrow" aria-hidden="true">
+                <InteractiveArrow className="assistant-source-arrow" external={isExternal}>
                   {isExternal ? "↗" : "→"}
-                </span>
+                </InteractiveArrow>
               )}
             </>
           );
@@ -137,13 +138,14 @@ function AssistantSources({ sources, onSourceClick }) {
           return (
             <li key={source.key} className="assistant-source-item">
               {source.href ? (
-                <a
+                <m.a
                   className="assistant-source-card"
+                  initial={false} animate="rest" whileHover="hover" whileFocus="hover" whileTap="pressed"
                   {...sourceLinkProps(source, onSourceClick)}
                   aria-label={accessibleSourceLabel}
                 >
                   {sourceContent}
-                </a>
+                </m.a>
               ) : (
                 <span className="assistant-source-card">{sourceContent}</span>
               )}
@@ -844,17 +846,21 @@ export default function PortfolioAssistant() {
                 <ol className="assistant-prompt-list">
                   {SUGGESTED_PROMPTS.map((prompt) => (
                     <li key={prompt} className="assistant-prompt-item">
-                      <button
+                      <m.button
                         type="button"
                         className="assistant-prompt-button"
+                        initial={false} animate="rest"
+                        whileHover={actionsAreDisabled ? undefined : "hover"}
+                        whileFocus={actionsAreDisabled ? undefined : "hover"}
+                        whileTap={actionsAreDisabled ? undefined : "pressed"}
                         onClick={() => askQuestion(prompt)}
                         disabled={actionsAreDisabled}
                       >
                         <span className="assistant-prompt-copy">{prompt}</span>
-                        <span className="assistant-prompt-arrow" aria-hidden="true">
+                        <InteractiveArrow className="assistant-prompt-arrow">
                           →
-                        </span>
-                      </button>
+                        </InteractiveArrow>
+                      </m.button>
                     </li>
                   ))}
                 </ol>

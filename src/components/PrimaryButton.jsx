@@ -1,19 +1,18 @@
 import { useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
-
-const spring = { type: "spring", stiffness: 460, damping: 34, mass: 0.65 };
-const pressSpring = { type: "spring", stiffness: 680, damping: 42, mass: 0.6 };
-const instant = { duration: 0 };
+import {
+  interactionSpring as spring, interactionPressSpring as pressSpring,
+  instantInteraction as instant, interactionFeedback,
+  stillInteractionVariants as stillVariants,
+  interactionArrowVariants as arrowVariants,
+  interactionExternalArrowVariants as externalVariants,
+} from "../utils/interactionMotion";
 const faceVariants = {
   rest: { x: 0, y: 0 },
   hover: { x: -1, y: -2 },
   pressed: { x: 1, y: 1, transition: pressSpring },
   disabled: { x: 0, y: 0 },
-};
-const stillVariants = {
-  rest: { x: 0, y: 0 }, hover: { x: 0, y: 0 },
-  pressed: { x: 0, y: 0 }, disabled: { x: 0, y: 0 },
 };
 const depthVariants = {
   rest: { x: 4, y: 4, opacity: 1 },
@@ -28,13 +27,6 @@ const stillDepthVariants = {
 const highlightVariants = {
   rest: { opacity: 0 }, hover: { opacity: 1 },
   pressed: { opacity: 0.35 }, disabled: { opacity: 0 },
-};
-const arrowVariants = {
-  rest: { x: 0, y: 0 }, hover: { x: 2.5, y: 0 },
-  pressed: { x: 0, y: 0 }, disabled: { x: 0, y: 0 },
-};
-const externalVariants = {
-  ...arrowVariants, hover: { x: 1.5, y: -1.5 },
 };
 
 export default function PrimaryButton({
@@ -97,7 +89,7 @@ export default function PrimaryButton({
       <m.span aria-hidden="true" className="primary-button__depth" transition={transition} variants={reducedMotion ? stillDepthVariants : depthVariants} />
       <m.span aria-hidden="true" className="primary-button__face" transition={transition} variants={reducedMotion ? stillVariants : faceVariants}>
         <m.span className="primary-button__highlight" variants={highlightVariants}
-          transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }} />
+          transition={reducedMotion ? instant : interactionFeedback} />
       </m.span>
       <m.span className="primary-button__content" transition={transition} variants={reducedMotion ? stillVariants : faceVariants}>
         {iconPosition === "start" && animatedIcon}

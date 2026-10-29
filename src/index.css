@@ -102,6 +102,12 @@
   --motion-fast: 180ms;
   --motion-medium: 320ms;
   --motion-slow: 620ms;
+  /* Hover/focus feedback shares the primary controls' timing family. Larger
+     image surfaces settle more slowly; entrance/reveal timing stays separate. */
+  --ease-interaction: var(--ease-out);
+  --motion-feedback: var(--motion-fast);
+  --motion-hover: 260ms;
+  --motion-media-hover: 420ms;
   --reveal-move-duration: 820ms;
   --shadow-card: 0 22px 56px rgba(23, 32, 51, 0.075);
   --page-gutter: clamp(1rem, 2.5vw, 1.5rem);
@@ -227,10 +233,10 @@ h1[tabindex="-1"]:focus { outline: none; }
   transition:
     opacity var(--motion-medium) ease,
     transform var(--motion-medium) var(--ease-out),
-    color var(--motion-fast) ease,
-    background var(--motion-medium) ease,
-    border-color var(--motion-medium) ease,
-    box-shadow var(--motion-medium) ease;
+    color var(--motion-feedback) var(--ease-interaction),
+    background var(--motion-feedback) var(--ease-interaction),
+    border-color var(--motion-feedback) var(--ease-interaction),
+    box-shadow var(--motion-hover) var(--ease-interaction);
 }
 
 /* ───────────────────────── Scroll Reveal ───────────────────────── */
@@ -683,7 +689,7 @@ h1[tabindex="-1"]:focus { outline: none; }
   overflow: hidden;
   border: 1px solid var(--primary-border);
   background: var(--primary-surface);
-  transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  transition: background var(--motion-feedback) var(--ease-interaction), border-color var(--motion-feedback) var(--ease-interaction);
 }
 
 .primary-button__highlight {
@@ -715,9 +721,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   flex-wrap: wrap;
 }
 
-.quiet-button svg,
-.button-arrow {
-  transition: transform var(--motion-fast) var(--ease-out);
+.quiet-button svg {
+  transition: transform var(--motion-hover) var(--ease-interaction);
 }
 
 .quiet-button {
@@ -729,8 +734,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: var(--ink);
   --quiet-border-accent: rgba(233, 79, 55, 0.72);
   transition:
-    background var(--motion-snap) ease,
-    color var(--motion-snap) ease;
+    background var(--motion-feedback) var(--ease-interaction),
+    color var(--motion-feedback) var(--ease-interaction);
 }
 
 .quiet-button::after {
@@ -743,7 +748,7 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: var(--quiet-border-accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--motion-fast) var(--ease-out);
+  transition: transform var(--motion-hover) var(--ease-interaction);
 }
 
 @media (hover: hover) {
@@ -1062,7 +1067,7 @@ h1[tabindex="-1"]:focus { outline: none; }
   border-color: var(--line-soft);
   background: rgba(255, 255, 255, 0.6);
   color: var(--muted);
-  transition: color 140ms ease, border-color 140ms ease;
+  transition: color var(--motion-feedback) var(--ease-interaction), border-color var(--motion-feedback) var(--ease-interaction);
 }
 
 .project-filter-controls { isolation: isolate; }
@@ -1070,7 +1075,7 @@ h1[tabindex="-1"]:focus { outline: none; }
   position: relative;
   z-index: 1;
   display: inline-block;
-  transition: transform 120ms var(--ease-out);
+  transition: transform var(--motion-snap) var(--ease-interaction);
 }
 .filter-pill:active .filter-pill__label { transform: translateY(1px); }
 
@@ -1105,8 +1110,10 @@ h1[tabindex="-1"]:focus { outline: none; }
   transform: scaleX(0);
   transform-origin: left;
   background: currentColor;
-  transition: transform var(--motion-fast) var(--ease-out);
+  transition: transform var(--motion-hover) var(--ease-interaction);
 }
+
+.filter-pill:not([aria-pressed="true"]):focus-visible::after { transform: scaleX(1); }
 
 @media (hover: hover) {
   .filter-pill:not([aria-pressed="true"]):hover::after {
@@ -1488,8 +1495,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   padding: 0.9rem 1rem 0.9rem 1.125rem;
   list-style: none;
   transition:
-    background var(--motion-fast) ease,
-    color var(--motion-fast) ease;
+    background var(--motion-feedback) var(--ease-interaction),
+    color var(--motion-feedback) var(--ease-interaction);
 }
 
 .archive-disclosure__lead,
@@ -1548,6 +1555,9 @@ h1[tabindex="-1"]:focus { outline: none; }
   border-bottom: 1px solid var(--line);
   background: rgba(233, 79, 55, 0.045);
 }
+
+.archive-disclosure__summary:focus-visible,
+.course-record__summary:focus-visible { background: rgba(23, 32, 51, 0.055); }
 
 @media (hover: hover) {
   .archive-disclosure__summary:hover,
@@ -1685,24 +1695,25 @@ h1[tabindex="-1"]:focus { outline: none; }
   background:
     radial-gradient(circle at 78% 18%, rgba(233, 79, 55, 0.18), transparent 11rem),
     linear-gradient(180deg, rgba(23, 32, 51, 0), rgba(23, 32, 51, 0.08));
-  transition: opacity var(--motion-medium) ease;
+  transition: opacity var(--motion-feedback) var(--ease-interaction);
 }
 
 .work-image-trigger img {
   transition:
     opacity var(--motion-medium) ease,
-    filter var(--motion-medium) ease,
-    transform var(--motion-slow) var(--ease-out);
+    filter var(--motion-feedback) var(--ease-interaction),
+    transform var(--motion-media-hover) var(--ease-interaction);
 }
 
+.work-image-trigger:focus-visible::before { opacity: 1; }
+.work-image-trigger:focus-visible img { filter: saturate(1.04) contrast(1.02); }
+
 @media (hover: hover) {
-  .work-image-trigger:hover::before,
-  .work-image-trigger:focus-visible::before {
+  .work-image-trigger:hover::before {
     opacity: 1;
   }
 
-  .work-image-trigger:hover img,
-  .work-image-trigger:focus-visible img {
+  .work-image-trigger:hover img {
     filter: saturate(1.04) contrast(1.02);
   }
 
@@ -1719,6 +1730,7 @@ h1[tabindex="-1"]:focus { outline: none; }
 
 .work-image-expand {
   z-index: 3;
+  transition: opacity var(--motion-feedback) var(--ease-interaction);
 }
 
 .image-modal-dialog[open] {
@@ -1743,16 +1755,20 @@ h1[tabindex="-1"]:focus { outline: none; }
   animation: modal-image-in var(--motion-medium) ease both;
 }
 
-.modal-pager {
+.image-modal-control {
   transition:
-    background var(--motion-fast) ease,
-    transform var(--motion-fast) var(--ease-out);
+    background var(--motion-feedback) var(--ease-interaction),
+    color var(--motion-feedback) var(--ease-interaction),
+    border-color var(--motion-feedback) var(--ease-interaction);
 }
 
+.modal-pager { --pager-nudge: 2.5px; }
+.modal-pager--previous { --pager-nudge: -2.5px; }
+.modal-pager svg { transition: transform var(--motion-hover) var(--ease-interaction); }
+.modal-pager:focus-visible svg { transform: translateX(var(--pager-nudge)); }
+
 @media (hover: hover) {
-  .modal-pager:hover {
-    transform: translateY(-50%) scale(1.05);
-  }
+  .modal-pager:hover svg { transform: translateX(var(--pager-nudge)); }
 }
 
 .course-card::before {
@@ -2048,12 +2064,13 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: #394357;
   text-align: left;
   transition:
-    transform var(--motion-fast) ease,
-    border-color var(--motion-fast) ease,
-    background var(--motion-fast) ease,
-    color var(--motion-fast) ease,
-    box-shadow var(--motion-fast) ease;
+    border-color var(--motion-feedback) var(--ease-interaction),
+    background var(--motion-feedback) var(--ease-interaction),
+    color var(--motion-feedback) var(--ease-interaction),
+    box-shadow var(--motion-hover) var(--ease-interaction);
 }
+
+.interactive-arrow { display: inline-flex; flex: 0 0 auto; }
 
 .assistant-prompt-copy {
   font-size: 0.76rem;
@@ -2077,12 +2094,23 @@ h1[tabindex="-1"]:focus { outline: none; }
 
 @media (hover: hover) {
   .assistant-prompt-button:not(:disabled):not([aria-disabled="true"]):hover {
-    transform: translateY(-2px);
     border-color: rgba(233, 79, 55, 0.4);
     background: rgba(255, 255, 255, 0.94);
     color: var(--ink);
     box-shadow: 3px 3px 0 rgba(233, 79, 55, 0.12);
   }
+}
+
+.assistant-prompt-button:focus-visible {
+  border-color: rgba(233, 79, 55, 0.4);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 rgba(233, 79, 55, 0.12);
+}
+
+.assistant-prompt-button:not(:disabled):active {
+  background: rgba(233, 79, 55, 0.07);
+  box-shadow: 1px 1px 0 rgba(233, 79, 55, 0.12);
 }
 
 .assistant-workspace {
@@ -2324,6 +2352,7 @@ h1[tabindex="-1"]:focus { outline: none; }
 .assistant-source-heading {
   color: #626979;
   letter-spacing: 0.12em;
+  transition: color var(--motion-feedback) var(--ease-interaction);
 }
 
 .assistant-source-disclosure-icon {
@@ -2352,9 +2381,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: #384255;
   text-decoration: none;
   transition:
-    padding var(--motion-fast) ease,
-    color var(--motion-fast) ease,
-    background var(--motion-fast) ease;
+    color var(--motion-feedback) var(--ease-interaction),
+    background var(--motion-feedback) var(--ease-interaction);
 }
 
 .assistant-source-copy {
@@ -2386,8 +2414,10 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: var(--coral);
   font-family: var(--font-accent);
   font-size: 0.86rem;
-  transition: transform var(--motion-fast) ease;
 }
+
+.assistant-source-summary:focus-visible .assistant-source-heading { color: var(--ink); }
+a.assistant-source-card:focus-visible { background: rgba(233, 79, 55, 0.07); color: var(--ink); }
 
 @media (hover: hover) {
   .assistant-source-summary:hover .assistant-source-heading {
@@ -2395,15 +2425,10 @@ h1[tabindex="-1"]:focus { outline: none; }
   }
 
   a.assistant-source-card:hover {
-    padding-right: 0.4rem;
-    padding-left: 0.4rem;
     background: rgba(233, 79, 55, 0.07);
     color: var(--ink);
   }
 
-  a.assistant-source-card:hover .assistant-source-arrow {
-    transform: translateX(2px);
-  }
 }
 
 .assistant-error,
@@ -2499,8 +2524,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   line-height: 1.55;
   box-shadow: 0 1px 0 rgba(23, 32, 51, 0.04);
   transition:
-    border-color var(--motion-fast) ease,
-    box-shadow var(--motion-fast) ease;
+    border-color var(--motion-feedback) var(--ease-interaction),
+    box-shadow var(--motion-hover) var(--ease-interaction);
 }
 
 .assistant-question-input::placeholder {
@@ -2544,7 +2569,7 @@ h1[tabindex="-1"]:focus { outline: none; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition:
-    opacity var(--motion-fast) ease;
+    opacity var(--motion-feedback) var(--ease-interaction);
 }
 
 .assistant-submit-button:disabled {
@@ -2701,7 +2726,7 @@ h1[tabindex="-1"]:focus { outline: none; }
 }
 
 .contact-panel .contact-email {
-  transition: color var(--motion-fast) ease;
+  transition: color var(--motion-feedback) var(--ease-interaction);
 }
 
 @media (hover: hover) {
@@ -2724,8 +2749,9 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: white;
 }
 
-.contact-panel .quiet-button:hover {
-  background: rgba(255, 255, 255, 0.13);
+.contact-panel .quiet-button:focus-visible { background: rgba(255, 255, 255, 0.13); }
+@media (hover: hover) {
+  .contact-panel .quiet-button:hover { background: rgba(255, 255, 255, 0.13); }
 }
 
 @media (max-width: 639px) {
@@ -2839,6 +2865,12 @@ h1[tabindex="-1"]:focus { outline: none; }
 .course-related { margin-top: 1.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line-soft); }
 .course-related p { color: var(--muted); font-size: 0.78rem; line-height: 1.65; }
 .course-related a { display: inline-block; margin-top: 0.4rem; padding-block: 0.5rem; color: var(--coral-text); font-size: 0.78rem; font-weight: 650; text-decoration: underline; text-underline-offset: 3px; }
+.course-related a,
+.course-row a,
+.detail-back,
+.nav-item {
+  transition: color var(--motion-feedback) var(--ease-interaction), text-decoration-color var(--motion-feedback) var(--ease-interaction);
+}
 
 /* Standalone case studies use hash URLs, including on static hosting. */
 .case-detail { padding-top: max(8rem, calc(var(--nav-clearance, 6.25rem) + 1rem)); padding-bottom: 4rem; }
@@ -2957,6 +2989,9 @@ h1[tabindex="-1"]:focus { outline: none; }
   .portrait-img,
   .sharp-button,
   .quiet-button,
+  .work-image-trigger img,
+  .modal-pager svg,
+  .interactive-arrow,
   .tech-badge,
   .course-row {
     transform: none !important;

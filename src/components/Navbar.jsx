@@ -180,7 +180,7 @@ export default function Navbar({ detailView = false }) {
             }}
             onClick={focusSection}
             aria-current={activeIndex === navItems.indexOf(item) ? "location" : undefined}
-            className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
+            className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] sm:px-4 ${
               activeIndex === navItems.indexOf(item)
                 ? "text-white"
                 : "text-slate-500 hover:text-slate-950"

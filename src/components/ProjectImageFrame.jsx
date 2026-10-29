@@ -217,7 +217,7 @@ export default function ProjectImageFrame({
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className={`work-image-expand absolute right-4 ${project.imageFrame === "full-bleed" ? "bottom-4" : "top-4"} grid h-11 w-11 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
+          <span className={`work-image-expand absolute right-4 ${project.imageFrame === "full-bleed" ? "bottom-4" : "top-4"} grid h-11 w-11 place-items-center border opacity-0 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
         </button>
@@ -256,7 +256,7 @@ export default function ProjectImageFrame({
                   type="button"
                   aria-label="Close image preview"
                   onClick={closeModal}
-                  className={`image-modal-control grid h-11 w-11 shrink-0 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalClose}`}
+                  className={`image-modal-control grid h-11 w-11 shrink-0 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalClose}`}
                 >
                   <FaTimes />
                 </button>
@@ -295,7 +295,7 @@ export default function ProjectImageFrame({
                       type="button"
                       aria-label="Previous work image"
                       onClick={showPrevious}
-                      className={`modal-pager image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                      className={`modal-pager modal-pager--previous image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
                     >
                       <FaChevronLeft />
                     </button>
@@ -303,7 +303,7 @@ export default function ProjectImageFrame({
                       type="button"
                       aria-label="Next work image"
                       onClick={showNext}
-                      className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                      className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
                     >
                       <FaChevronRight />
                     </button>
