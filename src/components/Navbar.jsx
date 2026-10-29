@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { focusSection } from "../utils/portfolioNavigation";
 
 const navItems = [
@@ -31,6 +33,7 @@ const sectionToNav = {
 };
 
 export default function Navbar({ detailView = false }) {
+  const reducedMotion = useReducedMotion();
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [indicator, setIndicator] = useState({ left: 0, top: 0, width: 0, height: 0, ready: false });
@@ -149,17 +152,22 @@ export default function Navbar({ detailView = false }) {
       </a>
 
       <div className="site-nav__links">
-        <span
-          aria-hidden="true"
-          className="site-nav__indicator"
-          style={{
-            opacity: indicator.ready ? 1 : 0,
-            transform: `translateX(${indicator.left}px)`,
-            width: `${indicator.width}px`,
-            top: `${indicator.top}px`,
-            height: `${indicator.height}px`,
-          }}
-        />
+        {indicator.ready && (
+          <m.span
+            aria-hidden="true"
+            className="site-nav__indicator"
+            initial={false}
+            animate={{
+              x: indicator.left,
+              y: indicator.top,
+              width: indicator.width,
+              height: indicator.height,
+            }}
+            transition={reducedMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 520, damping: 42, mass: 0.7 }}
+          />
+        )}
         {navItems.map((item) => (
           <a
             key={item.id}
@@ -172,7 +180,7 @@ export default function Navbar({ detailView = false }) {
             }}
             onClick={focusSection}
             aria-current={activeIndex === navItems.indexOf(item) ? "location" : undefined}
-            className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] transition-colors duration-200 sm:px-4 ${
+            className={`nav-item whitespace-nowrap px-3 py-2 font-montserrat text-[0.68rem] font-bold uppercase tracking-[0.08em] sm:px-4 ${
               activeIndex === navItems.indexOf(item)
                 ? "text-white"
                 : "text-slate-500 hover:text-slate-950"

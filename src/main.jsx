@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { LazyMotion, MotionConfig, domMax } from "motion/react";
 import "./index.css";
 import App from "./App";
 
@@ -13,6 +14,10 @@ if (motionIsSupported) {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <MotionConfig reducedMotion="user">
+      <LazyMotion features={domMax} strict>
+        <App />
+      </LazyMotion>
+    </MotionConfig>
   </React.StrictMode>
 );

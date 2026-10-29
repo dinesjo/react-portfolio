@@ -1,10 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { flushSync } from "react-dom";
+import { useEffect, useId, useMemo, useState } from "react";
+import { AnimatePresence, LayoutGroup, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { projects, projectContexts } from "../data/projects";
 import { compareProjectRecency } from "../utils/projectOrdering";
 import ProjectBadges from "./ProjectBadges";
 import ProjectImageFrame from "./ProjectImageFrame";
 import SectionIntro from "./SectionIntro";
+import { ProjectMotionCard, ProjectMotionGroup } from "./ProjectMotion";
+import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
+import PrimaryButton from "./PrimaryButton";
 import {
   FaArchive,
   FaArrowRight,
@@ -17,31 +21,22 @@ import {
 const priorityGroups = {
   1: {
     title: "Case studies",
-    filteredTitle: "case studies",
     copy:
       "Projects with more detail about the problem, what I built, and the result.",
   },
   2: {
     title: "Selected projects",
-    filteredTitle: "selected projects",
     copy:
       "Ongoing work first, then completed projects from newest to oldest.",
   },
   3: {
     title: "Project archive",
-    filteredTitle: "project archive",
     copy:
       "Course projects, experiments, and apps I no longer maintain.",
   },
 };
 
 const byPriority = (priority) => (project) => (project.priority || 2) === priority;
-
-function getFilteredTitle(filter, priority) {
-  const group = priorityGroups[priority];
-  if (filter === "All") return group.title;
-  return `${filter} ${group.filteredTitle}`;
-}
 
 function ProjectTags({ project, className = "" }) {
   return (
@@ -75,15 +70,15 @@ function ProjectLinks({ project, compact = false }) {
   return (
     <div className={`flex flex-wrap ${compact ? "gap-2" : "gap-3"}`}>
       {project.links.live && (
-        <a
+        <PrimaryButton
           href={project.links.live}
           target="_blank"
           rel="noopener noreferrer"
           className={primaryClass}
+          icon={<FaExternalLinkAlt className="text-[10px]" />} iconMotion="external"
         >
-          <FaExternalLinkAlt className="text-[10px]" />
           {project.links.liveText || "Try it"}
-        </a>
+        </PrimaryButton>
       )}
       {project.links.github && (
         <a
@@ -100,11 +95,11 @@ function ProjectLinks({ project, compact = false }) {
   );
 }
 
-function PriorityGroupHeader({ filter, priority, count }) {
+function PriorityGroupHeader({ priority, count, settled }) {
   const group = priorityGroups[priority];
 
   return (
-    <header className="collection-group-header reveal" data-reveal="trace">
+    <header className={`collection-group-header reveal ${settled ? "revealed reveal-complete" : ""}`} data-reveal="trace">
       <span className="collection-group-index" aria-hidden="true">
         {String(priority).padStart(2, "0")}
       </span>
@@ -114,7 +109,7 @@ function PriorityGroupHeader({ filter, priority, count }) {
             id={`project-group-${priority}-title`}
             className="collection-group-title"
           >
-            {getFilteredTitle(filter, priority)}
+            {group.title}
           </h3>
           <span className="collection-group-count">
             {count} {count === 1 ? "project" : "projects"}
@@ -128,20 +123,19 @@ function PriorityGroupHeader({ filter, priority, count }) {
   );
 }
 
-function CaseStudyCard({ project, index }) {
+function CaseStudyCard({ project, index, settled }) {
   const keepFullImage = project.featuredImageFit === "contain";
   return (
     <article
       id={`project-${project.id}`}
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
-      className={`surface-card priority-case-card group reveal overflow-hidden rounded-lg ${
+      className={`surface-card priority-case-card group reveal overflow-hidden rounded-lg ${settled ? "revealed reveal-complete" : ""} ${
         index % 2 === 1
           ? "priority-case-card--text-left"
           : "priority-case-card--text-right"
       }`}
       data-reveal="case-study"
-      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <div className={`case-study-layout ${index % 2 === 1 ? "case-study-layout--text-first" : ""}`}>
         <ProjectImageFrame
@@ -191,7 +185,8 @@ function CaseStudyCard({ project, index }) {
           </div>
 
           <div className="case-card-actions mt-6">
-            <a href={`#/work/${project.id}`} className="sharp-button inline-flex items-center gap-2 px-4 py-3 text-sm font-bold">Read case study <FaArrowRight aria-hidden="true" /></a>
+            <PrimaryButton href={`#/work/${project.id}`} className="sharp-button inline-flex items-center gap-2 px-4 py-3 text-sm font-bold"
+              icon={<FaArrowRight />} iconPosition="end">Read case study</PrimaryButton>
             <ProjectLinks project={project} compact />
           </div>
         </div>
@@ -200,15 +195,14 @@ function CaseStudyCard({ project, index }) {
   );
 }
 
-function SelectedProjectCard({ project }) {
+function SelectedProjectCard({ project, settled }) {
   return (
     <article
       id={`project-${project.id}`}
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
-      className="surface-card project-card group reveal flex flex-col overflow-hidden rounded-lg"
+      className={`surface-card project-card group reveal flex flex-col overflow-hidden rounded-lg ${settled ? "revealed reveal-complete" : ""}`}
       data-reveal="trace"
-      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <ProjectImageFrame
         project={project}
@@ -261,7 +255,6 @@ function ArchiveProjectCard({ project }) {
       tabIndex={-1}
       aria-labelledby={`project-${project.id}-title`}
       className="archive-card group grid overflow-hidden sm:grid-cols-[11.5rem_1fr] lg:grid-cols-[13rem_1fr]"
-      style={{ viewTransitionName: `project-card-${project.id}` }}
     >
       <ProjectImageFrame
         project={project}
@@ -304,173 +297,157 @@ function ArchiveProjectCard({ project }) {
   );
 }
 
+const caseStudyOrder = projects.filter(byPriority(1)).map((project) => project.id);
+const filterProjects = (filter) => filter === "All"
+  ? projects
+  : projects.filter((project) => project.context === filter);
+
 export default function ProjectsGrid() {
-  const [filter, setFilter] = useState("All");
+  const layoutId = useId();
+  const reducedMotion = useReducedMotion();
+  const [selection, setSelection] = useState({ filter: "All", previous: "All", revision: 0, instant: false });
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const { filter, revision } = selection;
+  const settled = revision > 0;
+  const presence = { instant: selection.instant || reducedMotion };
 
   useEffect(() => {
     const revealProject = (event) => {
       if (event.detail?.targetId?.startsWith("project-")) {
-        setFilter("All");
+        // Source links must be able to reveal and focus their target immediately.
+        setSelection((previous) => ({ filter: "All", previous: previous.filter,
+          revision: previous.revision + 1, instant: true }));
       }
     };
-
     window.addEventListener("portfolio:reveal-source", revealProject);
     return () => window.removeEventListener("portfolio:reveal-source", revealProject);
   }, []);
 
-  const filtered = useMemo(
-    () => (filter === "All" ? projects : projects.filter((project) => project.context === filter)),
-    [filter]
-  );
-
-  const grouped = useMemo(
-    () => ({
-      1: filtered.filter(byPriority(1)),
-      2: filtered.filter(byPriority(2)).sort(compareProjectRecency),
-      3: filtered.filter(byPriority(3)),
-    }),
-    [filtered]
-  );
+  const filtered = useMemo(() => filterProjects(filter), [filter]);
+  const grouped = useMemo(() => ({
+    1: filtered.filter(byPriority(1)),
+    2: filtered.filter(byPriority(2)).sort(compareProjectRecency),
+    3: filtered.filter(byPriority(3)),
+  }), [filtered]);
+  const previousCases = filterProjects(selection.previous).filter(byPriority(1));
 
   const changeFilter = (nextFilter) => {
-    if (nextFilter === filter) return;
-
-    const updateFilter = () => {
-      flushSync(() => setFilter(nextFilter));
-      document.querySelectorAll("#projects .reveal").forEach((element) => {
-        element.classList.add("revealed", "reveal-complete");
-      });
-    };
-
-    const canUseViewTransition =
-      typeof document.startViewTransition === "function" &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (!canUseViewTransition) {
-      setFilter(nextFilter);
-      return;
-    }
-
-    const transition = document.startViewTransition(updateFilter);
-    transition.ready.catch(() => undefined);
+    setSelection((previous) => previous.filter === nextFilter ? previous : {
+      filter: nextFilter, previous: previous.filter,
+      revision: previous.revision + 1, instant: false,
+    });
   };
 
   return (
     <section id="featured" tabIndex={-1} className="pb-20 pt-8">
       <div className="section-shell">
-        <SectionIntro
-          eyebrow="Projects"
-          title="Things I&rsquo;ve built."
-          className="mb-5"
-        >
+        <SectionIntro eyebrow="Projects" title="Things I&rsquo;ve built." className="mb-5">
           Research, professional tools, and personal apps. Explore the work below.
         </SectionIntro>
 
-        <div className="project-filters mb-4 reveal" data-reveal="trace">
-          <div className="flex flex-wrap gap-2">
-            {projectContexts.map((context) => (
-              <button
-                key={context}
-                type="button"
-                aria-pressed={filter === context}
-                onClick={() => changeFilter(context)}
-                className={`filter-pill border px-4 py-2 font-montserrat text-sm font-bold transition-all duration-200 ${
-                  filter === context
-                    ? "border-slate-950 bg-slate-950 text-white"
-                    : "border-slate-200/70 bg-white/60 text-slate-500 hover:border-slate-300 hover:bg-white/80 hover:text-slate-950"
-                }`}
-              >
-                {context}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div id="projects" className="content-collection work-collection">
-          <p className="sr-only" role="status">
-            {filtered.length} {filter === "All" ? "" : `${filter.toLowerCase()} `}projects
-          </p>
-
-          {grouped[1].length > 0 && (
-            <section
-              className="collection-group"
-              aria-labelledby="project-group-1-title"
-            >
-              <PriorityGroupHeader
-                filter={filter}
-                priority={1}
-                count={grouped[1].length}
-              />
-              <div className="space-y-8">
-                {grouped[1].map((project, index) => (
-                  <CaseStudyCard
-                    key={project.id}
-                    project={project}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {grouped[2].length > 0 && (
-            <section
-              className="collection-group"
-              aria-labelledby="project-group-2-title"
-            >
-              <PriorityGroupHeader
-                filter={filter}
-                priority={2}
-                count={grouped[2].length}
-              />
-              <div className="project-grid reveal-grid grid gap-5">
-                {grouped[2].map((project) => (
-                  <SelectedProjectCard
-                    key={project.id}
-                    project={project}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {grouped[3].length > 0 && (
-            <section
-              className="collection-group"
-              aria-labelledby="project-group-3-title"
-            >
-              <PriorityGroupHeader
-                filter={filter}
-                priority={3}
-                count={grouped[3].length}
-              />
-              <details className="archive-disclosure reveal" data-reveal="trace">
-                <summary className="archive-disclosure__summary">
-                  <span className="archive-disclosure__lead">
-                    <span className="archive-disclosure__lead-title">
-                      Browse {grouped[3].length} earlier {grouped[3].length === 1 ? "project" : "projects"}
-                    </span>
-                    <span className="archive-disclosure__lead-count">
-                      Kept here for reference
-                    </span>
-                  </span>
-                  <span className="archive-disclosure__action">
-                    <span className="disclosure-action__closed">Open archive</span>
-                    <span className="disclosure-action__open">Close archive</span>
-                  </span>
-                </summary>
-                <div className="archive-disclosure__list">
-                  {grouped[3].map((project) => (
-                    <ArchiveProjectCard
-                      key={project.id}
-                      project={project}
+        <LayoutGroup id={layoutId}>
+          <div className="project-filters mb-4 reveal" data-reveal="trace">
+            <div className="project-filter-controls flex flex-wrap gap-2" role="group" aria-label="Filter projects by context">
+              {projectContexts.map((context) => (
+                <button
+                  key={context}
+                  type="button"
+                  aria-pressed={filter === context}
+                  onClick={(event) => {
+                    event.currentTarget.focus({ preventScroll: true });
+                    changeFilter(context);
+                  }}
+                  className="filter-pill border px-4 py-2 font-montserrat text-sm font-bold"
+                >
+                  {filter === context && (
+                    <m.span
+                      aria-hidden="true"
+                      className="project-filter-indicator"
+                      layoutId="active-filter"
+                      initial={false}
+                      style={{
+                        borderTopLeftRadius: 1, borderTopRightRadius: 7,
+                        borderBottomRightRadius: 1, borderBottomLeftRadius: 1,
+                        boxShadow: "4px 4px 0 rgba(233, 79, 55, 0.2)",
+                      }}
+                      transition={presence.instant ? { duration: 0 } : {
+                        type: "spring", stiffness: 560, damping: 44, mass: 0.7,
+                      }}
                     />
-                  ))}
-                </div>
-              </details>
-            </section>
-          )}
-        </div>
+                  )}
+                  <span className="filter-pill__label">{context}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div id="projects" className="content-collection work-collection" data-filter={filter}>
+            <p className="sr-only" role="status" aria-atomic="true">
+              {filtered.length} {filter === "All" ? "" : `${filter.toLowerCase()} `}projects
+            </p>
+
+            <AnimatePresence initial={false} mode="popLayout" custom={presence}>
+              {[1, 2, 3].map((priority) => grouped[priority].length > 0 && (
+                <ProjectMotionGroup key={priority} priority={priority} revision={revision}>
+                  <PriorityGroupHeader priority={priority} count={grouped[priority].length} settled={settled} />
+
+                  {priority === 1 && (
+                    <div className="project-case-list">
+                      <AnimatePresence initial={false} mode="popLayout" custom={presence}>
+                        {grouped[1].map((project, index) => (
+                          <ProjectMotionCard key={project.id} projectId={project.id} index={index} revision={revision} reflow={false}
+                            crossfade={settled && previousCases.some((item) => item.id === project.id) &&
+                              previousCases.findIndex((item) => item.id === project.id) !== index}>
+                            <CaseStudyCard project={project} index={caseStudyOrder.indexOf(project.id)} settled={settled} />
+                          </ProjectMotionCard>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
+
+                  {priority === 2 && (
+                    <div className="project-grid reveal-grid grid gap-5">
+                      <AnimatePresence initial={false} mode="popLayout" custom={presence}>
+                        {grouped[2].map((project, index) => (
+                          <ProjectMotionCard key={project.id} projectId={project.id} index={index} revision={revision}>
+                            <SelectedProjectCard project={project} settled={settled} />
+                          </ProjectMotionCard>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
+
+                  {priority === 3 && (
+                    <AnimatedDisclosure className={`archive-disclosure reveal ${settled ? "revealed reveal-complete" : ""}`}
+                      data-reveal="trace" defaultOpen={archiveOpen} onOpenChange={setArchiveOpen}
+                      summaryClassName="archive-disclosure__summary" summary={(expanded) => <>
+                        <span className="archive-disclosure__lead">
+                          <span className="archive-disclosure__lead-title">
+                            Browse {grouped[3].length} earlier {grouped[3].length === 1 ? "project" : "projects"}
+                          </span>
+                          <span className="archive-disclosure__lead-count">Kept here for reference</span>
+                        </span>
+                        <span className="archive-disclosure__action">
+                          {expanded ? "Close archive" : "Open archive"}
+                          <DisclosureIndicator expanded={expanded} />
+                        </span>
+                      </>}>
+                      <div className="archive-disclosure__list">
+                        <AnimatePresence initial={false} mode="popLayout" custom={presence}>
+                          {grouped[3].map((project, index) => (
+                            <ProjectMotionCard key={project.id} projectId={project.id} index={index} revision={revision}>
+                              <ArchiveProjectCard project={project} />
+                            </ProjectMotionCard>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    </AnimatedDisclosure>
+                  )}
+                </ProjectMotionGroup>
+              ))}
+            </AnimatePresence>
+          </div>
+        </LayoutGroup>
       </div>
     </section>
   );

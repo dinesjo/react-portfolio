@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaCopy, FaCheck, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
+import PrimaryButton from "./PrimaryButton";
 
 export default function Contact() {
   const { email, github, linkedin } = profile.contact;
@@ -76,9 +77,10 @@ export default function Contact() {
               >
                 {email}
               </a>
-              <button
+              <PrimaryButton
                 onClick={handleCopy}
                 aria-live="polite"
+                icon={copyStatus === "copied" ? <FaCheck /> : <FaCopy />} iconMotion="none"
                 className={`copy-button sharp-button inline-flex w-fit items-center gap-2 px-5 py-2.5 font-montserrat text-sm font-bold ${
                   copyStatus === "copied"
                     ? "copy-button--copied"
@@ -87,20 +89,8 @@ export default function Contact() {
                       : ""
                 }`}
               >
-                {copyStatus === "copied" ? (
-                  <>
-                    <FaCheck /> Copied!
-                  </>
-                ) : copyStatus === "failed" ? (
-                  <>
-                    <FaCopy /> Copy failed
-                  </>
-                ) : (
-                  <>
-                    <FaCopy /> Copy
-                  </>
-                )}
-              </button>
+                {copyStatus === "copied" ? "Copied!" : copyStatus === "failed" ? "Copy failed" : "Copy"}
+              </PrimaryButton>
             </div>
 
             <div className="mt-8 flex gap-3">

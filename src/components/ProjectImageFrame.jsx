@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence } from "motion/react";
 import { FaChevronLeft, FaChevronRight, FaExpand, FaTimes } from "react-icons/fa";
+import ProjectImageDialog from "./ProjectImageDialog";
 import projectImageDimensions from "../assets/project-optimized/dimensions.json";
 import {
   getProjectImageAssetId,
@@ -100,8 +102,6 @@ export default function ProjectImageFrame({
   const [artworkVariant, setArtworkVariant] = useState("full");
   const frameRef = useRef(null);
   const previewImageRef = useRef(null);
-  const closeButtonRef = useRef(null);
-  const dialogRef = useRef(null);
   const previousFocusRef = useRef(null);
 
   const images = useMemo(() => normalizeImages(project), [project]);
@@ -170,42 +170,6 @@ export default function ProjectImageFrame({
   }, [hasDirectedArtwork]);
 
   useEffect(() => {
-    if (!isOpen) return undefined;
-
-    const dialog = dialogRef.current;
-    if (dialog && !dialog.open) dialog.showModal();
-    closeButtonRef.current?.focus();
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (event) => {
-      if (hasMultipleImages && event.key === "ArrowLeft") showPrevious();
-      if (hasMultipleImages && event.key === "ArrowRight") showNext();
-      if (event.key === "Tab" && dialog) {
-        const controls = [...dialog.querySelectorAll("button:not(:disabled)")];
-        const first = controls[0];
-        const last = controls[controls.length - 1];
-        if (first && (!dialog.contains(document.activeElement) ||
-          (event.shiftKey && document.activeElement === first) ||
-          (!event.shiftKey && document.activeElement === last))) {
-          event.preventDefault();
-          (event.shiftKey ? last : first).focus();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      if (dialog?.open) dialog.close();
-      window.removeEventListener("keydown", onKeyDown);
-      previousFocusRef.current?.focus?.({ preventScroll: true });
-    };
-  }, [closeModal, hasMultipleImages, images.length, isOpen, showNext, showPrevious]);
-
-  useEffect(() => {
     setLoaded(false);
 
     const imageElement = previewImageRef.current;
@@ -253,7 +217,7 @@ export default function ProjectImageFrame({
             className={`${imageClassName} ${!loaded ? "opacity-0" : "opacity-100"}`}
           />
 
-          <span className={`work-image-expand absolute right-4 ${project.imageFrame === "full-bleed" ? "bottom-4" : "top-4"} grid h-11 w-11 place-items-center border opacity-0 transition duration-200 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
+          <span className={`work-image-expand absolute right-4 ${project.imageFrame === "full-bleed" ? "bottom-4" : "top-4"} grid h-11 w-11 place-items-center border opacity-0 group-hover/image:opacity-100 group-focus-visible/image:opacity-100 ${overlayStyle.expand}`}>
             <FaExpand className="text-sm" />
           </span>
         </button>
@@ -265,100 +229,96 @@ export default function ProjectImageFrame({
         )}
       </div>
 
-      {isOpen && createPortal(
-        <dialog
-          ref={dialogRef}
-          aria-label={`${project.title} work image preview`}
-          onCancel={(event) => {
-            event.preventDefault();
-            closeModal();
-          }}
-          className="image-modal-dialog fixed inset-0 z-80 m-0 h-dvh max-h-none w-screen max-w-none items-center justify-center border-0 bg-transparent px-3 py-4 sm:px-6"
-        >
-          <div
-            aria-hidden="true"
-            onClick={closeModal}
-            className="image-modal-backdrop absolute inset-0 cursor-zoom-out bg-(--ink) backdrop-blur-xs"
-          />
+      {createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <ProjectImageDialog
+              key={project.id}
+              title={project.title}
+              onClose={closeModal}
+              onPrevious={showPrevious}
+              onNext={showNext}
+              hasMultipleImages={hasMultipleImages}
+              returnFocusRef={previousFocusRef}
+              shellClassName={overlayStyle.modalShell}
+            >
+              <div className={`flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-5 ${overlayStyle.modalHeader}`}>
+                <div className="min-w-0">
+                  <p className={`font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] ${overlayStyle.modalKicker}`}>
+                    Work image
+                  </p>
+                  <h3 className="truncate font-montserrat text-base font-extrabold sm:text-lg">
+                    {currentImage.caption}
+                  </h3>
+                </div>
 
-          <div className={`image-modal-shell relative z-10 flex max-h-[calc(100dvh-2rem)] w-full max-w-6xl flex-col overflow-hidden border ${overlayStyle.modalShell}`}>
-            <div className={`flex items-center justify-between gap-4 border-b px-4 py-3 sm:px-5 ${overlayStyle.modalHeader}`}>
-              <div className="min-w-0">
-                <p className={`font-montserrat text-xs font-extrabold uppercase tracking-[0.18em] ${overlayStyle.modalKicker}`}>
-                  Work image
-                </p>
-                <h3 className="truncate font-montserrat text-base font-extrabold sm:text-lg">
-                  {currentImage.caption}
-                </h3>
+                <button
+                  type="button"
+                  aria-label="Close image preview"
+                  onClick={closeModal}
+                  className={`image-modal-control grid h-11 w-11 shrink-0 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalClose}`}
+                >
+                  <FaTimes />
+                </button>
               </div>
 
-              <button
-                ref={closeButtonRef}
-                type="button"
-                aria-label="Close image preview"
-                onClick={closeModal}
-                className={`image-modal-control grid h-11 w-11 shrink-0 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalClose}`}
-              >
-                <FaTimes />
-              </button>
-            </div>
+              <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-size-[24px_24px] bg-position-[0_0,12px_12px] p-2 sm:p-4">
+                <div key={currentImage.src} className="relative max-h-[calc(100dvh-9rem)] max-w-full">
+                  {hasPreviewImage && !isFullImageLoaded && (
+                    <img
+                      src={currentImage.previewSrc}
+                      alt=""
+                      aria-hidden="true"
+                      className="work-modal-image max-h-[calc(100dvh-9rem)] max-w-full bg-white object-contain shadow-xl"
+                    />
+                  )}
 
-            <div className="relative flex min-h-0 flex-1 items-center justify-center bg-[linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%),linear-gradient(45deg,rgba(255,255,255,0.04)_25%,transparent_25%,transparent_75%,rgba(255,255,255,0.04)_75%)] bg-size-[24px_24px] bg-position-[0_0,12px_12px] p-2 sm:p-4">
-              <div key={currentImage.src} className="relative max-h-[calc(100dvh-9rem)] max-w-full">
-                {hasPreviewImage && !isFullImageLoaded && (
                   <img
-                    src={currentImage.previewSrc}
-                    alt=""
-                    aria-hidden="true"
-                    className="work-modal-image max-h-[calc(100dvh-9rem)] max-w-full bg-white object-contain shadow-xl"
+                    src={currentImage.src}
+                    srcSet={currentImageSrcSet}
+                    sizes={currentImageSrcSet ? "(min-width: 1152px) 1152px, calc(100vw - 2rem)" : undefined}
+                    alt={currentImage.alt}
+                    aria-hidden={hasPreviewImage && !isFullImageLoaded ? "true" : undefined}
+                    decoding="async"
+                    onLoad={(event) => markFullImageReady(currentImage.src, event.currentTarget)}
+                    className={`${
+                      hasPreviewImage && !isFullImageLoaded
+                        ? "absolute inset-0 h-full w-full opacity-0"
+                        : "max-h-[calc(100dvh-9rem)] max-w-full"
+                    } work-modal-image bg-white object-contain shadow-xl`}
                   />
-                )}
+                </div>
 
-                <img
-                  src={currentImage.src}
-                  srcSet={currentImageSrcSet}
-                  sizes={currentImageSrcSet ? "(min-width: 1152px) 1152px, calc(100vw - 2rem)" : undefined}
-                  alt={currentImage.alt}
-                  aria-hidden={hasPreviewImage && !isFullImageLoaded ? "true" : undefined}
-                  decoding="async"
-                  onLoad={(event) => markFullImageReady(currentImage.src, event.currentTarget)}
-                  className={`${
-                    hasPreviewImage && !isFullImageLoaded
-                      ? "absolute inset-0 h-full w-full opacity-0"
-                      : "max-h-[calc(100dvh-9rem)] max-w-full"
-                  } work-modal-image bg-white object-contain shadow-xl`}
-                />
+                {hasMultipleImages && (
+                  <>
+                    <button
+                      type="button"
+                      aria-label="Previous work image"
+                      onClick={showPrevious}
+                      className={`modal-pager modal-pager--previous image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    >
+                      <FaChevronLeft />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Next work image"
+                      onClick={showNext}
+                      className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </>
+                )}
               </div>
 
               {hasMultipleImages && (
-                <>
-                  <button
-                    type="button"
-                    aria-label="Previous work image"
-                    onClick={showPrevious}
-                    className={`modal-pager image-modal-control absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
-                  >
-                    <FaChevronLeft />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Next work image"
-                    onClick={showNext}
-                    className={`modal-pager image-modal-control absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center border transition focus:outline-hidden focus-visible:ring-2 ${overlayStyle.modalPager}`}
-                  >
-                    <FaChevronRight />
-                  </button>
-                </>
+                <div className={`border-t px-4 py-3 text-center font-montserrat text-xs font-bold uppercase tracking-[0.16em] ${overlayStyle.modalCounter}`}>
+                  {activeImage + 1} / {images.length}
+                </div>
               )}
-            </div>
-
-            {hasMultipleImages && (
-              <div className={`border-t px-4 py-3 text-center font-montserrat text-xs font-bold uppercase tracking-[0.16em] ${overlayStyle.modalCounter}`}>
-                {activeImage + 1} / {images.length}
-              </div>
-            )}
-          </div>
-        </dialog>,
+            </ProjectImageDialog>
+          )}
+        </AnimatePresence>,
         document.body
       )}
     </>
