@@ -6,6 +6,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import {
   isNdjsonResponse,
   readNdjsonStream,
@@ -14,19 +16,28 @@ import {
   assistantAnswerForAnnouncement,
   nextAssistantStreamStep,
 } from "../utils/assistantPresentation";
+import { assistantStreamingMarkdown } from "../utils/assistantMarkdown";
 import {
   MAX_ASSISTANT_HISTORY_MESSAGE_CHARACTERS,
   MAX_ASSISTANT_HISTORY_MESSAGES,
   MAX_ASSISTANT_QUESTION_CHARACTERS,
 } from "../data/assistantLimits";
 import SectionIntro from "./SectionIntro";
+import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
+import AssistantStage from "./AssistantStage";
+import { openDisclosuresForTarget } from "../utils/portfolioNavigation";
 
 const REQUEST_TIMEOUT_MS = 45_000;
 const SOURCE_REVEAL_MAX_FRAMES = 30;
 const TRANSCRIPT_FOLLOW_THRESHOLD = 72;
 
 const STREAM_STATUS = "Writing an answer from the portfolio…";
-const AssistantMarkdown = lazy(() => import("./AssistantMarkdown"));
+const messageTransition = {
+  opacity: { duration: 0.18 },
+  y: { type: "spring", stiffness: 440, damping: 36, mass: 0.65 },
+};
+const loadAssistantMarkdown = () => import("./AssistantMarkdown");
+const AssistantMarkdown = lazy(loadAssistantMarkdown);
 
 const SUGGESTED_PROMPTS = [
   "Which projects best demonstrate work with AI and knowledge graphs?",
@@ -78,29 +89,27 @@ function sourceLinkProps(source, onSourceClick) {
   };
 }
 
-function AssistantAnswer({ content }) {
+function AssistantAnswer({ content, streaming = false }) {
   return (
     <Suspense
       fallback={
         <p className="assistant-message-content assistant-markdown-fallback">
-          {assistantAnswerForAnnouncement(content)}
+          {assistantAnswerForAnnouncement(streaming ? assistantStreamingMarkdown(content) : content)}
         </p>
       }
     >
-      <AssistantMarkdown content={content} />
+      <AssistantMarkdown content={content} streaming={streaming} />
     </Suspense>
   );
 }
 
 function AssistantSources({ sources, onSourceClick }) {
   return (
-    <details className="assistant-source-block">
-      <summary className="assistant-source-summary">
+    <AnimatedDisclosure className="assistant-source-block" summaryClassName="assistant-source-summary"
+      summary={(expanded) => <>
         <span className="assistant-source-heading">From this portfolio</span>
-        <span className="assistant-source-disclosure-icon" aria-hidden="true">
-          ↓
-        </span>
-      </summary>
+        <DisclosureIndicator expanded={expanded} className="assistant-source-disclosure-icon" />
+      </>}>
       <ul
         className="assistant-source-list"
         aria-label="Portfolio entries related to this answer"
@@ -141,7 +150,7 @@ function AssistantSources({ sources, onSourceClick }) {
           );
         })}
       </ul>
-    </details>
+    </AnimatedDisclosure>
   );
 }
 
@@ -253,8 +262,7 @@ function scheduleSourceReveal(href, { replaceHistory = false } = {}) {
       return;
     }
 
-    const disclosure = target.closest("details");
-    if (disclosure) disclosure.open = true;
+    openDisclosuresForTarget(target);
 
     if (replaceHistory) window.history.replaceState(null, "", href);
     target.scrollIntoView({
@@ -308,6 +316,7 @@ export default function PortfolioAssistant() {
   const streamTimerRef = useRef(null);
   const isFollowingRef = useRef(true);
   const mountedRef = useRef(false);
+  const reducedMotion = useReducedMotion();
   const isLoading = activeAnswer !== null;
 
   const beginSourceReveal = useCallback((href, options) => {
@@ -424,6 +433,10 @@ export default function PortfolioAssistant() {
       return;
     }
 
+    // Load the formatter during the request's initial latency, before the first
+    // words arrive, while keeping it out of the initial page bundle.
+    loadAssistantMarkdown().catch(() => {});
+
     const history = messages
       .slice(-MAX_ASSISTANT_HISTORY_MESSAGES)
       .map((message) => ({
@@ -495,9 +508,11 @@ export default function PortfolioAssistant() {
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-      const step = reducedMotion
-        ? { text: deltaBuffer, delayMs: 0 }
-        : nextAssistantStreamStep(deltaBuffer);
+      const step = nextAssistantStreamStep(deltaBuffer, {
+        complete: pendingCompletion !== null,
+        instant: reducedMotion,
+      });
+      if (!step.text) return;
       deltaBuffer = deltaBuffer.slice(step.text.length);
       setActiveAnswer((current) =>
         current?.id === assistantMessageId
@@ -568,7 +583,7 @@ export default function PortfolioAssistant() {
       setMessages((current) => current.filter((message) => message.id !== userMessageId && message.id !== assistantMessageId));
       setQuestion(candidate);
       setLiveStatus("Response stopped. Your question is ready to edit or send again.");
-      questionInputRef.current?.focus();
+      questionInputRef.current?.focus({ preventScroll: true });
     };
     isFollowingRef.current = true;
     setQuestion("");
@@ -585,7 +600,7 @@ export default function PortfolioAssistant() {
     ]);
     window.cancelAnimationFrame(inputFocusFrameRef.current);
     inputFocusFrameRef.current = window.requestAnimationFrame(() => {
-      questionInputRef.current?.focus();
+      questionInputRef.current?.focus({ preventScroll: true });
     });
     armIdleTimeout();
 
@@ -696,7 +711,7 @@ export default function PortfolioAssistant() {
     isFollowingRef.current = true;
     window.cancelAnimationFrame(inputFocusFrameRef.current);
     inputFocusFrameRef.current = window.requestAnimationFrame(() => {
-      questionInputRef.current?.focus();
+      questionInputRef.current?.focus({ preventScroll: true });
     });
   };
 
@@ -723,8 +738,12 @@ export default function PortfolioAssistant() {
   const assistantIsUnavailable = health.status !== "configured";
   const actionsAreDisabled = isLoading || assistantIsUnavailable;
   const canSubmit = question.trim().length > 0 && !actionsAreDisabled;
-  const showSuggestions = messages.length === 0 && !isLoading;
   const hasConversation = messages.length > 0 || isLoading;
+  // Keep the active answer's key and element when streaming finishes. Replacing
+  // it with a second article would replay its entrance and disturb selection.
+  const visibleMessages = activeAnswer
+    ? [...messages, { ...activeAnswer, role: "assistant", sources: [], streaming: true }]
+    : messages;
 
   return (
     <section
@@ -751,99 +770,96 @@ export default function PortfolioAssistant() {
           data-conversation={hasConversation ? "true" : "false"}
         >
         <div className="assistant-workspace">
-          {hasConversation && (
-            <div
-              ref={transcriptRef}
-              className="assistant-transcript"
-              role="log"
-              aria-label="Portfolio assistant conversation"
-              aria-live="off"
-              aria-busy={isLoading}
-              onScroll={handleTranscriptScroll}
-            >
-              {messages.map((message) => (
-                <article
-                  key={message.id}
-                  className={`assistant-message assistant-message-${message.role}`}
-                >
-                  <p className="assistant-message-label">
-                    {message.role === "user" ? "You" : "Portfolio assistant"}
-                  </p>
-                  {message.role === "assistant" ? (
-                    <AssistantAnswer
-                      content={message.content}
-                    />
-                  ) : (
-                    <p className="assistant-message-content">{message.content}</p>
-                  )}
-
-                  {message.role === "assistant" && message.sources.length > 0 && (
-                    <AssistantSources
-                      sources={message.sources}
-                      onSourceClick={handleSourceClick}
-                    />
-                  )}
-                </article>
-              ))}
-
-              {isLoading && (
-                <article
-                  className="assistant-message assistant-message-assistant assistant-message-streaming"
-                  data-phase={activeAnswer.phase}
-                  data-has-content={activeAnswer.content ? "true" : "false"}
-                >
-                  <p className="assistant-message-label">Portfolio assistant</p>
-                  {activeAnswer.content ? (
-                    <AssistantAnswer
-                      content={activeAnswer.content}
-                    />
-                  ) : (
-                    <div className="assistant-stream-status" aria-hidden="true">
-                      <span className="assistant-stream-pulse">
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                      <span className="assistant-stream-copy">
-                        {STREAM_STATUS}
-                      </span>
-                    </div>
-                  )}
-                </article>
-              )}
-            </div>
-          )}
-
-          {showSuggestions && (
-            <div
-              className="assistant-prompts"
-              aria-labelledby="assistant-prompts-title"
-            >
-              <p
-                id="assistant-prompts-title"
-                className="assistant-prompts-title"
+          <AssistantStage conversation={hasConversation}>
+            {hasConversation ? (
+              <div
+                ref={transcriptRef}
+                className="assistant-transcript"
+                role="log"
+                aria-label="Portfolio assistant conversation"
+                aria-live="off"
+                aria-busy={isLoading}
+                onScroll={handleTranscriptScroll}
               >
-                Try asking
-              </p>
-              <ol className="assistant-prompt-list">
-                {SUGGESTED_PROMPTS.map((prompt) => (
-                  <li key={prompt} className="assistant-prompt-item">
-                    <button
-                      type="button"
-                      className="assistant-prompt-button"
-                      onClick={() => askQuestion(prompt)}
-                      disabled={actionsAreDisabled}
-                    >
-                      <span className="assistant-prompt-copy">{prompt}</span>
-                      <span className="assistant-prompt-arrow" aria-hidden="true">
-                        →
-                      </span>
-                    </button>
-                  </li>
+                {visibleMessages.map((message) => (
+                  <m.article
+                    key={message.id}
+                    className={`assistant-message assistant-message-${message.role}${message.streaming ? " assistant-message-streaming" : ""}`}
+                    data-message-id={message.id}
+                    data-phase={message.streaming ? message.phase : undefined}
+                    data-has-content={message.content ? "true" : "false"}
+                    initial={{ opacity: 0, y: reducedMotion ? 0 : 7 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={reducedMotion ? { duration: 0 } : messageTransition}
+                  >
+                    <p className="assistant-message-label">
+                      {message.role === "user" ? "You" : "Portfolio assistant"}
+                    </p>
+                    {message.streaming && !message.content ? (
+                      <div className="assistant-stream-status" aria-hidden="true">
+                        <span className="assistant-stream-pulse">
+                          <span />
+                          <span />
+                          <span />
+                        </span>
+                        <span className="assistant-stream-copy">{STREAM_STATUS}</span>
+                      </div>
+                    ) : message.role === "assistant" ? (
+                      <AssistantAnswer
+                        content={message.content}
+                      streaming={message.streaming}
+                      />
+                    ) : (
+                      <p className="assistant-message-content">{message.content}</p>
+                    )}
+
+                    {message.role === "assistant" && message.sources.length > 0 && (
+                      <m.div
+                        className="assistant-source-arrival"
+                        initial={{ opacity: 0, y: reducedMotion ? 0 : 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={reducedMotion ? { duration: 0 } : messageTransition}
+                      >
+                        <AssistantSources
+                          sources={message.sources}
+                          onSourceClick={handleSourceClick}
+                        />
+                      </m.div>
+                    )}
+                  </m.article>
                 ))}
-              </ol>
-            </div>
-          )}
+              </div>
+            ) : (
+              <div
+                className="assistant-prompts"
+                aria-labelledby="assistant-prompts-title"
+              >
+                <p
+                  id="assistant-prompts-title"
+                  className="assistant-prompts-title"
+                >
+                  Try asking
+                </p>
+                <ol className="assistant-prompt-list">
+                  {SUGGESTED_PROMPTS.map((prompt) => (
+                    <li key={prompt} className="assistant-prompt-item">
+                      <button
+                        type="button"
+                        className="assistant-prompt-button"
+                        onClick={() => askQuestion(prompt)}
+                        disabled={actionsAreDisabled}
+                      >
+                        <span className="assistant-prompt-copy">{prompt}</span>
+                        <span className="assistant-prompt-arrow" aria-hidden="true">
+                          →
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </AssistantStage>
 
           <p
             className="sr-only"

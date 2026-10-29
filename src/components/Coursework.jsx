@@ -2,6 +2,7 @@ import { courseRelatedWork, featuredCourses, getCoursesByYear, studyYears } from
 import { profile } from "../data/profile";
 import SectionIntro from "./SectionIntro";
 import { focusSection } from "../utils/portfolioNavigation";
+import AnimatedDisclosure, { DisclosureIndicator } from "./AnimatedDisclosure";
 
 export default function Coursework() {
   const totalCourses = studyYears.reduce(
@@ -85,8 +86,8 @@ export default function Coursework() {
               </div>
             </header>
 
-            <details className="course-record reveal" data-reveal="trace">
-              <summary className="course-record__summary">
+            <AnimatedDisclosure className="course-record reveal" data-reveal="trace"
+              summaryClassName="course-record__summary" summary={(expanded) => <>
                 <span className="course-record__lead">
                   <span className="course-record__lead-title">
                     Browse all {totalCourses} courses
@@ -96,10 +97,10 @@ export default function Coursework() {
                   </span>
                 </span>
                 <span className="course-record__action">
-                  <span className="disclosure-action__closed">Open record</span>
-                  <span className="disclosure-action__open">Close record</span>
+                  {expanded ? "Close record" : "Open record"}
+                  <DisclosureIndicator expanded={expanded} />
                 </span>
-              </summary>
+              </>}>
 
               <div className="course-record__body">
                 {studyYears.map((year) => {
@@ -172,7 +173,7 @@ export default function Coursework() {
                   );
                 })}
               </div>
-            </details>
+            </AnimatedDisclosure>
           </section>
         </div>
       </div>
