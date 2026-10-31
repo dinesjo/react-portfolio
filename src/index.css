@@ -2550,6 +2550,10 @@ a.assistant-source-card:focus-visible { background: rgba(233, 79, 55, 0.07); col
   letter-spacing: 0.025em;
 }
 
+.assistant-question-count {
+  margin-left: auto;
+}
+
 .assistant-submit-button {
   --primary-surface: #c93f2c;
   --primary-border: #c93f2c;

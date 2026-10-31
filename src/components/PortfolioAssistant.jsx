@@ -304,6 +304,7 @@ export default function PortfolioAssistant() {
     detail: "",
   });
   const [question, setQuestion] = useState("");
+  const [showKeyboardHint, setShowKeyboardHint] = useState(false);
   const [messages, setMessages] = useState([]);
   const [activeAnswer, setActiveAnswer] = useState(null);
   const [chatError, setChatError] = useState(null);
@@ -383,6 +384,15 @@ export default function PortfolioAssistant() {
       window.clearTimeout(streamTimerRef.current);
     };
   }, [checkHealth]);
+
+  useEffect(() => {
+    const desktopInput = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updateKeyboardHint = () => setShowKeyboardHint(desktopInput.matches);
+
+    updateKeyboardHint();
+    desktopInput.addEventListener("change", updateKeyboardHint);
+    return () => desktopInput.removeEventListener("change", updateKeyboardHint);
+  }, []);
 
   useEffect(() => {
     const revealCurrentHash = () => {
@@ -937,12 +947,14 @@ export default function PortfolioAssistant() {
                 readOnly={isLoading}
                 rows={2}
                 placeholder="Ask about a project, technology, result, or course…"
-                aria-describedby="assistant-question-help assistant-question-count"
+                aria-describedby={showKeyboardHint
+                  ? "assistant-question-help assistant-question-count"
+                  : "assistant-question-count"}
               />
               <div className="assistant-form-meta">
-                <p id="assistant-question-help" className="assistant-question-help">
+                {showKeyboardHint && <p id="assistant-question-help" className="assistant-question-help">
                   Enter to send · Shift + Enter for a new line
-                </p>
+                </p>}
                 <p id="assistant-question-count" className="assistant-question-count">
                   {question.length}/{MAX_ASSISTANT_QUESTION_CHARACTERS}
                 </p>
