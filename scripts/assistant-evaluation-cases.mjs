@@ -11,6 +11,27 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'snuskoll-auth-and-data',
+    question: 'Does SnusKoll send sign-in through its ASP.NET API? What data does the API handle, and what are the shared DTOs used for?',
+    checks: (answer) => ({
+      directSupabaseSignIn: /direct(?:ly)?.{0,100}Supabase|Supabase.{0,100}direct(?:ly)?/is.test(answer),
+      separatesDataRequests: /API/.test(answer) && /product|preference/i.test(answer),
+      sharedDataContracts: /DTO/.test(answer) && /data|exchang|contract|response/i.test(answer),
+      projectCitation: cites(answer, 'project:snuskoll'),
+    }),
+  },
+  {
+    id: 'snuskoll-contract-test-scope',
+    question: 'Do SnusKoll’s backend contract tests run requests against live Supabase? What do they actually check?',
+    checks: (answer) => ({
+      noLiveSupabaseCoverage: /(?:do not|don't|does not|doesn't|not|no).{0,100}(?:live|Supabase)|(?:live|Supabase).{0,100}(?:not|isn't|aren't)/is.test(answer),
+      authorizationAttributes: /authoriz/i.test(answer) && /attribute/i.test(answer),
+      publicResponseFields: /public/i.test(answer) && /review|response/i.test(answer) && /field/i.test(answer),
+      preferenceRules: /preference/i.test(answer) && /validat|mutation/i.test(answer),
+      projectCitation: cites(answer, 'project:snuskoll'),
+    }),
+  },
+  {
     id: 'pickle-integrity-boundary',
     question: 'Did the DD2525 project make any pickle payload safe by adding HMAC?',
     checks: (answer) => ({

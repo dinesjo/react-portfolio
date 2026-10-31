@@ -76,7 +76,9 @@ test("grounds case-study answers in benchmark scope and engineering tradeoffs", 
   assert.match(thesis.text, /Hybrid lexical-semantic retrieval: verdict accuracy 96\.4%; median end-to-end response time 5\.45 s/);
   assert.match(thesis.text, /SPARQL graph agent: verdict accuracy 98\.2%; median end-to-end response time 21\.62 s/);
   assert.match(snuskoll.text, /tradeoff is maintaining/);
-  assert.match(snuskoll.text, /contract tests around authorization/);
+  assert.match(snuskoll.text, /contract tests for API authorization attributes and public review fields/);
+  assert.match(snuskoll.text, /sign-in and sessions directly through Supabase Auth/);
+  assert.match(snuskoll.text, /do not exercise requests against a live Supabase instance/);
 });
 
 test("includes every published course-to-project connection without inventing course assignments", () => {

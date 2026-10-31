@@ -53,14 +53,13 @@ export const projectRecords = [
     context: "Personal",
     links: {
       live: "https://snuskoll.dinesjo.se/",
-      github: "https://github.com/dinesjo/SnusKoll",
     },
     date: "June 2025 - Present",
     priority: 1,
     featured: true,
     highlights: [
       "I split the app into a Blazor WebAssembly frontend, an ASP.NET API, shared DTOs, and Dockerized services",
-      "Supabase handles authentication and data, with contract tests around authorization",
+      "Supabase handles authentication and data, with contract tests for API authorization attributes and public review fields",
       "Users can search and filter the catalog, rate products, save lists, and discover something at random",
     ],
   },
