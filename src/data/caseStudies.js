@@ -48,7 +48,7 @@ export const caseStudies = {
         ],
       },
     ],
-    imageCaption: "The MAZE research interface sketched in an engineering setting. The person and truck scene are illustrative.",
+    imageCaption: "Photorealistic mockup of the MAZE research interface on an iPad in a truck workshop. The screen recreates the example shown in the original portfolio artwork.",
   },
   snuskoll: {
     subtitle: "A mobile-first product catalog with personal ratings and social reviews.",

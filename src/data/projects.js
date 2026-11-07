@@ -57,7 +57,7 @@ const projectMedia = {
     imagePanorama: masterThesisKgqaPanorama,
     imageOverlayTone: "light",
     imageFrame: "full-bleed",
-    imageAlt: "Pencil sketch of an engineer viewing a MAZE compatibility answer marked BLOCKED, with an Evidence button on the screen and a complete truck in the background.",
+    imageAlt: "Photorealistic scene of an engineer holding an iPad with a MAZE compatibility answer marked BLOCKED and an Evidence button. A white truck is parked in the workshop behind it.",
   },
   "thesis-tracker": {
     image: thesisTrackerCard,

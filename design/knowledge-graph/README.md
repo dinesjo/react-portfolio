@@ -1,5 +1,15 @@
 # Knowledge Graph QA artwork
 
+The current cover shows an engineer checking MAZE on a handheld iPad beside
+a truck bay. The photorealistic mockup recreates the question, BLOCKED verdict,
+and Evidence control from the approved pencil artwork.
+
+The standard optimizer uses `master-thesis-ipad-wide.png` for the landscape
+card, case-study page, and viewer. The portrait and panorama images follow
+the card frame. See [sources and generation prompts](IPAD_PROMPTS.md).
+
+## Previous artwork — Soft pencil
+
 Accepted on 18 October 2026: **2 — Soft pencil**, generated with the built-in
 image generation tool. The approved original is
 `src/assets/project-originals/master-thesis.png`. The standard optimizer creates

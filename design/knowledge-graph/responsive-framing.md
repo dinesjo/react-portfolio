@@ -1,5 +1,9 @@
 # Responsive artwork and framing
 
+The [current iPad artwork](IPAD_PROMPTS.md) uses the same landscape, portrait,
+and panoramic frames. The generation notes below document the earlier pencil
+compositions.
+
 The square Knowledge Graph scene was too tall as an unconstrained image and left large empty bands when fitted into a bounded rectangle. This revision extends the approved pencil scene into three compositions, keeping the engineer, complete truck, monitor, and answer visible in the card.
 
 The five assets below were edited with the built-in ImageGen tool on 2026-10-18. Each source was inspected before editing. Generated outputs were inspected and copied into the repository under versioned names; the earlier source files remain unchanged. The phone mockups are presentation artwork, not new project facts.

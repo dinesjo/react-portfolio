@@ -37,8 +37,9 @@ const projectImages = [
 const sourceFiles = {
   "ci-server": "ci-server-sketch-v2.png",
   "deserialization-security": "deserialization-security-sketch-v2.png",
-  "master-thesis-kgqa": "master-thesis-wide-v2.png",
+  "master-thesis-kgqa": "master-thesis-ipad-wide.png",
   "s3k-interrupts": "s3k-interrupts-sketch-v2.png",
+  snuskoll: "snuskoll-catalog-refresh.png",
   taskeroo: "taskeroo-device-demo.png",
   "thesis-tracker": "thesis-tracker.jpg",
 };
@@ -64,8 +65,8 @@ const standaloneImages = [
 ];
 
 const directedImages = [
-  { id: "master-thesis-kgqa", source: "master-thesis-portrait-v2.png", variant: "portrait" },
-  { id: "master-thesis-kgqa", source: "master-thesis-panorama-v2.png", variant: "panorama" },
+  { id: "master-thesis-kgqa", source: "master-thesis-ipad-portrait.png", variant: "portrait" },
+  { id: "master-thesis-kgqa", source: "master-thesis-ipad-panorama.png", variant: "panorama" },
 ];
 
 const techImages = [

@@ -161,7 +161,7 @@ and Firefox 128+.
 
 Cards keep a readable minimum column width. Case studies switch columns using
 their available width in text-relative units, so enlarged text also causes reflow.
-The Knowledge Graph illustration has landscape, portrait, and panoramic
+The Knowledge Graph artwork has landscape, portrait, and panoramic
 compositions selected from the actual image frame's shape. Technical screenshots
 use uncropped previews, and the image viewer preserves the full composition.
 See [responsive artwork notes](design/knowledge-graph/responsive-framing.md) for
