@@ -2038,6 +2038,10 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: rgba(255, 255, 255, 0.26);
 }
 
+.assistant-shell[data-conversation="true"] .assistant-prompts {
+  border-top: 1px solid var(--line);
+}
+
 .assistant-prompts-title {
   color: var(--muted);
 }

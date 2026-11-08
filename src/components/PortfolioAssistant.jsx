@@ -842,41 +842,41 @@ export default function PortfolioAssistant() {
                   </m.article>
                 ))}
               </div>
-            ) : (
-              <div
-                className="assistant-prompts"
-                aria-labelledby="assistant-prompts-title"
-              >
-                <p
-                  id="assistant-prompts-title"
-                  className="assistant-prompts-title"
-                >
-                  Try asking
-                </p>
-                <ol className="assistant-prompt-list">
-                  {SUGGESTED_PROMPTS.map((prompt) => (
-                    <li key={prompt} className="assistant-prompt-item">
-                      <m.button
-                        type="button"
-                        className="assistant-prompt-button"
-                        initial={false} animate="rest"
-                        whileHover={actionsAreDisabled ? undefined : "hover"}
-                        whileFocus={actionsAreDisabled ? undefined : "hover"}
-                        whileTap={actionsAreDisabled ? undefined : "pressed"}
-                        onClick={() => askQuestion(prompt)}
-                        disabled={actionsAreDisabled}
-                      >
-                        <span className="assistant-prompt-copy">{prompt}</span>
-                        <InteractiveArrow className="assistant-prompt-arrow">
-                          →
-                        </InteractiveArrow>
-                      </m.button>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
+            ) : null}
           </AssistantStage>
+
+          <div
+            className="assistant-prompts"
+            aria-labelledby="assistant-prompts-title"
+          >
+            <p
+              id="assistant-prompts-title"
+              className="assistant-prompts-title"
+            >
+              Try asking
+            </p>
+            <ol className="assistant-prompt-list">
+              {SUGGESTED_PROMPTS.map((prompt) => (
+                <li key={prompt} className="assistant-prompt-item">
+                  <m.button
+                    type="button"
+                    className="assistant-prompt-button"
+                    initial={false} animate="rest"
+                    whileHover={actionsAreDisabled ? undefined : "hover"}
+                    whileFocus={actionsAreDisabled ? undefined : "hover"}
+                    whileTap={actionsAreDisabled ? undefined : "pressed"}
+                    onClick={() => askQuestion(prompt)}
+                    disabled={actionsAreDisabled}
+                  >
+                    <span className="assistant-prompt-copy">{prompt}</span>
+                    <InteractiveArrow className="assistant-prompt-arrow">
+                      →
+                    </InteractiveArrow>
+                  </m.button>
+                </li>
+              ))}
+            </ol>
+          </div>
 
           <p
             className="sr-only"

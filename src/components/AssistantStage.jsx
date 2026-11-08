@@ -33,7 +33,7 @@ function StageView({ children }) {
   );
 }
 
-// Only the suggestions/conversation handoff changes this frame's height.
+// Only opening or clearing the conversation changes this frame's height.
 // The transcript has its own stable scroll area, so token updates never spring
 // the composer or scale the text the visitor is reading.
 export default function AssistantStage({ conversation, children }) {
