@@ -1,4 +1,5 @@
-import { FaArrowLeft, FaArrowRight, FaExternalLinkAlt, FaGithub } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaGithub } from "react-icons/fa";
+import PrimaryButton from "./PrimaryButton";
 import ProjectImageFrame from "./ProjectImageFrame";
 import ProjectBadges from "./ProjectBadges";
 
@@ -46,7 +47,7 @@ export default function CaseStudy({ project, nextProject }) {
         </div>
         <aside className="case-detail__aside"><ProjectBadges project={project} />
           <div className="detail-external-links">
-            {project.links.live && <a className="quiet-button" href={project.links.live} target="_blank" rel="noopener noreferrer"><FaExternalLinkAlt aria-hidden="true" /> {project.links.liveText || "Try the app"}</a>}
+            {project.links.live && <PrimaryButton className="sharp-button project-live-button" href={project.links.live} target="_blank" rel="noopener noreferrer" icon={<FaArrowRight />} iconPosition="end">{project.links.liveText || "Try the app"}</PrimaryButton>}
             {project.links.github && <a className="quiet-button" href={project.links.github} target="_blank" rel="noopener noreferrer"><FaGithub aria-hidden="true" /> View source</a>}
           </div>
         </aside>

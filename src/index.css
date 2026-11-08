@@ -94,6 +94,7 @@
   --cyan: #0f8aa6;
   --coral: #e94f37;
   --coral-text: #b93825;
+  --coral-action: #c6422a;
   --amber: #b7791f;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-reveal: cubic-bezier(0.2, 0.74, 0.24, 1);
@@ -2847,11 +2848,15 @@ a.assistant-source-card:focus-visible { background: rgba(233, 79, 55, 0.07); col
 .case-card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1rem; }
 .case-card-actions .quiet-button,
 .case-card-actions .sharp-button { min-height: 2.75rem; }
-.case-card-actions > div .sharp-button {
-  --primary-surface: transparent;
-  --primary-text: var(--ink);
-  --primary-border: var(--line);
-  --primary-depth: transparent;
+.project-live-button {
+  --primary-surface: var(--coral-action);
+  --primary-text: white;
+  --primary-border: var(--coral-action);
+  --primary-depth: rgba(233, 79, 55, 0.25);
+}
+
+.project-live-button .primary-button__highlight {
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.04));
 }
 
 .case-card-note {

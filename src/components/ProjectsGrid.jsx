@@ -12,7 +12,6 @@ import PrimaryButton from "./PrimaryButton";
 import {
   FaArchive,
   FaArrowRight,
-  FaExternalLinkAlt,
   FaGithub,
   FaInfoCircle,
   FaLock,
@@ -74,8 +73,8 @@ function ProjectLinks({ project, compact = false }) {
           href={project.links.live}
           target="_blank"
           rel="noopener noreferrer"
-          className={primaryClass}
-          icon={<FaExternalLinkAlt className="text-[10px]" />} iconMotion="external"
+          className={`project-live-button ${primaryClass}`}
+          icon={<FaArrowRight />} iconPosition="end"
         >
           {project.links.liveText || "Try it"}
         </PrimaryButton>
