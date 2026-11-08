@@ -1,12 +1,13 @@
 export const profile = {
   name: "Linus Dinesjö",
-  role: "Computer science graduate from KTH",
+  role: "Full-stack development at AMF",
   headline: "I build web apps, internal tools, and research prototypes.",
   summary:
-    "At AMF, I work on full-stack development and test automation. Our small team builds and maintains a framework for actuaries to create test cases and monitor regressions across versions of the core insurance system.",
+    "In a small development team, I help build tools that let actuaries create test cases and investigate regressions in the core insurance system.",
   portfolioSummary: "Projects from KTH, work, and my own time.",
   education: {
     institution: "KTH Royal Institute of Technology",
+    summary: "Computer science graduate from KTH.",
     graduation: "Summer 2026",
     courseworkStatus: "completed",
     recordUpdated: "October 2026",

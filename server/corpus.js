@@ -45,6 +45,7 @@ function buildProfileChunk() {
       `Role: ${profile.role}.`,
       `Headline: ${profile.headline}`,
       `Public summary: ${profile.summary}`,
+      `Education summary: ${profile.education.summary}`,
       `Education: graduated from ${profile.education.institution} in ${profile.education.graduation.toLowerCase()}. All listed KTH courses are ${profile.education.courseworkStatus}; individual grades are not published.`,
       `Current employer: ${profile.employment.employer}. Current work: ${joinList(profile.employment.focusAreas)}.`,
       `Current work context: ${profile.employment.description}`,

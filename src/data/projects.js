@@ -105,6 +105,7 @@ const projectMedia = {
   "ai-diary": {
     image: aiDiaryCard,
     imageFull: aiDiaryFull,
+    showFeaturedNote: false,
   },
   logportal: {
     image: logportalCard,
@@ -178,6 +179,7 @@ export const projects = projectRecords.map(({ id, title, highlights, ...content 
     ...(imagePreviewBackground ? { imagePreviewBackground } : {}),
     ...(icon ? { icon } : {}),
     ...content,
+    showFeaturedNote: projectMedia[id].showFeaturedNote !== false,
     ...(imageOverlayTone ? { imageOverlayTone } : {}),
     ...(featuredImageFit ? { featuredImageFit } : {}),
     ...(imageFrame ? { imageFrame } : {}),

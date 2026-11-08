@@ -42,9 +42,9 @@ const loadAssistantMarkdown = () => import("./AssistantMarkdown");
 const AssistantMarkdown = lazy(loadAssistantMarkdown);
 
 const SUGGESTED_PROMPTS = [
-  "Which projects best demonstrate work with AI and knowledge graphs?",
-  "Which KTH courses relate to security and software reliability?",
-  "What does Linus work on at AMF?",
+  "Give me a quick overview of Linus’s experience.",
+  "Which projects can I try?",
+  "What has Linus built as a full-stack developer?",
 ];
 
 function safeSourceHref(value) {

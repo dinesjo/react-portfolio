@@ -109,9 +109,10 @@ Safeguards remain explicit:
 - recent conversation history is capped at 40 messages and approximately 6,000
   tokens, then packaged as one explicitly untrusted visitor transcript rather
   than authoritative assistant messages;
-- the system prompt requires source-level attribution, neutral wording for
-  private work, exact course facts, same-language replies, and an explicit
-  response when the portfolio does not contain an answer;
+- the system prompt preserves published roles and collaboration, including for
+  private work, and requires source-level citations, exact course facts,
+  same-language replies, and an explicit response when the portfolio does not
+  contain an answer;
 - only records actually cited in the final answer appear as quiet, linked
   portfolio entries inside a default-closed disclosure below it; citation
   labels remain internal so the prose stays natural and uncluttered;

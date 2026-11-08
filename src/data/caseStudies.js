@@ -1,12 +1,12 @@
 export const caseStudies = {
   // Thesis report dated 3 July 2026: Chapters 3–7, Tables 5.1 and 5.3, Section 5.2.
   "master-thesis-kgqa": {
-    subtitle: "Making truck-component compatibility constraints accessible through natural-language questions.",
-    role: "Master’s thesis at Traton · system design, implementation, and evaluation",
+    subtitle: "Can a natural-language question reliably tell us whether truck components can be used together?",
+    role: "Sole developer · research with Traton and Scania",
     result: {
       value: "96.4%",
-      label: "Hybrid retrieval verdict accuracy",
-      context: "Up from 77.1% with dense retrieval · 280 graph-derived questions",
+      label: "Correct compatibility decisions",
+      context: "Hybrid retrieval · up from 77.1% with dense retrieval · 280 test questions",
     },
     sections: [
       {
@@ -14,6 +14,12 @@ export const caseStudies = {
         paragraphs: [
           "Traton’s MAZE knowledge graph records combinations of truck components that must not be used together. Answering a compatibility question requires exact component identities and the complete blocking combination. Similar descriptions can refer to different options, and a partial match to a larger blocker does not necessarily make a configuration invalid.",
           "My thesis investigated how a natural-language interface could recover that evidence reliably, comparing static retrieval with direct graph access.",
+        ],
+      },
+      {
+        title: "My role and collaboration",
+        paragraphs: [
+          "I worked with colleagues at Traton and Scania and with users to establish the user stories. I led development and implemented the research system myself, covering system design, the Python implementation, and evaluation.",
         ],
       },
       {
@@ -51,23 +57,24 @@ export const caseStudies = {
     imageCaption: "Photorealistic mockup of the MAZE research interface on an iPad in a truck workshop. The screen recreates the example shown in the original portfolio artwork.",
   },
   snuskoll: {
-    subtitle: "A mobile-first product catalog with personal ratings and social reviews.",
-    role: "Personal project · full-stack development",
+    subtitle: "A hobby app for browsing snus, keeping ratings, and sharing reviews.",
+    role: "Sole developer · hobby project",
     sections: [
+      { title: "Why I made it", paragraphs: ["I missed ratings and comments on the shopping sites I used, including Snusbolaget. I made SnusKoll as something fun for my friends and me to use, and as a way to learn more about web development."] },
       { title: "What it’s for", paragraphs: ["SnusKoll brings product discovery and personal preferences together. Visitors can browse the catalog and read recent reviews; signing in lets them keep ratings, notes, favorites, and a wishlist."] },
-      { title: "What I built", paragraphs: ["I built a Blazor WebAssembly PWA and an ASP.NET Core API, with shared C# models and DTOs. The frontend and API are packaged as separate Docker images."], points: ["Search and filter the product catalog.", "Rate products, add notes, and maintain favorites and a wishlist.", "Read recent user reviews or get a random product suggestion."] },
+      { title: "What I built", paragraphs: ["As the sole developer, I built the Blazor WebAssembly PWA and ASP.NET Core API, with shared C# models and DTOs. The frontend and API are packaged as separate Docker images."], points: ["Search and filter the product catalog.", "Rate products, add notes, and maintain favorites and a wishlist.", "Read recent user reviews or get a random product suggestion."] },
       { title: "How the pieces fit", paragraphs: ["The browser calls the API for product and user-preference data. Shared DTOs define the data exchanged between them.", "The browser handles sign-in and sessions directly through Supabase Auth. The API validates the browser’s bearer token with Supabase before accessing user-specific data, and uses Supabase for database queries."], architecture: true },
       { title: "Engineering choices", paragraphs: ["The separate frontend and API make the client/server boundary explicit. The tradeoff is maintaining those parts and their shared contracts together.", "Backend contract tests check API authorization attributes, public review response fields, and the validation and mutation rules for user preferences. They do not exercise requests against a live Supabase instance."] },
-      { title: "The result", paragraphs: ["The app is publicly available to try, with browsing open to visitors and personal collections available after sign-in. It remains an ongoing personal project."] },
+      { title: "Try it", paragraphs: ["The app is publicly available to try, with browsing open to visitors and personal collections available after sign-in. It remains an ongoing hobby project."] },
     ],
     imageCaption: "SnusKoll’s product browsing interface. Open the image for a closer look, or try the live app.",
   },
   "ai-diary": {
     subtitle: "From a short spoken update to a daily note the technician can review.",
-    role: "Professional project · internal application",
+    role: "Sole technical developer · Bravida",
     sections: [
       { title: "The problem", paragraphs: ["Technicians in the field need a way to record a daily update without typing a long report. AI-Diary uses a short voice recording as the starting point."] },
-      { title: "My contribution", paragraphs: ["I worked on the internal tool that turns spoken check-ins into structured daily notes. The published technology stack includes React, TypeScript, Material UI, Azure, and Azure Speech."] },
+      { title: "My contribution", paragraphs: ["I was the sole technical developer of AI-Diary, working with technicians to understand their needs and with occasional ideas from another developer.", "I built the application with React, TypeScript, Material UI, Azure, and Azure Speech, connecting speech transcription to AI-generated draft notes."] },
       { title: "The workflow", points: ["The technician records a short voice update.", "Azure Speech creates a transcript.", "An LLM turns the transcript into a draft note.", "The user reviews the result before it is added to the diary."] },
       { title: "The design decision", paragraphs: ["The generated note is a draft with a review step before it enters the diary. This keeps the technician involved in the final record while reducing the amount of typing required."] },
       { title: "Availability", paragraphs: ["AI-Diary is an internal application. This case study covers the public workflow and technology summary; there is no public demo or source repository."] },

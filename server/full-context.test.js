@@ -4,6 +4,7 @@ import test from "node:test";
 import { portfolioChunks } from "./corpus.js";
 import { courseRelatedWork, courses } from "../src/data/courses.js";
 import { projectRecords } from "../src/data/projectRecords.js";
+import { profile } from "../src/data/profile.js";
 import { createChatPayload } from "./ollama.js";
 import {
   FULL_CONTEXT_TOKEN_BUDGET,
@@ -43,11 +44,41 @@ test("carries every project's published facts into ASK with its own citation", (
     const block = context.split(`[${source.citation}]\n`)[1].split(`[/${source.citation}]`)[0];
     assert.ok(block.includes(project.title), `Missing title for ${project.id}`);
     assert.ok(block.includes(project.description), `Missing description for ${project.id}`);
+    if (project.featuredDescription) {
+      assert.ok(block.includes(project.featuredDescription), `Missing featured summary for ${project.id}`);
+    }
     assert.ok(block.includes(project.date), `Missing dates for ${project.id}`);
     for (const note of project.highlights ?? []) {
       assert.ok(block.includes(note), `Missing published highlight for ${project.id}`);
     }
+    if (project.caseStudy) {
+      const study = project.caseStudy;
+      const publishedText = [
+        study.subtitle,
+        study.role,
+        ...Object.values(study.result ?? {}),
+        ...study.sections.flatMap((section) => [
+          section.title,
+          ...(section.paragraphs ?? []),
+          ...(section.points ?? []),
+          ...(section.comparisonCaption ? [section.comparisonCaption] : []),
+          ...(section.comparison ?? []).flatMap((row) => Object.values(row)),
+        ]),
+      ];
+      for (const text of publishedText) {
+        assert.ok(block.includes(text), `Missing case-study fact for ${project.id}: ${text}`);
+      }
+    }
     if (project.isPrivate) assert.match(block, /do not infer confidential/);
+  }
+});
+
+test("carries the published introduction and background into ASK", () => {
+  const { context, sources } = buildFullPortfolioContext();
+  const source = sources.find((item) => item.type === "profile");
+  const block = context.split(`[${source.citation}]\n`)[1].split(`[/${source.citation}]`)[0];
+  for (const text of [profile.role, profile.headline, profile.summary, profile.education.summary]) {
+    assert.ok(block.includes(text), `Missing published profile fact: ${text}`);
   }
 });
 

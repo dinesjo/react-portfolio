@@ -2,13 +2,61 @@ import { caseStudies } from "./caseStudies.js";
 
 export const projectRecords = [
   {
+    id: "ai-diary",
+    caseStudy: caseStudies["ai-diary"],
+    title: "AI-Diary",
+    description:
+      "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
+    featuredDescription:
+      "I built an internal tool that turns Bravida technicians’ spoken updates into structured daily notes.",
+    technologies: ["React", "Material UI", "TypeScript", "Azure", "Azure Speech"],
+    methods: ["Field reporting", "Speech-to-text", "LLM summaries"],
+    category: "Web",
+    context: "Professional",
+    links: {},
+    date: "November 2024 - June 2026",
+    isPrivate: true,
+    priority: 1,
+    featured: true,
+    highlights: [
+      "Technicians review the AI-generated draft before it is saved to the diary",
+      "The tool avoids asking technicians to type long reports while they are in the field",
+      "Azure Speech creates the transcript and an LLM turns it into a draft note",
+    ],
+  },
+  {
+    id: "snuskoll",
+    caseStudy: caseStudies.snuskoll,
+    title: "SnusKoll",
+    description:
+      "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
+    featuredDescription:
+      "A hobby app for my friends and me to browse snus, keep ratings, and share reviews. I built it to learn more about web development and make something fun to use.",
+    technologies: ["ASP.NET", "Blazor", "C#", "Supabase", "SQL", "Tailwind CSS", "Docker"],
+    methods: ["Product discovery", "Personal ratings", "Social reviews"],
+    category: "Web",
+    context: "Personal",
+    links: {
+      live: "https://snuskoll.dinesjo.se/",
+    },
+    date: "June 2025 - Present",
+    priority: 1,
+    featured: true,
+    highlights: [
+      "Browse the catalog and read reviews without an account; sign in to keep ratings and lists",
+      "I split the app into a Blazor WebAssembly frontend, an ASP.NET API, shared DTOs, and Dockerized services",
+      "Supabase handles authentication and data, with contract tests for API authorization attributes and public review fields",
+      "Users can search and filter the catalog, rate products, save lists, and discover something at random",
+    ],
+  },
+  {
     id: "master-thesis-kgqa",
     caseStudy: caseStudies["master-thesis-kgqa"],
-    title: "Industrial Knowledge Graph QA",
+    title: "Truck compatibility with AI",
     description:
       "Master’s thesis comparing dense RAG, hybrid lexical-semantic RAG, and a bounded SPARQL graph agent for truck-component compatibility questions over Traton’s MAZE knowledge graph.",
     featuredDescription:
-      "I built and benchmarked three ways to answer truck-component compatibility questions using Traton’s MAZE knowledge graph: dense retrieval, hybrid retrieval, and a SPARQL graph agent.",
+      "For my master’s thesis, I built and compared three ways to answer a practical question: can these truck components be used together?",
     technologies: ["Python", "SPARQL", "GraphDB", "Qdrant", "Amazon Bedrock"],
     methods: ["Knowledge graphs", "RAG", "Hybrid retrieval", "LLM evaluation", "Text-to-SPARQL"],
     category: "Research",
@@ -38,30 +86,6 @@ export const projectRecords = [
     date: "February 2026 - Decommissioned",
     isDecommissioned: true,
     priority: 3,
-  },
-  {
-    id: "snuskoll",
-    caseStudy: caseStudies.snuskoll,
-    title: "SnusKoll",
-    description:
-      "A Blazor and ASP.NET PWA for browsing, rating, and saving snus products, with Supabase-backed auth/data, search filters, social reviews, favorites, and wishlists.",
-    featuredDescription:
-      "I built SnusKoll as a mobile-first place to browse snus products, keep personal ratings, save favorites and wishlists, and read recent reviews from other users.",
-    technologies: ["ASP.NET", "Blazor", "C#", "Supabase", "SQL", "Tailwind CSS", "Docker"],
-    methods: ["Product discovery", "Personal ratings", "Social reviews"],
-    category: "Web",
-    context: "Personal",
-    links: {
-      live: "https://snuskoll.dinesjo.se/",
-    },
-    date: "June 2025 - Present",
-    priority: 1,
-    featured: true,
-    highlights: [
-      "I split the app into a Blazor WebAssembly frontend, an ASP.NET API, shared DTOs, and Dockerized services",
-      "Supabase handles authentication and data, with contract tests for API authorization attributes and public review fields",
-      "Users can search and filter the catalog, rate products, save lists, and discover something at random",
-    ],
   },
   {
     id: "s3k-interrupts",
@@ -167,28 +191,6 @@ export const projectRecords = [
     priority: 2,
   },
   {
-    id: "ai-diary",
-    caseStudy: caseStudies["ai-diary"],
-    title: "AI-Diary",
-    description:
-      "A speech-first work diary for Bravida technicians, using Azure Speech transcription and LLM summaries to turn short spoken check-ins into structured daily notes.",
-    featuredDescription:
-      "I worked on AI-Diary, an internal tool that lets Bravida technicians record a short voice update and turn it into a structured daily note.",
-    technologies: ["React", "Material UI", "TypeScript", "Azure", "Azure Speech"],
-    methods: ["Field reporting", "Speech-to-text", "LLM summaries"],
-    category: "Web",
-    context: "Professional",
-    links: {},
-    date: "November 2024 - June 2026",
-    isPrivate: true,
-    priority: 1,
-    highlights: [
-      "The tool avoids asking technicians to type long reports while they are in the field",
-      "Azure Speech creates the transcript and an LLM turns it into a draft note",
-      "The user can review the result before it is added to the diary",
-    ],
-  },
-  {
     id: "logportal",
     timeline: { start: "2023-06", end: "2024-08" },
     title: "LogPortal",
@@ -220,7 +222,7 @@ export const projectRecords = [
       liveText: "Read on DiVA",
     },
     date: "January - June 2024",
-    priority: 1,
+    priority: 3,
     highlights: [
       "I compared full conversation history with several summarized versions",
       "The experiments measured both answer quality and API cost",

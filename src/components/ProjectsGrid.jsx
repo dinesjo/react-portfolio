@@ -20,7 +20,7 @@ import {
 
 const priorityGroups = {
   1: {
-    title: "Case studies",
+    title: "Featured work",
     copy:
       "Projects with more detail about the problem, what I built, and the result.",
   },
@@ -161,17 +161,14 @@ function CaseStudyCard({ project, index, settled }) {
             </p>
             <p className="project-date">{project.date}</p>
 
+            <p className="mt-4 text-sm leading-relaxed text-slate-700">
+              <span className="font-semibold">My role: </span>{project.caseStudy.role}
+            </p>
+
             {project.caseStudy?.result && <div className="case-result"><strong>{project.caseStudy.result.value}</strong><div><p>{project.caseStudy.result.label}</p><span>{project.caseStudy.result.context}</span></div></div>}
 
-            {project.highlights?.length > 0 && (
-              <ul className="mt-6 space-y-3">
-                {project.highlights.slice(0, 2).map((note) => (
-                  <li key={note} className="flex gap-3 text-sm text-slate-700">
-                    <span className="project-bullet mt-2 shrink-0" />
-                    <span>{note}</span>
-                  </li>
-                ))}
-              </ul>
+            {project.showFeaturedNote !== false && !project.caseStudy.result && project.highlights?.length > 0 && (
+              <p className="case-card-note">{project.highlights[0]}</p>
             )}
 
             {project.statusNote && (
@@ -289,7 +286,11 @@ function ArchiveProjectCard({ project }) {
           </p>
         )}
 
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
+          {project.caseStudy && (
+            <PrimaryButton href={`#/work/${project.id}`} className="quiet-button inline-flex min-h-11 items-center gap-2 px-3 py-2 text-xs font-bold"
+              icon={<FaArrowRight />} iconPosition="end">Read case study</PrimaryButton>
+          )}
           <ProjectLinks project={project} compact />
         </div>
       </div>

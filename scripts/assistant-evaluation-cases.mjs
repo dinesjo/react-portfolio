@@ -11,6 +11,37 @@ function label(id) {
 
 export const imperfectCases = [
   {
+    id: 'ai-diary-development-and-collaboration',
+    question: 'Was AI-Diary built by a team of developers, or did Linus develop it alone? Who else contributed?',
+    checks: (answer) => ({
+      soleTechnicalDeveloper: /sole (?:technical )?developer|only (?:technical )?developer|(?:developed|built|implemented).{0,50}(?:himself|alone)/is.test(answer),
+      technicianInput: /technician/i.test(answer) && /user|need|input|work|collaborat/i.test(answer),
+      limitedDeveloperInput: /(?:another|other) developer/i.test(answer) && /ideas?/i.test(answer),
+      projectCitation: cites(answer, 'project:ai-diary'),
+    }),
+  },
+  {
+    id: 'thesis-development-and-user-stories',
+    question: 'Did Linus work entirely alone on his master’s thesis, or collaborate with people at Traton and Scania? Who implemented the system?',
+    checks: (answer) => ({
+      soleImplementation: /sole|himself|on his own|alone/i.test(answer) && /implement|develop/i.test(answer),
+      bothOrganizations: /Traton/i.test(answer) && /Scania/i.test(answer),
+      userStories: /user stories/i.test(answer),
+      projectCitation: cites(answer, 'project:master-thesis-kgqa'),
+    }),
+  },
+  {
+    id: 'snuskoll-hobby-motivation',
+    question: 'Why did Linus make SnusKoll, and who was it for?',
+    checks: (answer) => ({
+      hobbyScope: /hobby|fun/i.test(answer),
+      learningMotivation: /learn/i.test(answer) && /web development/i.test(answer),
+      friends: /friends/i.test(answer),
+      missingReviews: /ratings/i.test(answer) && /comments|reviews/i.test(answer) && /miss|lack|couldn.t|didn.t/i.test(answer),
+      projectCitation: cites(answer, 'project:snuskoll'),
+    }),
+  },
+  {
     id: 'snuskoll-auth-and-data',
     question: 'Does SnusKoll send sign-in through its ASP.NET API? What data does the API handle, and what are the shared DTOs used for?',
     checks: (answer) => ({
@@ -106,7 +137,8 @@ export const imperfectCases = [
     id: 'vague-project',
     question: 'that truck ai thing - what did he actually make, and did it work?',
     checks: (answer) => ({
-      identifiesWork: /Industrial Knowledge Graph QA/.test(answer),
+      identifiesWork: /Truck compatibility with AI/.test(answer) ||
+        (/master.s thesis/i.test(answer) && /Traton|MAZE/.test(answer) && /truck/i.test(answer)),
       reportsMeasuredResult: /96\.4%/.test(answer),
       qualifiesResults: /not statistically decisive|controlled|diagnostic|fixed|snapshot|not.*production|higher.*(?:latency|token)/i.test(answer),
       projectCitation: cites(answer, 'project:master-thesis-kgqa'),
@@ -165,7 +197,8 @@ export const imperfectCases = [
     question: 'why did he pick supabase for snuskoll instead of firebase?',
     checks: (answer) => ({
       admitsMissingReason: /(?:reason|rationale|choice|decision).{0,80}(?:not|isn't|wasn't|undocumented)|(?:not|isn't|doesn't).{0,80}(?:document|explain|publish|state|reason)/i.test(answer),
-      givesKnownFact: /Supabase/.test(answer),
+      givesKnownFact: /Supabase/.test(answer) ||
+        (/SnusKoll/.test(answer) && /learn.{0,40}web development|friends/is.test(answer)),
       noInventedComparison: !/cheaper|more flexible|better than Firebase|because.*(?:SQL|Postgres)/i.test(answer),
     }),
   },

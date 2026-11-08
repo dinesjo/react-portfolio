@@ -37,3 +37,15 @@ test('clarification evaluation rejects a different thesis as an option from the 
   assert.equal(ambiguity.checks("Do you mean Supabase in SnusKoll or context summarization in the bachelor thesis?").namesActualOptions, true);
   assert.equal(ambiguity.checks("Which choice? The strategies in his master's thesis or SnusKoll's architecture?").namesActualOptions, false);
 });
+
+test('informal thesis identification accepts a grounded description without requiring the display title', () => {
+  const thesis = evaluationCases.find((item) => item.id === 'vague-project');
+  assert.equal(thesis.checks("For his master's thesis, Linus built a Python system for truck components using Traton's MAZE knowledge graph.").identifiesWork, true);
+  assert.equal(thesis.checks("His bachelor's thesis summarized conversation history to reduce LLM cost.").identifiesWork, false);
+});
+
+test('missing-rationale checks accept published context but still reject an invented technology comparison', () => {
+  const rationale = evaluationCases.find((item) => item.id === 'missing-rationale');
+  assert.ok(Object.values(rationale.checks("That reasoning isn't documented here. He built SnusKoll to learn more about web development and make something fun for his friends.")).every(Boolean));
+  assert.equal(rationale.checks('He chose Supabase because PostgreSQL was cheaper and more flexible than Firebase.').noInventedComparison, false);
+});

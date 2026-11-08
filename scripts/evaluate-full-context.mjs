@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 import { buildFullPortfolioContext } from "../server/full-context.js";
 import { askOllama } from "../server/ollama.js";
 import { imperfectCases } from "./assistant-evaluation-cases.mjs";
+import { projectRecords } from "../src/data/projectRecords.js";
 
 const DEFAULT_MODELS = [
   "minimax-m3",
@@ -13,15 +14,9 @@ const DEFAULT_MODELS = [
   "nemotron-3-ultra",
   "gpt-oss:120b",
 ];
-const REACT_PROJECTS = [
-  "Thesis Tracker",
-  "AI-Diary",
-  "HabitGrower",
-  "React Pathfinding Visualization",
-  "FitTrackr",
-  "Deadline Tracker",
-  "This Website",
-];
+const REACT_PROJECTS = projectRecords
+  .filter((project) => project.technologies.includes("React"))
+  .map((project) => project.title);
 const requestedModels = process.argv.slice(2).join(",");
 const models = (requestedModels || process.env.EVAL_MODELS || DEFAULT_MODELS.join(","))
   .split(",")
@@ -43,7 +38,7 @@ const cases = [
     checks(answer) {
       const normalized = normalizeForComparison(answer);
       return {
-        allSevenProjects: REACT_PROJECTS.every((title) => normalized.includes(title)),
+        allReactProjects: REACT_PROJECTS.every((title) => normalized.includes(title)),
         aiDiaryIncluded: normalized.includes("AI-Diary"),
         cited: /\[S\d+\]/.test(answer),
       };
@@ -55,11 +50,8 @@ const cases = [
     checks(answer) {
       const normalized = normalizeForComparison(answer);
       return {
-        neutralAttribution: /\bworked on\b/i.test(normalized),
-        noEscalatedOwnership:
-          !/(?:\b(?:Linus|he)\b.{0,24}\b(?:built|created|designed|developed|led|owned)\b|\b(?:built|created|designed|developed|led|owned)\b.{0,24}\bby Linus\b)/i.test(
-            normalized,
-          ),
+        publishedOwnership: /sole (?:technical )?developer|only (?:technical )?developer/i.test(normalized),
+        describesWorkflow: /speech|spoken|voice/i.test(normalized) && /note|diary/i.test(normalized),
         cited: /\[S\d+\]/.test(answer),
       };
     },
@@ -87,7 +79,7 @@ const cases = [
       "I'm curious about AI and knowledge graphs. Which project should I look at first, and why?",
     checks(answer) {
       return {
-        recommendsKnowledgeGraphProject: answer.includes("Industrial Knowledge Graph QA"),
+        recommendsKnowledgeGraphProject: answer.includes("Truck compatibility with AI"),
         givesPublishedReason: /(?:knowledge graph|MAZE|retrieval|graph quer)/i.test(answer),
         cited: /\[S\d+\]/.test(answer),
         avoidsPortfolioCliches: !/\b(?:showcases|demonstrates)\b/i.test(answer),
@@ -96,12 +88,12 @@ const cases = [
   },
   {
     id: "swedish-private-attribution",
-    question: "Vad byggde Linus för AI-Diary?",
+    question: "Vad byggde Linus för AI-Diary, och var han ensam utvecklare?",
     checks(answer) {
       return {
         answersInSwedish: /\b(?:Linus|han|verktyg|dagbok)\b/i.test(answer),
-        neutralAttribution: /\barbetade med\b/i.test(answer),
-        noEscalatedOwnership: !/\b(?:byggde|utvecklade|ledde|skapade)\b/i.test(answer),
+        publishedOwnership: /ensam|enda/i.test(answer) && /utvecklare|utveckling/i.test(answer),
+        describesWorkflow: /tal|röst|transkrip/i.test(answer) && /anteckning|dagbok/i.test(answer),
         cited: /\[S\d+\]/.test(answer),
       };
     },
