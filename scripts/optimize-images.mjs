@@ -62,6 +62,12 @@ const standaloneImages = [
     width: 900,
     quality: 86,
   },
+  {
+    source: "portrait-coastal-extension.png",
+    output: "portrait-coastal-extension.webp",
+    width: 1600,
+    quality: 82,
+  },
 ];
 
 const directedImages = [
